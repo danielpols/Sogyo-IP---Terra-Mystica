@@ -1,13 +1,52 @@
 image: gradle:latest
 
+variables:
+  CSV_DEFAULT: "build/reports/jacoco/test/jacocoTestReport.csv"
+
+.coverage-template:
+  stage: report
+  needs:
+    - test
+  script:
+    - echo $CSV_LOCATION
+    - awk -F "," '{instructions += $4+$5;covered+=$5} END {print covered, "/", instructions, "instructions covered"; print "Coverage", 100*covered/instructions, "%"}' $CSV_LOCATION
+  when: always
+  coverage: '/Coverage ([0-9.]+) %/'
+
 stages:
   - test
+  - report
   - build
   
 test:
   stage: test
   script:
     - gradle test
+  artifacts:
+    when: always
+    paths:
+      - $CI_PROJECT_DIR/**/jacocoTestReport.csv
+    expire_in: 5 minutes
+
+code-coverage:
+  extends: .coverage-template
+  before_script:
+    - export CSV_LOCATION=$(find . -name "jacocoTestReport.csv")
+
+code-coverage-domain:
+  extends: .coverage-template
+  before_script:
+    - export CSV_LOCATION=$CI_PROJECT_DIR/domain/$CSV_DEFAULT
+
+code-coverage-api:
+  extends: .coverage-template
+  before_script:
+    - export CSV_LOCATION=$CI_PROJECT_DIR/api/$CSV_DEFAULT
+
+code-coverage-persistence:
+  extends: .coverage-template
+  before_script:
+    - export CSV_LOCATION=$CI_PROJECT_DIR/persistence/$CSV_DEFAULT
 
 build:
   stage: build
