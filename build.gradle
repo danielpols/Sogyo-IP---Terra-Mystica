@@ -1,0 +1,8 @@
+
+plugins {
+    id 'jacoco-report-aggregation'
+}
+
+subprojects {
+    version = findProperty('projVersion') ?: '0.0.1'
+}
