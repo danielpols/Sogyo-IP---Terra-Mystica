@@ -1,4 +1,4 @@
-image: mcr.microsoft.com/dotnet/sdk:8.0
+image: gradle:latest
 
 stages:
   - test
@@ -7,9 +7,9 @@ stages:
 test:
   stage: test
   script:
-    - dotnet test
+    - gradle test
 
 build:
   stage: build
   script:
-    - dotnet build
+    - gradle build
