@@ -34,11 +34,10 @@ Het doel is om een opzet van Terra Mystica te implementeren.
 
 ## Persoonlijke leerdoelen
 
-- Beter bekend raken met AGILE/SCRUM
-- b
+- Beter bekend raken met AGILE/SCRUM.
+- Git georganiseerd houden en vaak committen.
 
 ## Technische leerdoelen
 
-- Implementeren bordspel in C#.
 - Meer comfortabel worden met front-end development.
 
