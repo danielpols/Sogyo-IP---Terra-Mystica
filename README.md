@@ -8,25 +8,24 @@ Het doel is om een opzet van Terra Mystica te implementeren.
 ## MoSCoW
 
 - Must
-  - [ ] Een hexagonaal bord zien met verschillende land types.
-  - [ ] Tussen twee facties kunnen kiezen bij het starten
-  - [ ] Beurt kunnen beeindigen.
-  - [ ] Actie 1: Terraform/Bouw kunnen uitvoeren.
-  - [ ] Punten toekennen aan het einde voor grootste verbonden landgebied.
+  - [ ] Een hexagonaal bord laten zien.
+  - [ ] Landtypes inlezen vanuit een database.
+  - [ ] Gebouwen op het bord kunnen bouwen.
+  - [ ] Landtype aanpassen tijdens het bouwen.
 - Should
-  - [ ] Actie 2/3: Sliders kunnen verschuiven voor rivier en schep.
-  - [ ] Actie 4: Verbeteren van gebouwen.
-  - [ ] Automatisch conversie priester -> werker -> geld doen waar nodig.
-  - [ ] Pop-up tonen die de kosten van een actie laat zien.
+  - [ ] Tonen op welke zeshoeken een speler mag bouwen 
+  - [ ] Laten zien hoe "moeilijk" het terraformen is.
+  - [ ] Tonen welke speler het grootste aaneengesloten gebied bezit.
+  - [ ] Laten zien wat de kosten van een actie zijn.
 - Could
-  - [ ] Tonen waar ieders grootste aangesloten gebied ligt.
-  - [ ] Factie-specifieke passives toevoegen.
-  - [ ] Detecteren wanneer er een stad gemaakt is.
-- Won't
-  - [ ] Overige facties implementeren
-  - [ ] Power/cult bord acties toevoegen
-  - [ ] Bruggen toevoegen
+  - [ ] Resource income implementeren.
+  - [ ] Detecteren waar een stad gemaakt word (genoeg gebouwen naast elkaar).
+  - [ ] Facties implementeren.
   - [ ] Bonuskaarten en scoretegels toevoegen
+- Won't
+  - [ ] Bruggen toevoegen
+  - [ ] Power/elementenbord acties toevoegen.
+  - [ ] Mooie visuals toevoegen
 
 ## Installatie
 
