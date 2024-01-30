@@ -6,6 +6,8 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
+import terra.api.controllers.TerraController;
+
 public class App {
     private static final int PORT = 8080;
 
@@ -51,9 +53,9 @@ public class App {
     private static ResourceConfig createResources() {
         // Create the dependencies we want to inject
         // TODO create controller and inject dependencies
-        String mancalaController = null;
+        TerraController controller = new TerraController();
         // Register our MancalaController
-        return new ResourceConfig().register(mancalaController);
+        return new ResourceConfig().register(controller);
         // Note: Jetty (and most other frameworks) can also handle Dependency
         // Injection and registering controllers automatically.
     }

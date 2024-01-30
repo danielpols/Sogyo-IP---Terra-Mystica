@@ -45,7 +45,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set('mancala.api.App')
+    mainClass.set('terra.api.App')
 }
 
 test {
