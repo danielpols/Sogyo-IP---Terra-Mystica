@@ -62,4 +62,14 @@ public enum Terrain {
         return getNextTowards(other).getNextTowards(other, amount - 1);
     }
 
+    public String getTerrainString() {
+        return this.name().substring(0, 1);
+    }
+
+    public static Terrain getTerrain(char letter) {
+        return Arrays.stream(Terrain.values()).map(t -> t.name())
+                .filter(n -> n.startsWith(Character.toString(letter)))
+                .map(n -> Terrain.valueOf(n)).findFirst().get();
+    }
+
 }
