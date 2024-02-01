@@ -15,14 +15,18 @@ import jakarta.ws.rs.core.Response;
 import terra.api.models.GameDTO;
 import terra.domain.ITerraMystica;
 import terra.domain.ITerraMysticaFactory;
+import terra.persistence.ITerraMysticaRepository;
 
 @Path("/terra/api")
 public class TerraController {
 
     private ITerraMysticaFactory factory;
+    private ITerraMysticaRepository repository;
 
-    public TerraController(ITerraMysticaFactory factory) {
+    public TerraController(ITerraMysticaFactory factory,
+            ITerraMysticaRepository repository) {
         this.factory = factory;
+        this.repository = repository;
     }
 
     @Path("/log")

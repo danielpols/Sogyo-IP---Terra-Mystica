@@ -9,6 +9,9 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import terra.api.controllers.TerraController;
 import terra.domain.ITerraMysticaFactory;
 import terra.domain.MockTerraMysticaFactory;
+import terra.persistence.ITerraMysticaRepository;
+import terra.persistence.MockTerraMysticaDatabase;
+import terra.persistence.TerraMysticaRepository;
 
 public class App {
     private static final int PORT = 8080;
@@ -55,7 +58,9 @@ public class App {
     private static ResourceConfig createResources() {
         // Create the dependencies we want to inject
         ITerraMysticaFactory factory = new MockTerraMysticaFactory();
-        TerraController controller = new TerraController(factory);
+        ITerraMysticaRepository repository = new TerraMysticaRepository(
+                new MockTerraMysticaDatabase());
+        TerraController controller = new TerraController(factory, repository);
         // Register our MancalaController
         return new ResourceConfig().register(controller);
         // Note: Jetty (and most other frameworks) can also handle Dependency
