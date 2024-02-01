@@ -6,7 +6,8 @@
     <li class="tileListItem">
         <div class="tileContainer">
             <a class="tile">
-                <button type="button" class="tileButton" @click="post">{{ terrain }}</button>
+                <button type="button" class="tileButton" @click="post" :style="cssVars"
+                >{{ terrain }}</button>
             </a>
         </div>
     </li>
@@ -20,6 +21,31 @@
             await fetch('terra/api/log').then(response => response.text())
             .then(data => console.log(data))
             .catch(error => console.log(error));
+        }
+    },
+    computed: {
+        cssVars() {
+            var colour = "transparent";
+            if(this.terrain == "PLAINS") {
+                colour = "brown";
+            } else if(this.terrain == "SWAMP") {
+                colour = "darkgrey";
+            } else if(this.terrain == "LAKE") {
+                colour = "blue";
+            } else if(this.terrain == "FOREST") {
+                colour = "green";
+            } else if(this.terrain == "MOUNTAIN") {
+                colour = "lightgrey";
+            } else if(this.terrain == "WASTELAND") {
+                colour = "darkred";
+            } else if(this.terrain == "DESERT") {
+                colour = "orange";
+            } else {
+                colour = "lightblue";
+            }
+            return {
+                '--bg-color': colour
+            };
         }
     }
   }
@@ -68,7 +94,6 @@
     visibility: visible;
     width: 100%;
     height: 100%;
-    background-color: green;
     transform: skewY(-30deg) rotate3d(0, 0, 1, 60deg);
 }
 
@@ -76,6 +101,7 @@
     border-width: 0;
     width: 100%;
     height: 100%;
+    background-color: var(--bg-color);
 }
 </style>
 
