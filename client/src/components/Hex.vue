@@ -34,7 +34,7 @@
                 colour = "blue";
             } else if(this.terrain == "FOREST") {
                 colour = "green";
-            } else if(this.terrain == "MOUNTAIN") {
+            } else if(this.terrain == "MOUNTAINS") {
                 colour = "lightgrey";
             } else if(this.terrain == "WASTELAND") {
                 colour = "darkred";
