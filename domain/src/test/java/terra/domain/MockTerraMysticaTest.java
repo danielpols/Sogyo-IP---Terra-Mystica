@@ -2,6 +2,7 @@ package terra.domain;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -33,6 +34,31 @@ public class MockTerraMysticaTest {
                 Terrain.WASTELAND };
         assertArrayEquals(expected, Arrays.stream(mock.getTileLocations())
                 .map(loc -> mock.getTileTerrain(loc)).toArray(Terrain[]::new));
+    }
+
+    @Test
+    public void testMockWithTerrainInput() {
+        Terrain[] terrains = { Terrain.DESERT, Terrain.RIVER, Terrain.MOUNTAINS,
+                Terrain.WASTELAND, Terrain.SWAMP };
+        ITerraMystica game = new MockTerraMystica(terrains, 2);
+
+        assertAll(() -> {
+            assertEquals(Terrain.DESERT,
+                    game.getTileTerrain(new int[] { 0, 0 }));
+        }, () -> {
+            assertEquals(Terrain.RIVER,
+                    game.getTileTerrain(new int[] { 0, 1 }));
+        }, () -> {
+            assertEquals(Terrain.MOUNTAINS,
+                    game.getTileTerrain(new int[] { 1, 0 }));
+        }, () -> {
+            assertEquals(Terrain.WASTELAND,
+                    game.getTileTerrain(new int[] { 2, 0 }));
+        }, () -> {
+            assertEquals(Terrain.SWAMP,
+                    game.getTileTerrain(new int[] { 2, 1 }));
+        });
+
     }
 
 }

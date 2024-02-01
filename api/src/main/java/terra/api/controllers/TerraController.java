@@ -44,7 +44,8 @@ public class TerraController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGamestate(@Context HttpServletRequest request) {
 
-        ITerraMystica game = factory.startGame(null, null);
+        ITerraMystica game = factory.startGame(null,
+                repository.getStartingTerrain());
 
         GameDTO output = new GameDTO(game);
 
