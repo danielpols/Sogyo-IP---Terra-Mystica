@@ -19,11 +19,11 @@
     position: relative;
     display: grid;
     list-style-type: none;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 10px;
+    grid-template-columns: repeat(26, 1fr);
+    grid-gap: 3px;
     margin: 0;
     padding: 0;
-    width: 50%;
+    width: 100%;
     margin-bottom: 60px;
     font-size: 0;
 }
