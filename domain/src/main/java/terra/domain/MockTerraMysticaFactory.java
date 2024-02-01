@@ -6,6 +6,9 @@ public class MockTerraMysticaFactory implements ITerraMysticaFactory {
 
     @Override
     public ITerraMystica startGame(String[] players, Terrain[] terrains) {
+        if (terrains == null) {
+            return new MockTerraMystica();
+        }
         return new MockTerraMystica(terrains, BOARD_SIZE);
     }
 
