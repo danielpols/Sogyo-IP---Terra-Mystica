@@ -12,9 +12,18 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import terra.api.models.GameDTO;
+import terra.domain.ITerraMystica;
+import terra.domain.ITerraMysticaFactory;
 
 @Path("/terra/api")
 public class TerraController {
+
+    private ITerraMysticaFactory factory;
+
+    public TerraController(ITerraMysticaFactory factory) {
+        this.factory = factory;
+    }
 
     @Path("/log")
     @GET
@@ -23,6 +32,19 @@ public class TerraController {
     public Response log(@Context HttpServletRequest request, String body) {
         System.out.println("Received call on /log");
         return Response.status(200).entity("Hi").build();
+    }
+
+    @Path("/get-gamestate")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGamestate(@Context HttpServletRequest request) {
+
+        ITerraMystica game = factory.startGame(null, null);
+
+        GameDTO output = new GameDTO(game);
+
+        return Response.status(200).entity(output).build();
     }
 
     @Path("/start")
