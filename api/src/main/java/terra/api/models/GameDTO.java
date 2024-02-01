@@ -10,4 +10,8 @@ public class GameDTO {
         board = new BoardDTO(game);
     }
 
+    public BoardDTO getBoard() {
+        return board;
+    }
+
 }

@@ -15,4 +15,8 @@ public class BoardDTO {
 
     }
 
+    public TileDTO[] getTiles() {
+        return tiles;
+    }
+
 }
