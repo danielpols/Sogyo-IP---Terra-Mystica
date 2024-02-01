@@ -1,5 +1,6 @@
 package terra.domain;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -69,6 +70,48 @@ public class TerrainTest {
     public void testNoNextTerrainToRiver(Terrain t) {
         assertThrows(RuntimeException.class, () -> {
             t.getNextTowards(Terrain.RIVER);
+        });
+    }
+
+    @Test
+    public void testCanConvertTerrainToString() {
+        assertAll(() -> {
+            assertEquals("R", Terrain.RIVER.getTerrainString());
+        }, () -> {
+            assertEquals("P", Terrain.PLAINS.getTerrainString());
+        }, () -> {
+            assertEquals("S", Terrain.SWAMP.getTerrainString());
+        }, () -> {
+            assertEquals("L", Terrain.LAKE.getTerrainString());
+        }, () -> {
+            assertEquals("F", Terrain.FOREST.getTerrainString());
+        }, () -> {
+            assertEquals("M", Terrain.MOUNTAINS.getTerrainString());
+        }, () -> {
+            assertEquals("W", Terrain.WASTELAND.getTerrainString());
+        }, () -> {
+            assertEquals("D", Terrain.DESERT.getTerrainString());
+        });
+    }
+
+    @Test
+    public void testCanConvertCharToTerrain() {
+        assertAll(() -> {
+            assertEquals(Terrain.RIVER, Terrain.getTerrain('R'));
+        }, () -> {
+            assertEquals(Terrain.PLAINS, Terrain.getTerrain('P'));
+        }, () -> {
+            assertEquals(Terrain.SWAMP, Terrain.getTerrain('S'));
+        }, () -> {
+            assertEquals(Terrain.LAKE, Terrain.getTerrain('L'));
+        }, () -> {
+            assertEquals(Terrain.FOREST, Terrain.getTerrain('F'));
+        }, () -> {
+            assertEquals(Terrain.MOUNTAINS, Terrain.getTerrain('M'));
+        }, () -> {
+            assertEquals(Terrain.WASTELAND, Terrain.getTerrain('W'));
+        }, () -> {
+            assertEquals(Terrain.DESERT, Terrain.getTerrain('D'));
         });
     }
 
