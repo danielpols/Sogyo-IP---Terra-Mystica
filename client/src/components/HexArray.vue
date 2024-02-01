@@ -15,22 +15,17 @@
 
 <style scoped>
 .tileList {
+    box-sizing: border-box;
     position: relative;
     display: grid;
     list-style-type: none;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 10px;
-    padding: 0;
-    width: 346.41px;
-    min-height: 450px;
-    margin-bottom: 60px;
-    font-size: 0;
-}
-
-.tileList * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    width: 50%;
+    margin-bottom: 60px;
+    font-size: 0;
 }
 </style>
 

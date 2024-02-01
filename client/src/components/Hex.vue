@@ -32,9 +32,11 @@
     grid-column-end: span 2;
     outline: 1px solid transparent;
     border-bottom: 1px solid transparent;
+    width: 100%;
+    padding-bottom: 86.602%;
 }
 
-.tileListItem, .tileListItem * {
+.tileListItem * {
     margin: 0;
     padding: 0;
 }
