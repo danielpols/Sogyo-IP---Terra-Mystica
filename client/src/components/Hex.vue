@@ -6,7 +6,7 @@
     <li class="tileListItem">
         <div class="tileContainer">
             <a class="tile">
-                <button type="button" class="tileButton" @click="post">abzbzbz</button>
+                <button type="button" class="tileButton" @click="post">{{ terrain }}</button>
             </a>
         </div>
     </li>
@@ -14,6 +14,7 @@
 
 <script>
   export default {
+    props: ['terrain'],
     methods: {
         async post() {
             await fetch('terra/api/log').then(response => response.text())
