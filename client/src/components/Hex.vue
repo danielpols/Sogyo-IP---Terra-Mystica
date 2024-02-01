@@ -42,7 +42,11 @@
     padding: 0;
 }
 
-.tileListItem:nth-child(3) {
+.tileListItem:nth-child(25n+1) {
+    grid-column-start: 1;
+}
+
+.tileListItem:nth-child(25n+14) {
     grid-column-start: 2;
 }
 
