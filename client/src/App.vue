@@ -1,6 +1,5 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
 import TerraMystica from './components/TerraMystica.vue'
 </script>
 
@@ -15,14 +14,13 @@ import TerraMystica from './components/TerraMystica.vue'
 
   <main>
     <template v-if="swap"><TerraMystica/></template>
-    <template v-else><TheWelcome /></template>
     <button type="button" class="switchButton" v-on:click="swap = !swap">Hi {{ swap }}</button>
   </main>
 </template>
 
 <script>
   export default {
-    data: function() {
+    data () {
       return {
         swap: false
       }
