@@ -1,6 +1,6 @@
 package terra.persistence;
 
-public class MockTerraDatabase implements ITerraDatabase {
+public class MockTerraMysticaDatabase implements ITerraMysticaDatabase {
 
     private static String start = "PMFLDWPSWFLWS" + "DRRPSRRDSRRD"
             + "RRSRMRFRFRMRR" + "FLDRRWLRWRWP" + "SPWLSPMDRRFSL"

@@ -13,8 +13,8 @@ public class TerraRepositoryTest {
     @Test
     public void testCanObtainStartingBoard() {
 
-        ITerraRepository repository = new TerraRepository(
-                new MockTerraDatabase());
+        ITerraMysticaRepository repository = new TerraMysticaRepository(
+                new MockTerraMysticaDatabase());
 
         Terrain[] terrain = repository.getStartingTerrain();
 

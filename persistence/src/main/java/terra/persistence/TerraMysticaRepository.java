@@ -2,11 +2,11 @@ package terra.persistence;
 
 import terra.domain.Terrain;
 
-public class TerraRepository implements ITerraRepository {
+public class TerraMysticaRepository implements ITerraMysticaRepository {
 
-    ITerraDatabase database;
+    ITerraMysticaDatabase database;
 
-    public TerraRepository(ITerraDatabase database) {
+    public TerraMysticaRepository(ITerraMysticaDatabase database) {
         this.database = database;
     }
 

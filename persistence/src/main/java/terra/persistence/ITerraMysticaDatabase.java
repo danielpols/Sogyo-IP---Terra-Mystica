@@ -1,6 +1,6 @@
 package terra.persistence;
 
-public interface ITerraDatabase {
+public interface ITerraMysticaDatabase {
 
     String getStartingBoard();
 
