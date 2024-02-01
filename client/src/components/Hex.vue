@@ -27,21 +27,21 @@
         cssVars() {
             var colour = "transparent";
             if(this.terrain == "PLAINS") {
-                colour = "brown";
+                colour = "saddlebrown";
             } else if(this.terrain == "SWAMP") {
-                colour = "darkgrey";
+                colour = "dimgrey";
             } else if(this.terrain == "LAKE") {
-                colour = "blue";
+                colour = "royalblue";
             } else if(this.terrain == "FOREST") {
                 colour = "green";
             } else if(this.terrain == "MOUNTAINS") {
-                colour = "lightgrey";
+                colour = "silver";
             } else if(this.terrain == "WASTELAND") {
                 colour = "darkred";
             } else if(this.terrain == "DESERT") {
                 colour = "orange";
             } else {
-                colour = "lightblue";
+                colour = "navy";
             }
             return {
                 '--bg-color': colour
