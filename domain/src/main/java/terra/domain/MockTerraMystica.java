@@ -1,6 +1,7 @@
 package terra.domain;
 
 import java.util.HashMap;
+import java.util.stream.IntStream;
 
 public class MockTerraMystica implements ITerraMystica {
 
@@ -13,6 +14,18 @@ public class MockTerraMystica implements ITerraMystica {
         tiles.put(new MockLocation(1, 0), Terrain.FOREST);
         tiles.put(new MockLocation(1, 1), Terrain.WASTELAND);
 
+    }
+
+    public MockTerraMystica(Terrain[] terrains, int rowLength) {
+        tiles = new HashMap<MockLocation, Terrain>();
+        IntStream.range(0, terrains.length).forEach(i -> {
+            int doubleRow = i / (2 * rowLength - 1);
+            int singleRow = (i - (2 * rowLength - 1) * doubleRow) / rowLength;
+            int col = i - (2 * rowLength - 1) * doubleRow
+                    - rowLength * singleRow;
+            tiles.put(new MockLocation(2 * doubleRow + singleRow, col),
+                    terrains[i]);
+        });
     }
 
     public int[][] getTileLocations() {
