@@ -25,6 +25,7 @@
     padding: 0;
     width: 100%;
     margin-bottom: 60px;
+    text-align: left;
     font-size: 0;
 }
 </style>

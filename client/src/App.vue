@@ -5,16 +5,8 @@ import { gameState } from './global.js';
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
   <main>
-    <template v-if="swap"><TerraMystica/></template>
+    <template v-if="swap"><TerraMystica/></template><br/>
     <button type="button" class="switchButton" v-on:click="swap = !swap">Hi {{ swap }}</button>
     <button type="button" v-on:click="print">Log</button>
     <button type="button" v-on:click="getGameState">Fetch!</button>
@@ -40,4 +32,7 @@ import { gameState } from './global.js';
 </script>
 
 <style scoped>
+main {
+  text-align: center;
+}
 </style>
