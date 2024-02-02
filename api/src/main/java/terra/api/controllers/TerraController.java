@@ -66,8 +66,13 @@ public class TerraController {
         // Save the ID in the HTTP session.
         session.setAttribute("gameId", gameId);
 
+        ITerraMystica game = factory.startGame(null,
+                repository.getStartingTerrain());
+
+        repository.saveGame(gameId, game);
+
         // Use the game to create a DTO.
-        var output = "hi";
+        GameDTO output = new GameDTO(game);
 
         // Send DTO back in response.
         return Response.status(200).entity(output).build();
