@@ -6,7 +6,7 @@
     <li class="tileListItem">
         <div class="tileContainer">
             <a class="tile">
-                <button type="button" class="tileButton" @click="post" :style="cssVars"
+                <button type="button" class="tileButton" @click="post" :style="cssVars" :disabled="terrain=='RIVER'"
                 >{{ terrain }}</button>
             </a>
         </div>
@@ -43,8 +43,10 @@
             } else {
                 colour = "navy";
             }
+            var textColour = (this.terrain == "RIVER") ? "dimgrey" : "black";
             return {
-                '--bg-color': colour
+                '--bg-color': colour,
+                '--text-color': textColour
             };
         }
     }
@@ -102,6 +104,8 @@
     width: 100%;
     height: 100%;
     background-color: var(--bg-color);
+    color: var(--text-color);
+    font-size: 8px;
 }
 </style>
 
