@@ -1,5 +1,4 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
 import TerraMystica from './components/TerraMystica.vue'
 import { gameState } from './global.js';
 </script>
