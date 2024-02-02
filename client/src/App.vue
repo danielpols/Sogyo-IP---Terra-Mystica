@@ -6,7 +6,7 @@ import { gameState } from './global.js';
 
 <template>
   <main>
-    <template v-if="swap"><TerraMystica/></template>
+    <template v-if="gameState.state.board"><TerraMystica/></template>
     <template v-else><StartScreen/></template>
     <br/>
     <button type="button" class="switchButton" v-on:click="swap = !swap">Hi {{ swap }}</button>
@@ -25,7 +25,7 @@ import { gameState } from './global.js';
     methods: {
       print() {console.log(gameState);},
       async getGameState() {
-        await fetch('terra/api/get-gamestate').then(response => response.json())
+        await fetch('terra/api/start').then(response => response.json())
         .then(data => {console.log("Success!"); console.log(data); gameState.state = data})
         .catch(error => console.log(error));
       }
