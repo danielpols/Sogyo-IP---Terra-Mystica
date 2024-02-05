@@ -1,5 +1,6 @@
 package terra.api.controllers;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import terra.api.models.GameDTO;
 import terra.api.models.StartPlayerDTO;
 import terra.domain.ITerraMystica;
 import terra.domain.ITerraMysticaFactory;
+import terra.domain.Player;
 import terra.persistence.ITerraMysticaRepository;
 
 @Path("/terra/api")
@@ -70,8 +72,11 @@ public class TerraController {
         // Save the ID in the HTTP session.
         session.setAttribute("gameId", gameId);
 
-        ITerraMystica game = factory.startGame(null,
-                repository.getStartingTerrain());
+        ITerraMystica game = factory
+                .startGame(
+                        Arrays.stream(body).map(p -> p.toPlayer())
+                                .toArray(Player[]::new),
+                        repository.getStartingTerrain());
 
         repository.saveGame(gameId, game);
 
