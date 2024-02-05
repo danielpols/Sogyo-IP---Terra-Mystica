@@ -1,5 +1,5 @@
 <script setup>
-    import { VueElement, reactive } from 'vue';
+    import { gameState } from '../global.js';
 </script>
 
 <template>
@@ -22,6 +22,7 @@
             <li><button type="button" @click="logPlayers">We do a little logging</button></li>
         </ul>
     </div>
+    <button type="button" v-on:click="getGameState">Fetch!</button>
 </template>
 
 <script>
@@ -43,6 +44,18 @@
             },
             removePlayer(index) {
                 this.$delete(this.playerList, index);
+            },
+            async getGameState() {
+                await fetch('terra/api/start', {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(this.playerList)
+                }).then(response => response.json())
+                .then(data => {console.log("Success!"); gameState.state = data})
+                .catch(error => console.log(error));
             }
         },
         beforeMount() {
@@ -55,5 +68,6 @@
 <style scoped>
 .playerList {
     list-style-type: none;
+    padding: 0;
 }
 </style>
