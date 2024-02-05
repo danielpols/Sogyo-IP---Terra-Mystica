@@ -21,7 +21,7 @@
             <li v-if="playerList.length < 5"><button type="button" @click="addPlayer">Add another player</button></li>
         </ul>
     </div>
-    <button type="button" v-on:click="getGameState">Start game!</button>
+    <button type="button" v-on:click="getGameState" :disabled="disableStart()">Start game!</button>
 </template>
 
 <script>
@@ -52,6 +52,21 @@
                 }).then(response => response.json())
                 .then(data => {console.log("Success!"); gameState.state = data})
                 .catch(error => console.log(error));
+            },
+            hasDuplicates(array) {
+                return (array.filter((value, index) => array.indexOf(value) != index) != 0);
+            },
+            getNames() {
+                return this.playerList.map(player => player.name);
+            },
+            getTerrains() {
+                return this.playerList.map(player => player.terrain);
+            },
+            disableStart() {
+                if(this.hasDuplicates(this.getNames()) || this.hasDuplicates(this.getTerrains())){
+                    return true;
+                }
+                return false;
             }
         },
         beforeMount() {
