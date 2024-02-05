@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import terra.api.models.GameDTO;
+import terra.api.models.StartPlayerDTO;
 import terra.domain.ITerraMystica;
 import terra.domain.ITerraMysticaFactory;
 import terra.persistence.ITerraMysticaRepository;
@@ -56,7 +57,10 @@ public class TerraController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response start(@Context HttpServletRequest request, String body) {
+    public Response start(@Context HttpServletRequest request,
+            StartPlayerDTO[] body) {
+        System.out.println("Call made to /start");
+
         // Create HTTP session.
         HttpSession session = request.getSession(true);
 
