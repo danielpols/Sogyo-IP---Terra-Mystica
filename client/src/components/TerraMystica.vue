@@ -14,8 +14,8 @@
 <style scoped>
 .gameScreen {
     display: inline-block;
-    height: 80%;
-    width: 80%;
+    height: 90%;
+    width: 90%;
 }
 </style>
 
