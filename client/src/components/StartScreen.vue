@@ -63,6 +63,10 @@
                 return this.playerList.map(player => player.terrain);
             },
             disableStart() {
+                if(this.getNames().filter(name => (name == '')).length > 0){
+                    return true;
+                }
+
                 if(this.hasDuplicates(this.getNames()) || this.hasDuplicates(this.getTerrains())){
                     return true;
                 }
