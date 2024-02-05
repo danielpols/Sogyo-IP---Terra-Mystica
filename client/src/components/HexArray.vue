@@ -20,7 +20,6 @@
     display: grid;
     list-style-type: none;
     grid-template-columns: repeat(26, 1fr);
-    grid-gap: 0.2vw;
     margin: 0;
     padding: 0;
     width: 100%;
