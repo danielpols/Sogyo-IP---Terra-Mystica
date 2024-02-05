@@ -1,5 +1,6 @@
 package terra.api.models;
 
+import terra.domain.Player;
 import terra.domain.Terrain;
 
 public class StartPlayerDTO {
@@ -21,6 +22,10 @@ public class StartPlayerDTO {
 
     public void setTerrain(Terrain terrain) {
         this.terrain = terrain;
+    }
+
+    public Player toPlayer() {
+        return new Player(name, terrain);
     }
 
 }
