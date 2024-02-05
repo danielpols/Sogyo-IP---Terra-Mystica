@@ -8,22 +8,10 @@ import { gameState } from './global.js';
   <main>
     <template v-if="gameState.state.board"><TerraMystica/></template>
     <template v-else><StartScreen/></template>
-    <br/>
-    <button type="button" v-on:click="print">Log</button>
   </main>
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        swap: false
-      }
-    },
-    methods: {
-      print() {console.log(gameState);}
-    }
-  }
 </script>
 
 <style scoped>

@@ -19,10 +19,9 @@
                 <button v-if="playerList.length > 2" type="button" @click="playerList.splice(i, 1)">Remove</button>
             </li>
             <li v-if="playerList.length < 5"><button type="button" @click="addPlayer">Add another player</button></li>
-            <li><button type="button" @click="logPlayers">We do a little logging</button></li>
         </ul>
     </div>
-    <button type="button" v-on:click="getGameState">Fetch!</button>
+    <button type="button" v-on:click="getGameState">Start game!</button>
 </template>
 
 <script>
@@ -38,9 +37,6 @@
                     name: "",
                     terrain: "PLAINS"
                 });
-            },
-            logPlayers() {
-                console.log(this.playerList);
             },
             removePlayer(index) {
                 this.$delete(this.playerList, index);
@@ -69,5 +65,6 @@
 .playerList {
     list-style-type: none;
     padding: 0;
+    margin-bottom: 3%;
 }
 </style>
