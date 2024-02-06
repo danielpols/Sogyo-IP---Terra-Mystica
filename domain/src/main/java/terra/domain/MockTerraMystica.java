@@ -15,6 +15,9 @@ public class MockTerraMystica implements ITerraMystica {
         tiles.put(new MockLocation(1, 0), Terrain.FOREST);
         tiles.put(new MockLocation(1, 1), Terrain.WASTELAND);
 
+        players = new Player[] { new Player("Henk", Terrain.WASTELAND),
+                new Player("Jaap", Terrain.FOREST) };
+
     }
 
     public MockTerraMystica(Terrain[] terrains, int rowLength) {
