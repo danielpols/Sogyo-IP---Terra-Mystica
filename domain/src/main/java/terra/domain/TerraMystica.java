@@ -1,43 +1,40 @@
 package terra.domain;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.stream.IntStream;
 
 public class TerraMystica implements ITerraMystica {
 
     private final int boardSize;
-    private Tile[] tiles;
+    private Tile rootTile;
     private Player[] players;
 
     public TerraMystica(Player[] players, Terrain[] terrains, int boardSize) {
         this.boardSize = boardSize;
-        this.tiles = IntStream.range(0, terrains.length)
+        List<Tile> tiles = IntStream.range(0, terrains.length)
                 .mapToObj(i -> new Tile(
                         TileLocation.fromBoardIndex(i, this.boardSize),
                         terrains[i]))
-                .toArray(Tile[]::new);
-        Arrays.stream(this.tiles)
-                .forEach(t -> t.setAdjacent(Arrays.asList(tiles)));
+                .toList();
+        tiles.stream().forEach(t -> t.setAdjacent(tiles));
+        this.rootTile = tiles.get(0);
         this.players = players;
     }
 
     public int[][] getTileLocations() {
-        return Arrays.stream(tiles).map(t -> t.getLocation().toArray())
-                .toArray(int[][]::new);
+        return rootTile.getTileLocations();
     }
 
     public Terrain getTileTerrain(int[] location) {
-        return Arrays.stream(tiles).filter(
-                t -> t.getLocation().equals(TileLocation.fromArray(location)))
-                .map(t -> t.getTerrain()).toArray(Terrain[]::new)[0];
+        return rootTile.getTileTerrain(TileLocation.fromArray(location));
     }
 
     public Player[] getPlayers() {
         return players;
     }
 
-    protected Tile[] getTiles() {
-        return tiles;
+    protected List<Tile> getTiles() {
+        return rootTile.getTileList();
     }
 
 }

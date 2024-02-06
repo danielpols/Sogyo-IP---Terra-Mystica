@@ -1,5 +1,6 @@
 package terra.domain;
 
+import java.util.HashSet;
 import java.util.List;
 
 public class Tile {
@@ -18,8 +19,44 @@ public class Tile {
                 .toList();
     }
 
+    protected int[][] getTileLocations() {
+        return getTileList().stream().map(t -> t.location.toArray())
+                .toArray(int[][]::new);
+    }
+
+    protected Terrain getTileTerrain(TileLocation target) {
+        return findTile(target).getTerrain();
+    }
+
+    protected List<Tile> getTileList() {
+        return getAllTiles().stream().sorted((i, j) -> i.compare(j)).toList();
+    }
+
     protected boolean isAdjacentTo(Tile other) {
         return location.isAdjacentTo(other.getLocation());
+    }
+
+    private int compare(Tile other) {
+        return location.compare(other.getLocation());
+    }
+
+    private Tile findTile(TileLocation target) {
+        return getAllTiles().stream().filter(t -> t.location.equals(target))
+                .findFirst().get();
+    }
+
+    private HashSet<Tile> getAllTiles() {
+        HashSet<Tile> tiles = new HashSet<Tile>();
+        return getAllTiles(tiles);
+    }
+
+    private HashSet<Tile> getAllTiles(HashSet<Tile> set) {
+        if (set.contains(this)) {
+            return set;
+        }
+        set.add(this);
+        adjacent.forEach(t -> t.getAllTiles(set));
+        return set;
     }
 
     protected TileLocation getLocation() {
