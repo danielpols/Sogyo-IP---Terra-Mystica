@@ -1,5 +1,6 @@
 <script setup>
     import '../css/hexcss.css'
+    import { tileColors } from '@/global';
 </script>
 
 <template>
@@ -27,27 +28,9 @@
     },
     computed: {
         buttonCSS() {
-            var colour = "transparent";
-            if(this.terrain == "PLAINS") {
-                colour = "saddlebrown";
-            } else if(this.terrain == "SWAMP") {
-                colour = "dimgrey";
-            } else if(this.terrain == "LAKE") {
-                colour = "royalblue";
-            } else if(this.terrain == "FOREST") {
-                colour = "green";
-            } else if(this.terrain == "MOUNTAINS") {
-                colour = "silver";
-            } else if(this.terrain == "WASTELAND") {
-                colour = "darkred";
-            } else if(this.terrain == "DESERT") {
-                colour = "orange";
-            } else {
-                colour = "navy";
-            }
             var textColour = (this.terrain == "RIVER") ? "dimgrey" : "black";
             return {
-                '--bg-color': colour,
+                '--bg-color': tileColors(this.terrain),
                 '--text-color': textColour
             };
         },
