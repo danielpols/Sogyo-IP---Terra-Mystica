@@ -6,6 +6,9 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import terra.domain.ITerraMystica;
 import terra.domain.MockTerraMystica;
 
@@ -22,6 +25,19 @@ public class GameDTOTest {
                 .map(tile -> TestLocation.fromIntArray(tile.getLocation()))
                 .toArray(TestLocation[]::new);
         assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void testCanSerializeGameDTO() {
+        ITerraMystica game = new MockTerraMystica();
+        GameDTO dto = new GameDTO(game);
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            mapper.writeValueAsString(dto);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
 }
