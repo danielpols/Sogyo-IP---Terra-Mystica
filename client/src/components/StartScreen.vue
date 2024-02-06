@@ -19,10 +19,9 @@
                 <button v-if="playerList.length > 2" type="button" @click="playerList.splice(i, 1)">Remove</button>
             </li>
             <li v-if="playerList.length < 5"><button type="button" @click="addPlayer">Add another player</button></li>
-            <li><button type="button" @click="logPlayers">We do a little logging</button></li>
         </ul>
     </div>
-    <button type="button" v-on:click="getGameState">Fetch!</button>
+    <button type="button" v-on:click="getGameState" :disabled="disableStart()">Start game!</button>
 </template>
 
 <script>
@@ -39,9 +38,6 @@
                     terrain: "PLAINS"
                 });
             },
-            logPlayers() {
-                console.log(this.playerList);
-            },
             removePlayer(index) {
                 this.$delete(this.playerList, index);
             },
@@ -56,6 +52,25 @@
                 }).then(response => response.json())
                 .then(data => {console.log("Success!"); gameState.state = data})
                 .catch(error => console.log(error));
+            },
+            hasDuplicates(array) {
+                return (array.filter((value, index) => array.indexOf(value) != index) != 0);
+            },
+            getNames() {
+                return this.playerList.map(player => player.name);
+            },
+            getTerrains() {
+                return this.playerList.map(player => player.terrain);
+            },
+            disableStart() {
+                if(this.getNames().filter(name => (name == '')).length > 0){
+                    return true;
+                }
+
+                if(this.hasDuplicates(this.getNames()) || this.hasDuplicates(this.getTerrains())){
+                    return true;
+                }
+                return false;
             }
         },
         beforeMount() {
@@ -69,5 +84,6 @@
 .playerList {
     list-style-type: none;
     padding: 0;
+    margin-bottom: 3%;
 }
 </style>
