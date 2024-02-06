@@ -9,7 +9,10 @@ public class MockTerraMysticaFactory implements ITerraMysticaFactory {
         if (terrains == null) {
             return new MockTerraMystica();
         }
-        return new MockTerraMystica(terrains, BOARD_SIZE);
+        if (players == null) {
+            return new MockTerraMystica(terrains, BOARD_SIZE);
+        }
+        return new MockTerraMystica(players, terrains, BOARD_SIZE);
     }
 
 }

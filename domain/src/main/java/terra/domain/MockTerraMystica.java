@@ -6,6 +6,7 @@ import java.util.stream.IntStream;
 public class MockTerraMystica implements ITerraMystica {
 
     HashMap<MockLocation, Terrain> tiles;
+    Player[] players;
 
     public MockTerraMystica() {
         tiles = new HashMap<MockLocation, Terrain>();
@@ -13,6 +14,9 @@ public class MockTerraMystica implements ITerraMystica {
         tiles.put(new MockLocation(0, 1), Terrain.DESERT);
         tiles.put(new MockLocation(1, 0), Terrain.FOREST);
         tiles.put(new MockLocation(1, 1), Terrain.WASTELAND);
+
+        players = new Player[] { new Player("Henk", Terrain.WASTELAND),
+                new Player("Jaap", Terrain.FOREST) };
 
     }
 
@@ -28,6 +32,13 @@ public class MockTerraMystica implements ITerraMystica {
         });
     }
 
+    public MockTerraMystica(Player[] players, Terrain[] terrains,
+            int rowLength) {
+        this(terrains, rowLength);
+        this.players = players;
+        this.players[0].switchTurn();
+    }
+
     public int[][] getTileLocations() {
         return tiles.keySet().stream().sorted((i, j) -> i.compare(j))
                 .map(t -> t.toArray()).toArray(int[][]::new);
@@ -35,6 +46,10 @@ public class MockTerraMystica implements ITerraMystica {
 
     public Terrain getTileTerrain(int[] location) {
         return tiles.get(new MockLocation(location[0], location[1]));
+    }
+
+    public Player[] getPlayers() {
+        return players;
     }
 
 }
