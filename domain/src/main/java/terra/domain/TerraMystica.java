@@ -16,6 +16,8 @@ public class TerraMystica implements ITerraMystica {
                         TileLocation.fromBoardIndex(i, this.boardSize),
                         terrains[i]))
                 .toArray(Tile[]::new);
+        Arrays.stream(this.tiles)
+                .forEach(t -> t.setAdjacent(Arrays.asList(tiles)));
         this.players = players;
     }
 
@@ -32,6 +34,10 @@ public class TerraMystica implements ITerraMystica {
 
     public Player[] getPlayers() {
         return players;
+    }
+
+    protected Tile[] getTiles() {
+        return tiles;
     }
 
 }
