@@ -36,6 +36,7 @@ public class MockTerraMystica implements ITerraMystica {
             int rowLength) {
         this(terrains, rowLength);
         this.players = players;
+        this.players[0].switchTurn();
     }
 
     public int[][] getTileLocations() {

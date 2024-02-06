@@ -7,10 +7,12 @@ public class PlayerDTO {
 
     private String name;
     private Terrain terrain;
+    private boolean turn;
 
     public PlayerDTO(Player player) {
         this.name = player.getName();
         this.terrain = player.getTerrain();
+        this.turn = player.hasTurn();
     }
 
     public String getName() {
@@ -19,6 +21,10 @@ public class PlayerDTO {
 
     public Terrain getTerrain() {
         return this.terrain;
+    }
+
+    public boolean getTurn() {
+        return this.turn;
     }
 
 }
