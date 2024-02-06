@@ -14,7 +14,7 @@
         computed: {
             listCSS() {
                 return {
-                    '--player-count': gameState.state.players.length
+                    '--column-amount': gameState.state.players.length + 1
                 }
             }
         }
@@ -26,7 +26,8 @@
 .playerList {
     display: grid;
     list-style-type: none;
-    grid-template-columns: repeat(var(--player-count), 1fr);
+    grid-template-columns: repeat(calc(var(--column-amount)), 1fr);
+    grid-template-rows: repeat(3, 1fr);
     grid-gap: 5%;
 }
 </style>

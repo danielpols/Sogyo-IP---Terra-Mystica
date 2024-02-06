@@ -17,7 +17,9 @@
         computed: {
             playerCSS() {
                 return {
-                    '--bg-color': tileColors(this.player.terrain)
+                    '--bg-color': tileColors(this.player.terrain),
+                    '--player-span-col' : this.player.turn ? 2 : 1,
+                    '--player-span-row' : this.player.turn ? 3 : 2
                 }
             }
         }
@@ -32,6 +34,8 @@
     color: black;
     width: 100%;
     padding-bottom: 40%;
+    grid-column-end: span var(--player-span-col);
+    grid-row-end: span var(--player-span-row);
 }
 
 .playerBoard {

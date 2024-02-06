@@ -18,14 +18,12 @@
 <style scoped>
 .gameScreen {
     display: inline-block;
-    height: 80%;
-    width: 80%;
+    width: 60%;
 }
 
 .playerScreen {
     display: inline-block;
-    height: 40%;
-    width: 80%;
+    width: 70%;
 }
 </style>
 
