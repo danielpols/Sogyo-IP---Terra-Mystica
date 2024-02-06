@@ -6,4 +6,6 @@ public interface ITerraMystica {
 
     Terrain getTileTerrain(int[] location);
 
+    Player[] getPlayers();
+
 }
