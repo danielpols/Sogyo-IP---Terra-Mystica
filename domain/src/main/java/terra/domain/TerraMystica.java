@@ -7,6 +7,7 @@ public class TerraMystica implements ITerraMystica {
 
     private final int boardSize;
     private Tile[] tiles;
+    private Player[] players;
 
     public TerraMystica(Player[] players, Terrain[] terrains, int boardSize) {
         this.boardSize = boardSize;
@@ -15,6 +16,7 @@ public class TerraMystica implements ITerraMystica {
                         TileLocation.fromBoardIndex(i, this.boardSize),
                         terrains[i]))
                 .toArray(Tile[]::new);
+        this.players = players;
     }
 
     public int[][] getTileLocations() {
@@ -29,7 +31,7 @@ public class TerraMystica implements ITerraMystica {
     }
 
     public Player[] getPlayers() {
-        return null;
+        return players;
     }
 
 }
