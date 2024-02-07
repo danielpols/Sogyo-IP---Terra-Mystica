@@ -41,8 +41,11 @@ public class Tile {
     }
 
     private Tile findTile(TileLocation target) {
-        return getAllTiles().stream().filter(t -> t.location.equals(target))
-                .findFirst().get();
+        return target.equals(location) ? this
+                : adjacent.stream()
+                        .filter(t -> t.getLocation().distance(target) < location
+                                .distance(target))
+                        .findAny().get().findTile(target);
     }
 
     private HashSet<Tile> getAllTiles() {
@@ -107,5 +110,15 @@ record TileLocation(int row, int col) {
         }
 
         return false;
+    }
+
+    protected int distance(TileLocation other) {
+        int rowDiff = Math.abs(row - other.row);
+        int halfColDiff = Math.abs(2 * col + (row % 2 == 0 ? 0 : 1)
+                - (2 * other.col + (other.row % 2 == 0 ? 0 : 1)));
+        if (halfColDiff <= rowDiff) {
+            return rowDiff;
+        }
+        return (halfColDiff - rowDiff) / 2 + rowDiff;
     }
 }

@@ -1,6 +1,7 @@
 package terra.domain;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -35,5 +36,18 @@ public class TileLocationTest {
             assertTrue(testOdd.isAdjacentTo(t));
         })));
         assertFalse(testOdd.isAdjacentTo(new TileLocation(3, 3)));
+    }
+
+    @Test
+    public void testHexDistance() {
+        TileLocation target = new TileLocation(5, 2);
+        TileLocation source1 = new TileLocation(2, 2);
+        TileLocation source2 = new TileLocation(5, 8);
+        TileLocation source3 = new TileLocation(6, 4);
+
+        assertEquals(3, source1.distance(target));
+        assertEquals(6, source2.distance(target));
+        assertEquals(2, source3.distance(target));
+        assertEquals(8, source1.distance(source2));
     }
 }
