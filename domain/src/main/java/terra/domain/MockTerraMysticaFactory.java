@@ -8,14 +8,14 @@ public class MockTerraMysticaFactory implements ITerraMysticaFactory {
 
     @Override
     public ITerraMystica startGame(List<String> names,
-            List<Terrain> playerTerrains, Terrain[] terrains) {
-        if (terrains == null) {
+            List<Terrain> playerTerrains, Terrain[] board) {
+        if (board == null) {
             return new MockTerraMystica();
         }
         if (names == null) {
-            return new MockTerraMystica(terrains, BOARD_SIZE);
+            return new MockTerraMystica(board, BOARD_SIZE);
         }
-        return new MockTerraMystica(new Player(names, playerTerrains), terrains,
+        return new MockTerraMystica(new Player(names, playerTerrains), board,
                 BOARD_SIZE);
     }
 
