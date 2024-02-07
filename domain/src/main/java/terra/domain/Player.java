@@ -5,25 +5,24 @@ import java.util.List;
 
 public class Player {
 
-    private String name;
-    private Terrain terrain;
+    private final String name;
+    private final Terrain terrain;
     private boolean turn;
-    private Player nextPlayer;
+    private final Player nextPlayer;
 
     public Player(String name, Terrain terrain) {
         this.name = name;
         this.terrain = terrain;
         this.turn = false;
+        this.nextPlayer = null;
     }
 
     public Player(List<String> names, List<Terrain> terrains) {
         this.name = names.get(0);
         this.terrain = terrains.get(0);
         this.turn = true;
-        if (names.size() > 1) {
-            this.nextPlayer = new Player(names.subList(1, names.size()),
-                    terrains.subList(1, terrains.size()), this);
-        }
+        this.nextPlayer = new Player(names.subList(1, names.size()),
+                terrains.subList(1, terrains.size()), this);
     }
 
     public Player(List<String> names, List<Terrain> terrains, Player player) {
