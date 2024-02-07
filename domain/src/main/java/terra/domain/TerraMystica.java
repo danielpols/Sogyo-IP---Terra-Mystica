@@ -7,18 +7,18 @@ public class TerraMystica implements ITerraMystica {
 
     private final int boardSize;
     private Tile rootTile;
-    private Player[] players;
+    private Player player;
 
-    public TerraMystica(Player[] players, Terrain[] terrains, int boardSize) {
+    public TerraMystica(Player player, Terrain[] board, int boardSize) {
         this.boardSize = boardSize;
-        List<Tile> tiles = IntStream.range(0, terrains.length)
+        List<Tile> tiles = IntStream.range(0, board.length)
                 .mapToObj(i -> new Tile(
                         TileLocation.fromBoardIndex(i, this.boardSize),
-                        terrains[i]))
+                        board[i]))
                 .toList();
         tiles.stream().forEach(t -> t.setAdjacent(tiles));
         this.rootTile = tiles.get(0);
-        this.players = players;
+        this.player = player;
     }
 
     public int[][] getTileLocations() {
@@ -30,7 +30,7 @@ public class TerraMystica implements ITerraMystica {
     }
 
     public Player[] getPlayers() {
-        return players;
+        return player.getAllPlayers().toArray(Player[]::new);
     }
 
     protected List<Tile> getTiles() {
