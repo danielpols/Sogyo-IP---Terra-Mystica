@@ -48,7 +48,9 @@
                     Accept: "application/json",
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(this.playerList)
+                body: JSON.stringify({
+                    players: this.playerList
+                })
                 }).then(response => response.json())
                 .then(data => {console.log("Success!"); gameState.state = data})
                 .catch(error => console.log(error));

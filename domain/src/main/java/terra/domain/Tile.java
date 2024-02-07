@@ -50,16 +50,15 @@ public class Tile {
 
     private HashSet<Tile> getAllTiles() {
         HashSet<Tile> tiles = new HashSet<Tile>();
-        return getAllTiles(tiles);
+        getAllTiles(tiles);
+        return tiles;
     }
 
-    private HashSet<Tile> getAllTiles(HashSet<Tile> set) {
-        if (set.contains(this)) {
-            return set;
+    private void getAllTiles(HashSet<Tile> set) {
+        if (!set.contains(this)) {
+            set.add(this);
+            adjacent.forEach(t -> t.getAllTiles(set));
         }
-        set.add(this);
-        adjacent.forEach(t -> t.getAllTiles(set));
-        return set;
     }
 
     protected TileLocation getLocation() {
