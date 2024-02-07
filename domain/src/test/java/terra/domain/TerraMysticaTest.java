@@ -75,7 +75,7 @@ public class TerraMysticaTest {
 
         game.passTurn();
         assertEquals(names.get(1), Arrays.stream(game.getPlayers())
-                .filter(p -> p.hasTurn()).findAny());
+                .filter(p -> p.hasTurn()).findAny().get().getName());
     }
 
 }
