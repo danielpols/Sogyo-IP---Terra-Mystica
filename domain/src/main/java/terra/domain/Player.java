@@ -10,13 +10,6 @@ public class Player {
     private boolean turn;
     private final Player nextPlayer;
 
-    public Player(String name, Terrain terrain) {
-        this.name = name;
-        this.terrain = terrain;
-        this.turn = false;
-        this.nextPlayer = null;
-    }
-
     public Player(List<String> names, List<Terrain> terrains) {
         this.name = names.get(0);
         this.terrain = terrains.get(0);
@@ -59,10 +52,6 @@ public class Player {
 
     public Player getNextPlayer() {
         return nextPlayer;
-    }
-
-    public void switchTurn() {
-        turn = !turn;
     }
 
     public String getName() {
