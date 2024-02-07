@@ -1,6 +1,5 @@
 package terra.api.controllers;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,10 +13,9 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import terra.api.models.GameDTO;
-import terra.api.models.StartPlayerDTO;
+import terra.api.models.StartGameDTO;
 import terra.domain.ITerraMystica;
 import terra.domain.ITerraMysticaFactory;
-import terra.domain.Player;
 import terra.persistence.ITerraMysticaRepository;
 
 @Path("/terra/api")
@@ -47,7 +45,7 @@ public class TerraController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGamestate(@Context HttpServletRequest request) {
 
-        ITerraMystica game = factory.startGame(null,
+        ITerraMystica game = factory.startGame(null, null,
                 repository.getStartingTerrain());
 
         GameDTO output = new GameDTO(game);
@@ -60,7 +58,7 @@ public class TerraController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response start(@Context HttpServletRequest request,
-            StartPlayerDTO[] body) {
+            StartGameDTO body) {
         System.out.println("Call made to /start");
 
         // Create HTTP session.
@@ -72,11 +70,8 @@ public class TerraController {
         // Save the ID in the HTTP session.
         session.setAttribute("gameId", gameId);
 
-        ITerraMystica game = factory
-                .startGame(
-                        Arrays.stream(body).map(p -> p.toPlayer())
-                                .toArray(Player[]::new),
-                        repository.getStartingTerrain());
+        ITerraMystica game = factory.startGame(body.getStartingNames(),
+                body.getStartingTerrains(), repository.getStartingTerrain());
 
         repository.saveGame(gameId, game);
 

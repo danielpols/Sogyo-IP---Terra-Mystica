@@ -1,12 +1,13 @@
 package terra.domain;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.IntStream;
 
 public class MockTerraMystica implements ITerraMystica {
 
     HashMap<MockLocation, Terrain> tiles;
-    Player[] players;
+    Player player;
 
     public MockTerraMystica() {
         tiles = new HashMap<MockLocation, Terrain>();
@@ -15,8 +16,8 @@ public class MockTerraMystica implements ITerraMystica {
         tiles.put(new MockLocation(1, 0), Terrain.FOREST);
         tiles.put(new MockLocation(1, 1), Terrain.WASTELAND);
 
-        players = new Player[] { new Player("Henk", Terrain.WASTELAND),
-                new Player("Jaap", Terrain.FOREST) };
+        player = new Player(Arrays.asList("Henk", "Jaap"),
+                Arrays.asList(Terrain.WASTELAND, Terrain.FOREST));
 
     }
 
@@ -32,11 +33,9 @@ public class MockTerraMystica implements ITerraMystica {
         });
     }
 
-    public MockTerraMystica(Player[] players, Terrain[] terrains,
-            int rowLength) {
+    public MockTerraMystica(Player player, Terrain[] terrains, int rowLength) {
         this(terrains, rowLength);
-        this.players = players;
-        this.players[0].switchTurn();
+        this.player = player;
     }
 
     public int[][] getTileLocations() {
@@ -49,7 +48,7 @@ public class MockTerraMystica implements ITerraMystica {
     }
 
     public Player[] getPlayers() {
-        return players;
+        return player.getAllPlayers().toArray(Player[]::new);
     }
 
 }

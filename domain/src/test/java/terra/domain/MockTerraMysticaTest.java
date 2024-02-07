@@ -17,7 +17,7 @@ public class MockTerraMysticaTest {
     @BeforeAll
     public static void intialise() {
         ITerraMysticaFactory factory = new MockTerraMysticaFactory();
-        mock = factory.startGame(null, null);
+        mock = factory.startGame(null, null, null);
     }
 
     @Test
