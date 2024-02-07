@@ -1,12 +1,13 @@
 <script setup>
-    import { tileColors } from '@/global';
+    import { gameState, tileColors } from '@/global';
 </script>
 
 <template>
     <li class="playerItem" :style="playerCSS">
         <div class="playerBoard">
             {{ player.name }} <br/>
-            {{ player.terrain }}
+            {{ player.terrain }} <br/>
+            <button v-if="player.turn" type="button" @click="passTurn">Pass</button>
         </div>
     </li>
 </template>
@@ -14,6 +15,14 @@
 <script>
     export default {
         props: ['player'],
+        methods: {
+            async passTurn() {
+                await fetch('terra/api/pass')
+                .then(response => response.json())
+                .then(data => {console.log(this.player.name + " passed turn."); gameState.state = data})
+                .catch(error => console.log(error));
+            }
+        },
         computed: {
             playerCSS() {
                 return {

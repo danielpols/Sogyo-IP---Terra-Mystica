@@ -33,6 +33,10 @@ public class TerraMystica implements ITerraMystica {
         return player.getAllPlayers().toArray(Player[]::new);
     }
 
+    public void passTurn() {
+        player.getTurnPlayer().passTurn();
+    }
+
     protected List<Tile> getTiles() {
         return rootTile.getTileList();
     }
