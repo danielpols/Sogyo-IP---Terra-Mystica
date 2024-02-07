@@ -28,4 +28,28 @@ public class PlayerTest {
         assertSame(player, player.getNextPlayer().getTurnPlayer());
     }
 
+    @Test
+    public void testActivePlayerCanPass() {
+        List<String> names = Arrays.asList("Henk", "Jaap", "Piet");
+        List<Terrain> terrains = Arrays.asList(Terrain.DESERT, Terrain.PLAINS,
+                Terrain.SWAMP);
+        Player player = new Player(names, terrains);
+        assertSame(player, player.getTurnPlayer());
+        player.getTurnPlayer().passTurn();
+        assertSame(player.getNextPlayer(), player.getTurnPlayer());
+        player.getTurnPlayer().getNextPlayer().passTurn();
+        assertSame(player.getNextPlayer(), player.getTurnPlayer());
+    }
+
+    @Test
+    public void testOnlyOneActivePlayer() {
+        List<String> names = Arrays.asList("Henk", "Jaap", "Piet");
+        List<Terrain> terrains = Arrays.asList(Terrain.DESERT, Terrain.PLAINS,
+                Terrain.SWAMP);
+        Player player = new Player(names, terrains);
+        player.getTurnPlayer().passTurn();
+        assertEquals(1, player.getAllPlayers().stream().filter(p -> p.hasTurn())
+                .count());
+    }
+
 }

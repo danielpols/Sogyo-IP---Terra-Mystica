@@ -61,4 +61,21 @@ public class TerraMysticaTest {
                         .toArray(String[]::new));
     }
 
+    @Test
+    public void testPassTurn() {
+
+        List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
+                "John");
+        List<Terrain> playerTerrains = Arrays.asList(Terrain.SWAMP,
+                Terrain.PLAINS, Terrain.MOUNTAINS, Terrain.DESERT);
+        Terrain[] terrains = { Terrain.RIVER, Terrain.DESERT, Terrain.FOREST,
+                Terrain.WASTELAND, Terrain.LAKE };
+        ITerraMystica game = new TerraMysticaFactory().startGame(names,
+                playerTerrains, terrains);
+
+        game.passTurn();
+        assertEquals(names.get(1), Arrays.stream(game.getPlayers())
+                .filter(p -> p.hasTurn()).findAny());
+    }
+
 }

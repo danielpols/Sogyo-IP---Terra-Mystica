@@ -39,20 +39,6 @@ public class TerraController {
         return Response.status(200).entity("Hi").build();
     }
 
-    @Path("/get-gamestate")
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getGamestate(@Context HttpServletRequest request) {
-
-        ITerraMystica game = factory.startGame(null, null,
-                repository.getStartingTerrain());
-
-        GameDTO output = new GameDTO(game);
-
-        return Response.status(200).entity(output).build();
-    }
-
     @Path("/start")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -61,13 +47,8 @@ public class TerraController {
             StartGameDTO body) {
         System.out.println("Call made to /start");
 
-        // Create HTTP session.
         HttpSession session = request.getSession(true);
-
-        // Create a unique ID for this game.
         String gameId = UUID.randomUUID().toString();
-
-        // Save the ID in the HTTP session.
         session.setAttribute("gameId", gameId);
 
         ITerraMystica game = factory.startGame(body.getStartingNames(),
@@ -77,9 +58,25 @@ public class TerraController {
 
         // Use the game to create a DTO.
         GameDTO output = new GameDTO(game);
-
-        // Send DTO back in response.
         return Response.status(200).entity(output).build();
+    }
+
+    @Path("/pass")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response pass(@Context HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        String gameId = (String) session.getAttribute("gameId");
+
+        ITerraMystica game = repository.loadGame(gameId);
+
+        game.passTurn();
+
+        repository.saveGame(gameId, game);
+
+        GameDTO output = new GameDTO(game);
+        return Response.status(200).entity(output).build();
+
     }
 
     @Path("/play")

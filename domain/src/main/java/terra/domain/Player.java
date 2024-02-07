@@ -50,6 +50,19 @@ public class Player {
         return nextPlayer.getTurnPlayer();
     }
 
+    public void passTurn() {
+        if (turn) {
+            switchTurn();
+        }
+    }
+
+    private void switchTurn() {
+        if (turn) {
+            nextPlayer.switchTurn();
+        }
+        turn = !turn;
+    }
+
     public Player getNextPlayer() {
         return nextPlayer;
     }

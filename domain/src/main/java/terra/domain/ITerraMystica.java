@@ -8,4 +8,6 @@ public interface ITerraMystica {
 
     Player[] getPlayers();
 
+    void passTurn();
+
 }
