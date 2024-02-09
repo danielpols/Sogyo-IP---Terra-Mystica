@@ -77,18 +77,6 @@ public class Tile {
         }
     }
 
-    protected TileLocation getLocation() {
-        return location;
-    }
-
-    protected Terrain getTerrain() {
-        return terrain;
-    }
-
-    protected List<Tile> getAdjacent() {
-        return adjacent;
-    }
-
 }
 
 record TileLocation(int row, int col) {

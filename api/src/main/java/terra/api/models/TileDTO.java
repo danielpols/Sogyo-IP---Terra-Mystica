@@ -1,5 +1,6 @@
 package terra.api.models;
 
+import terra.domain.Building;
 import terra.domain.ITerraMystica;
 import terra.domain.Terrain;
 
@@ -7,10 +8,12 @@ public class TileDTO {
 
     private int[] location;
     private Terrain terrain;
+    private Building building;
 
     public TileDTO(ITerraMystica game, int[] location) {
         this.location = new int[] { location[0], location[1] };
         this.terrain = game.getTileTerrain(location);
+        this.building = game.getTileBuilding(location);
     }
 
     public int[] getLocation() {
@@ -19,6 +22,10 @@ public class TileDTO {
 
     public Terrain getTerrain() {
         return terrain;
+    }
+
+    public Building getBuilding() {
+        return building;
     }
 
 }

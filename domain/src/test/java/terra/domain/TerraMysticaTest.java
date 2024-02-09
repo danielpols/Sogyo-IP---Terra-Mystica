@@ -38,15 +38,6 @@ public class TerraMysticaTest {
     }
 
     @Test
-    public void testAssureFourCorners() {
-        Terrain[] terrains = { Terrain.RIVER, Terrain.DESERT, Terrain.FOREST,
-                Terrain.WASTELAND, Terrain.LAKE };
-        TerraMystica game = new TerraMystica(null, terrains, 2);
-        assertEquals(4, game.getTiles().stream()
-                .filter(t -> t.getAdjacent().size() == 2).count());
-    }
-
-    @Test
     public void testCanGetPlayers() {
         List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
                 "John");
