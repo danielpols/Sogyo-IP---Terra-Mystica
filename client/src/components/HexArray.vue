@@ -5,7 +5,7 @@
 
 <template>
     <ul class="tileList">
-        <Hex v-if="gameState.state.board" v-for="tile in gameState.state.board.tiles" :terrain="tile.terrain"/>
+        <Hex v-if="gameState.state.board" v-for="tile in gameState.state.board.tiles" :tile="tile"/>
     </ul>
 </template>
 

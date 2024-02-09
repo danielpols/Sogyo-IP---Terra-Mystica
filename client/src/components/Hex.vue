@@ -1,6 +1,11 @@
 <script setup>
     import '../css/hexcss.css'
     import { tileColors } from '@/global';
+    import Dwelling from './buildings/Dwelling.vue';
+    import TradingCity from './buildings/TradingCity.vue';
+    import Stronghold from './buildings/Stronghold.vue';
+    import Temple from './buildings/Temple.vue';
+    import Sanctuary from './buildings/Sanctuary.vue';
 </script>
 
 <template>
@@ -8,8 +13,8 @@
         <div class="tileContainer" :style="borderCSS">
             <div class="tileBorder">
                 <a class="tile">
-                    <button type="button" class="tileButton" @click="post" :style="buttonCSS" :disabled="terrain=='RIVER'"
-                    >{{ terrain }}</button>
+                    <button type="button" class="tileButton" @click="post" :style="buttonCSS" :disabled="tile.terrain=='RIVER'"
+                    ><component :is="building"/></button>
                 </a>
             </div>
         </div>
@@ -18,7 +23,12 @@
 
 <script>
   export default {
-    props: ['terrain'],
+    props: ['tile'],
+    data () {
+        return {
+            building: "Temple"
+        }
+    },
     methods: {
         async post() {
             await fetch('terra/api/log').then(response => response.text())
@@ -28,18 +38,25 @@
     },
     computed: {
         buttonCSS() {
-            var textColour = (this.terrain == "RIVER") ? "dimgrey" : "black";
+            var textColour = (this.tile.terrain == "RIVER") ? "dimgrey" : "black";
             return {
-                '--bg-color': tileColors(this.terrain),
+                '--bg-color': tileColors(this.tile.terrain),
                 '--text-color': textColour
             };
         },
         borderCSS() {
-            var borderColour = (this.terrain == "RIVER") ? "transparent" : "white";
+            var borderColour = (this.tile.terrain == "RIVER") ? "transparent" : "white";
             return {
                 '--border-color': borderColour
             }
         }
+    },
+    components: {
+        Dwelling,
+        TradingCity,
+        Stronghold,
+        Temple,
+        Sanctuary
     }
   }
 </script>
