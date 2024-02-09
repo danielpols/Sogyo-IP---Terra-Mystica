@@ -33,16 +33,18 @@ De doelen van dit project opgeschreven in MoSCoW-format:
 - Must
   - [x] Een hexagonaal bord laten zien.
   - [x] Landtypes inlezen vanuit een database.
-  - [ ] Gebouwen op het bord kunnen bouwen.
-  - [ ] Landtype aanpassen tijdens het bouwen.
+  - [x] Gebouwen op het bord kunnen bouwen.
+  - [x] Landtype aanpassen tijdens het bouwen.
 - Should
-  - [ ] Tonen op welke zeshoeken een speler mag bouwen 
+  - [x] Tonen op welke zeshoeken een speler mag bouwen.
   - [ ] Laten zien hoe "moeilijk" het terraformen is.
   - [ ] Tonen welke speler het grootste aaneengesloten gebied bezit.
+  - [ ] Spelstatus kunnen coderen/decoderen vanuit een in-memory database (zonder het hele object op te slaan).
   - [ ] Laten zien wat de kosten van een actie zijn.
 - Could
   - [ ] Resource income implementeren.
   - [ ] Detecteren waar een stad gemaakt word (genoeg gebouwen naast elkaar).
+  - [ ] Connectie maken met een externe database.
   - [ ] Facties implementeren.
   - [ ] Bonuskaarten en scoretegels toevoegen
 - Won't
