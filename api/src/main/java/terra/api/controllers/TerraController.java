@@ -90,7 +90,7 @@ public class TerraController {
 
         ITerraMystica game = repository.loadGame(gameId);
 
-        game.build(body.getLocation());
+        game.build(body.getLocation(), body.getBuilding());
 
         repository.saveGame(gameId, game);
 

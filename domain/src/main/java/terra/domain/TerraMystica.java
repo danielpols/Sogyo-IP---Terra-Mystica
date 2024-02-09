@@ -41,8 +41,8 @@ public class TerraMystica implements ITerraMystica {
         player.getTurnPlayer().passTurn();
     }
 
-    public void build(int[] location) {
-        rootTile.build(TileLocation.fromArray(location));
+    public void build(int[] location, Building building) {
+        rootTile.build(TileLocation.fromArray(location), building);
     }
 
     protected List<Tile> getTiles() {

@@ -42,13 +42,13 @@ public class Tile {
         return location.isAdjacentTo(other.location);
     }
 
-    protected void build(TileLocation target) {
-        findTile(target).build();
+    protected void build(TileLocation target, Building newBuilding) {
+        findTile(target).build(newBuilding);
     }
 
-    private void build() {
-        if (building.equals(Building.NONE)) {
-            building = Building.DWELLING;
+    private void build(Building newBuilding) {
+        if (building.upgradesTo(newBuilding)) {
+            building = newBuilding;
         }
     }
 

@@ -12,6 +12,6 @@ public interface ITerraMystica {
 
     void passTurn();
 
-    void build(int[] location);
+    void build(int[] location, Building building);
 
 }
