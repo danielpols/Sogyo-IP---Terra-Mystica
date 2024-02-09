@@ -6,8 +6,12 @@ public interface ITerraMystica {
 
     Terrain getTileTerrain(int[] location);
 
+    Building getTileBuilding(int[] location);
+
     Player[] getPlayers();
 
     void passTurn();
+
+    void build(int[] location);
 
 }

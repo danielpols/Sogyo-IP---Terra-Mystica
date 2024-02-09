@@ -29,12 +29,20 @@ public class TerraMystica implements ITerraMystica {
         return rootTile.getTileTerrain(TileLocation.fromArray(location));
     }
 
+    public Building getTileBuilding(int[] location) {
+        return rootTile.getTileBuilding(TileLocation.fromArray(location));
+    }
+
     public Player[] getPlayers() {
         return player.getAllPlayers().toArray(Player[]::new);
     }
 
     public void passTurn() {
         player.getTurnPlayer().passTurn();
+    }
+
+    public void build(int[] location) {
+        rootTile.build(TileLocation.fromArray(location));
     }
 
     protected List<Tile> getTiles() {

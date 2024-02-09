@@ -8,10 +8,12 @@ public class Tile {
     private final TileLocation location;
     private Terrain terrain;
     private List<Tile> adjacent;
+    private Building building;
 
     protected Tile(TileLocation location, Terrain terrain) {
         this.location = location;
         this.terrain = terrain;
+        this.building = building.NONE;
     }
 
     protected void setAdjacent(List<Tile> others) {
@@ -25,7 +27,11 @@ public class Tile {
     }
 
     protected Terrain getTileTerrain(TileLocation target) {
-        return findTile(target).getTerrain();
+        return findTile(target).terrain;
+    }
+
+    protected Building getTileBuilding(TileLocation target) {
+        return findTile(target).building;
     }
 
     protected List<Tile> getTileList() {
@@ -33,17 +39,27 @@ public class Tile {
     }
 
     protected boolean isAdjacentTo(Tile other) {
-        return location.isAdjacentTo(other.getLocation());
+        return location.isAdjacentTo(other.location);
+    }
+
+    protected void build(TileLocation target) {
+        findTile(target).build();
+    }
+
+    private void build() {
+        if (building.equals(Building.NONE)) {
+            building = Building.DWELLING;
+        }
     }
 
     private int compare(Tile other) {
-        return location.compare(other.getLocation());
+        return location.compare(other.location);
     }
 
     private Tile findTile(TileLocation target) {
         return target.equals(location) ? this
                 : adjacent.stream()
-                        .filter(t -> t.getLocation().distance(target) < location
+                        .filter(t -> t.location.distance(target) < location
                                 .distance(target))
                         .findAny().get().findTile(target);
     }

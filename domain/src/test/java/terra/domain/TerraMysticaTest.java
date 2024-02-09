@@ -78,4 +78,15 @@ public class TerraMysticaTest {
                 .filter(p -> p.hasTurn()).findAny().get().getName());
     }
 
+    @Test
+    public void testBuildAction() {
+        Terrain[] terrains = { Terrain.RIVER, Terrain.DESERT, Terrain.FOREST,
+                Terrain.WASTELAND, Terrain.LAKE };
+        ITerraMystica game = new TerraMystica(null, terrains, 2);
+
+        game.build(new int[] { 1, 0 });
+        assertEquals(Building.DWELLING,
+                game.getTileBuilding(new int[] { 1, 0 }));
+    }
+
 }
