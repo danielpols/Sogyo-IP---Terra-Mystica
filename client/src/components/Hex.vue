@@ -2,6 +2,10 @@
     import '../css/hexcss.css'
     import { tileColors } from '@/global';
     import Dwelling from './buildings/Dwelling.vue';
+    import TradingCity from './buildings/TradingCity.vue';
+    import Stronghold from './buildings/Stronghold.vue';
+    import Temple from './buildings/Temple.vue';
+    import Sanctuary from './buildings/Sanctuary.vue';
 </script>
 
 <template>
@@ -22,7 +26,7 @@
     props: ['tile'],
     data () {
         return {
-            building: "Dwelling"
+            building: "Temple"
         }
     },
     methods: {
@@ -48,7 +52,11 @@
         }
     },
     components: {
-        Dwelling
+        Dwelling,
+        TradingCity,
+        Stronghold,
+        Temple,
+        Sanctuary
     }
   }
 </script>
