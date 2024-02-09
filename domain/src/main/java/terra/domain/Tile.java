@@ -49,6 +49,7 @@ public class Tile {
 
     private void build(Building newBuilding, Player player) {
         if (isBuildable(player) && building.upgradesTo(newBuilding)) {
+            terrain = player.getTerrain();
             building = newBuilding;
         }
     }
@@ -58,6 +59,28 @@ public class Tile {
     }
 
     private boolean isBuildable(Player player) {
+        boolean sameTerrain = sameTerrainAs(player);
+
+        if (getAllTiles().stream().filter(t -> t.hasPlayerBuilding(player))
+                .count() < 2) {
+            return !hasBuilding() && sameTerrain;
+        }
+
+        boolean adjacentToPlayer = adjacent.stream()
+                .filter(t -> t.hasPlayerBuilding(player)).count() > 0;
+        return (hasBuilding() && sameTerrain)
+                || (!hasBuilding() && adjacentToPlayer);
+    }
+
+    private boolean hasPlayerBuilding(Player player) {
+        return hasBuilding() && sameTerrainAs(player);
+    }
+
+    private boolean hasBuilding() {
+        return !building.equals(Building.NONE);
+    }
+
+    private boolean sameTerrainAs(Player player) {
         return terrain.equals(player.getTerrain());
     }
 
