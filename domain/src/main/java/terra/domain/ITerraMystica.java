@@ -8,6 +8,8 @@ public interface ITerraMystica {
 
     Building getTileBuilding(int[] location);
 
+    boolean tileIsBuildable(int[] location);
+
     Player[] getPlayers();
 
     void passTurn();

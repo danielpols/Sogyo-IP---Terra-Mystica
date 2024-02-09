@@ -13,7 +13,7 @@ public class Tile {
     protected Tile(TileLocation location, Terrain terrain) {
         this.location = location;
         this.terrain = terrain;
-        this.building = building.NONE;
+        this.building = Building.NONE;
     }
 
     protected void setAdjacent(List<Tile> others) {
@@ -42,14 +42,23 @@ public class Tile {
         return location.isAdjacentTo(other.location);
     }
 
-    protected void build(TileLocation target, Building newBuilding) {
-        findTile(target).build(newBuilding);
+    protected void build(TileLocation target, Building newBuilding,
+            Player player) {
+        findTile(target).build(newBuilding, player);
     }
 
-    private void build(Building newBuilding) {
-        if (building.upgradesTo(newBuilding)) {
+    private void build(Building newBuilding, Player player) {
+        if (isBuildable(player) && building.upgradesTo(newBuilding)) {
             building = newBuilding;
         }
+    }
+
+    protected boolean isBuildable(TileLocation target, Player player) {
+        return findTile(target).isBuildable(player);
+    }
+
+    private boolean isBuildable(Player player) {
+        return terrain.equals(player.getTerrain());
     }
 
     private int compare(Tile other) {

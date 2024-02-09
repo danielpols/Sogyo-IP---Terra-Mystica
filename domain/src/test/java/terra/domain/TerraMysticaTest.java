@@ -3,6 +3,7 @@ package terra.domain;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -70,14 +71,23 @@ public class TerraMysticaTest {
     }
 
     @Test
-    public void testBuildAction() {
+    public void testTileIsBuildable() {
+        List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
+                "John");
+        List<Terrain> playerTerrains = Arrays.asList(Terrain.SWAMP,
+                Terrain.PLAINS, Terrain.MOUNTAINS, Terrain.DESERT);
         Terrain[] terrains = { Terrain.RIVER, Terrain.DESERT, Terrain.FOREST,
-                Terrain.WASTELAND, Terrain.LAKE };
-        ITerraMystica game = new TerraMystica(null, terrains, 2);
+                Terrain.WASTELAND, Terrain.SWAMP };
+        ITerraMystica game = new TerraMysticaFactory().startGame(names,
+                playerTerrains, terrains);
 
-        game.build(new int[] { 1, 0 }, Building.DWELLING);
+        assertTrue(game.tileIsBuildable(new int[] { 0, 4 }));
+
+        game.build(new int[] { 0, 4 }, Building.DWELLING);
+        game.build(new int[] { 0, 0 }, Building.DWELLING);
         assertEquals(Building.DWELLING,
-                game.getTileBuilding(new int[] { 1, 0 }));
+                game.getTileBuilding(new int[] { 0, 4 }));
+        assertEquals(Building.NONE, game.getTileBuilding(new int[] { 0, 0 }));
     }
 
 }
