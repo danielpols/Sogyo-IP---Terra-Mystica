@@ -3,6 +3,7 @@ package terra.domain;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,15 +39,6 @@ public class TerraMysticaTest {
     }
 
     @Test
-    public void testAssureFourCorners() {
-        Terrain[] terrains = { Terrain.RIVER, Terrain.DESERT, Terrain.FOREST,
-                Terrain.WASTELAND, Terrain.LAKE };
-        TerraMystica game = new TerraMystica(null, terrains, 2);
-        assertEquals(4, game.getTiles().stream()
-                .filter(t -> t.getAdjacent().size() == 2).count());
-    }
-
-    @Test
     public void testCanGetPlayers() {
         List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
                 "John");
@@ -76,6 +68,76 @@ public class TerraMysticaTest {
         game.passTurn();
         assertEquals(names.get(1), Arrays.stream(game.getPlayers())
                 .filter(p -> p.hasTurn()).findAny().get().getName());
+    }
+
+    @Test
+    public void testTileIsBuildable() {
+        List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
+                "John");
+        List<Terrain> playerTerrains = Arrays.asList(Terrain.SWAMP,
+                Terrain.PLAINS, Terrain.MOUNTAINS, Terrain.DESERT);
+        Terrain[] terrains = { Terrain.RIVER, Terrain.DESERT, Terrain.FOREST,
+                Terrain.WASTELAND, Terrain.SWAMP };
+        ITerraMystica game = new TerraMysticaFactory().startGame(names,
+                playerTerrains, terrains);
+
+        assertTrue(game.tileIsBuildable(new int[] { 0, 4 }));
+
+        game.build(new int[] { 0, 4 }, Building.DWELLING);
+        game.build(new int[] { 0, 0 }, Building.DWELLING);
+        assertEquals(Building.DWELLING,
+                game.getTileBuilding(new int[] { 0, 4 }));
+        assertEquals(Building.NONE, game.getTileBuilding(new int[] { 0, 0 }));
+    }
+
+    @Test
+    public void testTerrainTerraform() {
+        List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
+                "John");
+        List<Terrain> playerTerrains = Arrays.asList(Terrain.SWAMP,
+                Terrain.PLAINS, Terrain.MOUNTAINS, Terrain.DESERT);
+        Terrain[] terrains = { Terrain.SWAMP, Terrain.SWAMP, Terrain.FOREST,
+                Terrain.WASTELAND, Terrain.SWAMP };
+        ITerraMystica game = new TerraMysticaFactory().startGame(names,
+                playerTerrains, terrains);
+
+        game.build(new int[] { 0, 0 }, Building.DWELLING);
+        assertEquals(Building.DWELLING,
+                game.getTileBuilding(new int[] { 0, 0 }));
+
+        game.build(new int[] { 0, 1 }, Building.DWELLING);
+        assertEquals(Building.DWELLING,
+                game.getTileBuilding(new int[] { 0, 1 }));
+
+        game.build(new int[] { 0, 2 }, Building.DWELLING);
+        assertEquals(Building.DWELLING,
+                game.getTileBuilding(new int[] { 0, 2 }));
+        assertEquals(Terrain.SWAMP, game.getTileTerrain(new int[] { 0, 2 }));
+    }
+
+    @Test
+    public void testTerrainTerraformAcrossRiver() {
+        List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
+                "John");
+        List<Terrain> playerTerrains = Arrays.asList(Terrain.SWAMP,
+                Terrain.PLAINS, Terrain.MOUNTAINS, Terrain.DESERT);
+        Terrain[] terrains = { Terrain.SWAMP, Terrain.SWAMP, Terrain.RIVER,
+                Terrain.WASTELAND, Terrain.SWAMP };
+        ITerraMystica game = new TerraMysticaFactory().startGame(names,
+                playerTerrains, terrains);
+
+        game.build(new int[] { 0, 0 }, Building.DWELLING);
+        assertEquals(Building.DWELLING,
+                game.getTileBuilding(new int[] { 0, 0 }));
+
+        game.build(new int[] { 0, 1 }, Building.DWELLING);
+        assertEquals(Building.DWELLING,
+                game.getTileBuilding(new int[] { 0, 1 }));
+
+        game.build(new int[] { 0, 3 }, Building.DWELLING);
+        assertEquals(Building.DWELLING,
+                game.getTileBuilding(new int[] { 0, 3 }));
+        assertEquals(Terrain.SWAMP, game.getTileTerrain(new int[] { 0, 3 }));
     }
 
 }

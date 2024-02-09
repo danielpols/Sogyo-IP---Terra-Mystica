@@ -2,16 +2,19 @@ package terra.domain;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Tile {
 
     private final TileLocation location;
     private Terrain terrain;
     private List<Tile> adjacent;
+    private Building building;
 
     protected Tile(TileLocation location, Terrain terrain) {
         this.location = location;
         this.terrain = terrain;
+        this.building = Building.NONE;
     }
 
     protected void setAdjacent(List<Tile> others) {
@@ -25,7 +28,11 @@ public class Tile {
     }
 
     protected Terrain getTileTerrain(TileLocation target) {
-        return findTile(target).getTerrain();
+        return findTile(target).terrain;
+    }
+
+    protected Building getTileBuilding(TileLocation target) {
+        return findTile(target).building;
     }
 
     protected List<Tile> getTileList() {
@@ -33,17 +40,83 @@ public class Tile {
     }
 
     protected boolean isAdjacentTo(Tile other) {
-        return location.isAdjacentTo(other.getLocation());
+        return location.isAdjacentTo(other.location);
+    }
+
+    protected void build(TileLocation target, Building newBuilding,
+            Player player) {
+        findTile(target).build(newBuilding, player);
+    }
+
+    private void build(Building newBuilding, Player player) {
+        if (isBuildable(player) && building.upgradesTo(newBuilding)) {
+            terrain = player.getTerrain();
+            building = newBuilding;
+        }
+    }
+
+    protected boolean isBuildable(TileLocation target, Player player) {
+        return findTile(target).isBuildable(player);
+    }
+
+    private boolean isBuildable(Player player) {
+        if (terrain.equals(Terrain.RIVER)) {
+            return false;
+        }
+
+        boolean sameTerrain = sameTerrainAs(player);
+
+        if (getAllTiles().stream().filter(t -> t.hasPlayerBuilding(player))
+                .count() < 2) {
+            return !hasBuilding() && sameTerrain;
+        }
+
+        boolean indirectAdjacent = getAllIndirectAdjacentWithin(
+                player.getShippingRange() + 1).stream()
+                .filter(t -> t.hasPlayerBuilding(player)).findFirst()
+                .isPresent();
+        return (hasBuilding() && sameTerrain)
+                || (!hasBuilding() && indirectAdjacent);
+    }
+
+    private Set<Tile> getAllIndirectAdjacentWithin(int range) {
+        HashSet<Tile> set = new HashSet<Tile>();
+        getAllIndirectAdjacentWithin(range, set);
+        return set;
+    }
+
+    private void getAllIndirectAdjacentWithin(int range, Set<Tile> set) {
+        if (!set.contains(this)) {
+            set.add(this);
+        }
+        if (range > 0) {
+            set.addAll(adjacent);
+            adjacent.stream().filter(t -> t.terrain.equals(Terrain.RIVER))
+                    .forEach(t -> t.getAllIndirectAdjacentWithin(range - 1,
+                            set));
+        }
+    }
+
+    private boolean hasPlayerBuilding(Player player) {
+        return hasBuilding() && sameTerrainAs(player);
+    }
+
+    private boolean hasBuilding() {
+        return !building.equals(Building.NONE);
+    }
+
+    private boolean sameTerrainAs(Player player) {
+        return terrain.equals(player.getTerrain());
     }
 
     private int compare(Tile other) {
-        return location.compare(other.getLocation());
+        return location.compare(other.location);
     }
 
     private Tile findTile(TileLocation target) {
         return target.equals(location) ? this
                 : adjacent.stream()
-                        .filter(t -> t.getLocation().distance(target) < location
+                        .filter(t -> t.location.distance(target) < location
                                 .distance(target))
                         .findAny().get().findTile(target);
     }
@@ -59,18 +132,6 @@ public class Tile {
             set.add(this);
             adjacent.forEach(t -> t.getAllTiles(set));
         }
-    }
-
-    protected TileLocation getLocation() {
-        return location;
-    }
-
-    protected Terrain getTerrain() {
-        return terrain;
-    }
-
-    protected List<Tile> getAdjacent() {
-        return adjacent;
     }
 
 }

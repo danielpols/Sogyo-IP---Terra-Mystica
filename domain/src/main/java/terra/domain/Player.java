@@ -10,6 +10,8 @@ public class Player {
     private boolean turn;
     private final Player nextPlayer;
 
+    private int shippingRange = 1;
+
     public Player(List<String> names, List<Terrain> terrains) {
         this.name = names.get(0);
         this.terrain = terrains.get(0);
@@ -77,6 +79,10 @@ public class Player {
 
     public boolean hasTurn() {
         return turn;
+    }
+
+    public int getShippingRange() {
+        return shippingRange;
     }
 
 }

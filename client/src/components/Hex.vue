@@ -1,6 +1,8 @@
 <script setup>
     import '../css/hexcss.css'
-    import { tileColors } from '@/global';
+    import { shallowRef } from 'vue';
+    import { gameState, tileColors } from '@/global';
+    import None from './buildings/None.vue';
     import Dwelling from './buildings/Dwelling.vue';
     import TradingCity from './buildings/TradingCity.vue';
     import Stronghold from './buildings/Stronghold.vue';
@@ -13,8 +15,8 @@
         <div class="tileContainer" :style="borderCSS">
             <div class="tileBorder">
                 <a class="tile">
-                    <button type="button" class="tileButton" @click="post" :style="buttonCSS" :disabled="tile.terrain=='RIVER'"
-                    ><component :is="building"/></button>
+                    <button type="button" class="tileButton" @click="build" :style="buttonCSS" :disabled="tile.terrain=='RIVER'"
+                    ><component :is="icon"/></button>
                 </a>
             </div>
         </div>
@@ -26,14 +28,29 @@
     props: ['tile'],
     data () {
         return {
-            building: "Temple"
+            icon: "None"
         }
     },
     methods: {
-        async post() {
-            await fetch('terra/api/log').then(response => response.text())
-            .then(data => console.log(data))
+        async build() {
+            await fetch('terra/api/build', {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    location: this.tile.location,
+                    building: "DWELLING"
+                })
+            }).then(response => response.json())
+            .then(data => gameState.state = data)
             .catch(error => console.log(error));
+        },
+        updateIcon() {
+            if(this.tile.building == "DWELLING") {
+                this.icon = "Dwelling";
+            }
         }
     },
     computed: {
@@ -45,13 +62,20 @@
             };
         },
         borderCSS() {
-            var borderColour = (this.tile.terrain == "RIVER") ? "transparent" : "white";
+            var borderColour = this.tile.buildable ? "white" : "dimgrey";
+            if(this.tile.terrain == "RIVER") {
+                borderColour = "transparent";
+            }
             return {
                 '--border-color': borderColour
             }
         }
     },
+    beforeUpdate () {
+        this.updateIcon();
+    },
     components: {
+        None,
         Dwelling,
         TradingCity,
         Stronghold,
