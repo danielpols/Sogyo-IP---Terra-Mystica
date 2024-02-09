@@ -12,6 +12,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import terra.api.models.ActionDTO;
 import terra.api.models.GameDTO;
 import terra.api.models.StartGameDTO;
 import terra.domain.ITerraMystica;
@@ -79,20 +80,21 @@ public class TerraController {
 
     }
 
-    @Path("/play")
+    @Path("/build")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response play(@Context HttpServletRequest request, String body) {
-        // Retrieve HTTP session.
+    public Response build(@Context HttpServletRequest request, ActionDTO body) {
         HttpSession session = request.getSession(false);
-
-        // Retrieve game ID.
         String gameId = (String) session.getAttribute("gameId");
 
-        String output = "Hi";
+        ITerraMystica game = repository.loadGame(gameId);
 
-        // Send DTO back in response.
+        game.build(body.getLocation());
+
+        repository.saveGame(gameId, game);
+
+        GameDTO output = new GameDTO(game);
         return Response.status(200).entity(output).build();
     }
 }
