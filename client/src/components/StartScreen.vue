@@ -52,7 +52,7 @@
                     players: this.playerList
                 })
                 }).then(response => response.json())
-                .then(data => {console.log("Success!"); gameState.state = data})
+                .then(data => gameState.state = data)
                 .catch(error => console.log(error));
             },
             hasDuplicates(array) {
