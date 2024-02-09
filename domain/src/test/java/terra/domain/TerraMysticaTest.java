@@ -75,7 +75,7 @@ public class TerraMysticaTest {
                 Terrain.WASTELAND, Terrain.LAKE };
         ITerraMystica game = new TerraMystica(null, terrains, 2);
 
-        game.build(new int[] { 1, 0 });
+        game.build(new int[] { 1, 0 }, Building.DWELLING);
         assertEquals(Building.DWELLING,
                 game.getTileBuilding(new int[] { 1, 0 }));
     }
