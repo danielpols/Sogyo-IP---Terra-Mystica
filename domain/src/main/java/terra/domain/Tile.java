@@ -2,6 +2,7 @@ package terra.domain;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Tile {
 
@@ -59,6 +60,10 @@ public class Tile {
     }
 
     private boolean isBuildable(Player player) {
+        if (terrain.equals(Terrain.RIVER)) {
+            return false;
+        }
+
         boolean sameTerrain = sameTerrainAs(player);
 
         if (getAllTiles().stream().filter(t -> t.hasPlayerBuilding(player))
@@ -66,10 +71,30 @@ public class Tile {
             return !hasBuilding() && sameTerrain;
         }
 
-        boolean adjacentToPlayer = adjacent.stream()
-                .filter(t -> t.hasPlayerBuilding(player)).count() > 0;
+        boolean indirectAdjacent = getAllIndirectAdjacentWithin(
+                player.getShippingRange() + 1).stream()
+                .filter(t -> t.hasPlayerBuilding(player)).findFirst()
+                .isPresent();
         return (hasBuilding() && sameTerrain)
-                || (!hasBuilding() && adjacentToPlayer);
+                || (!hasBuilding() && indirectAdjacent);
+    }
+
+    private Set<Tile> getAllIndirectAdjacentWithin(int range) {
+        HashSet<Tile> set = new HashSet<Tile>();
+        getAllIndirectAdjacentWithin(range, set);
+        return set;
+    }
+
+    private void getAllIndirectAdjacentWithin(int range, Set<Tile> set) {
+        if (!set.contains(this)) {
+            set.add(this);
+        }
+        if (range > 0) {
+            set.addAll(adjacent);
+            adjacent.stream().filter(t -> t.terrain.equals(Terrain.RIVER))
+                    .forEach(t -> t.getAllIndirectAdjacentWithin(range - 1,
+                            set));
+        }
     }
 
     private boolean hasPlayerBuilding(Player player) {

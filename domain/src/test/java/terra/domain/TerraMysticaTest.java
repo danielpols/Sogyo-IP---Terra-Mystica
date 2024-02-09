@@ -115,4 +115,29 @@ public class TerraMysticaTest {
         assertEquals(Terrain.SWAMP, game.getTileTerrain(new int[] { 0, 2 }));
     }
 
+    @Test
+    public void testTerrainTerraformAcrossRiver() {
+        List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
+                "John");
+        List<Terrain> playerTerrains = Arrays.asList(Terrain.SWAMP,
+                Terrain.PLAINS, Terrain.MOUNTAINS, Terrain.DESERT);
+        Terrain[] terrains = { Terrain.SWAMP, Terrain.SWAMP, Terrain.RIVER,
+                Terrain.WASTELAND, Terrain.SWAMP };
+        ITerraMystica game = new TerraMysticaFactory().startGame(names,
+                playerTerrains, terrains);
+
+        game.build(new int[] { 0, 0 }, Building.DWELLING);
+        assertEquals(Building.DWELLING,
+                game.getTileBuilding(new int[] { 0, 0 }));
+
+        game.build(new int[] { 0, 1 }, Building.DWELLING);
+        assertEquals(Building.DWELLING,
+                game.getTileBuilding(new int[] { 0, 1 }));
+
+        game.build(new int[] { 0, 3 }, Building.DWELLING);
+        assertEquals(Building.DWELLING,
+                game.getTileBuilding(new int[] { 0, 3 }));
+        assertEquals(Terrain.SWAMP, game.getTileTerrain(new int[] { 0, 3 }));
+    }
+
 }
