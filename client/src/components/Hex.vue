@@ -15,7 +15,7 @@
         <div class="tileContainer" :style="borderCSS">
             <div class="tileBorder">
                 <a class="tile">
-                    <button type="button" class="tileButton" @click="icon=shallowRef(Dwelling)" :style="buttonCSS" :disabled="tile.terrain=='RIVER'"
+                    <button type="button" class="tileButton" @click="build" :style="buttonCSS" :disabled="tile.terrain=='RIVER'"
                     ><component :is="icon"/></button>
                 </a>
             </div>
@@ -46,6 +46,11 @@
             }).then(response => response.json())
             .then(data => gameState.state = data)
             .catch(error => console.log(error));
+        },
+        updateIcon() {
+            if(this.tile.building == "DWELLING") {
+                this.icon = "Dwelling";
+            }
         }
     },
     computed: {
@@ -57,11 +62,17 @@
             };
         },
         borderCSS() {
-            var borderColour = (this.tile.terrain == "RIVER") ? "transparent" : "white";
+            var borderColour = this.tile.buildable ? "white" : "dimgrey";
+            if(this.tile.terrain == "RIVER") {
+                borderColour = "transparent";
+            }
             return {
                 '--border-color': borderColour
             }
         }
+    },
+    beforeUpdate () {
+        this.updateIcon();
     },
     components: {
         None,
