@@ -7,14 +7,8 @@
         <ul class="playerList">
             <li v-for="(player, i) in playerList" :key="player">
                 <input class="playerNameInput" type="text" @input="event => playerList[i].name = event.target.value" :placeholder="'Player ' + (i+1)">
-                <select class="playerTerrainInput" @input="event => playerList[i].terrain = event.target.value">
-                    <option value="PLAINS">Plains</option>
-                    <option value="SWAMP">Swamp</option>
-                    <option value="LAKE">Lake</option>
-                    <option value="FOREST">Forest</option>
-                    <option value="MOUNTAINS">Mountains</option>
-                    <option value="WASTELAND">Wasteland</option>
-                    <option value="DESERT">Desert</option>
+                <select class="playerTerrainInput" @input="event => playerList[i].terrain = event.target.value" v-model="player.terrain">
+                    <option v-for="terrain in terrainList" :value="terrain">{{ terrain.substring(0, 1) + terrain.substring(1).toLowerCase() }}</option>
                 </select>
                 <button v-if="playerList.length > 2" type="button" @click="playerList.splice(i, 1)">Remove</button>
             </li>
@@ -28,14 +22,15 @@
     export default {
         data () {
             return {
-                playerList: []
+                playerList: [],
+                terrainList: ["PLAINS", "SWAMP", "LAKE", "FOREST", "MOUNTAINS", "WASTELAND", "DESERT"]
             };
         },
         methods: {
             addPlayer() {
                 this.playerList.push({
                     name: "",
-                    terrain: "PLAINS"
+                    terrain: this.terrainList.filter(terrain => !this.getTerrains().includes(terrain))[0]
                 });
             },
             removePlayer(index) {
