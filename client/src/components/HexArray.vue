@@ -11,6 +11,10 @@
 
 <script>
 
+export default {
+    props: ['zoomLevel']
+}
+
 </script>
 
 <style scoped>
@@ -26,6 +30,7 @@
     margin-bottom: 60px;
     text-align: left;
     font-size: 0;
+    transform: scale(v-bind(zoomLevel));
 }
 </style>
 
