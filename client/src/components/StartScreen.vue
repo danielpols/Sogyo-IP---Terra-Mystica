@@ -6,7 +6,7 @@
     <div>
         <ul class="playerList">
             <li v-for="(player, i) in playerList" :key="player">
-                <input class="playerNameInput" type="text" @input="event => playerList[i].name = event.target.value">
+                <input class="playerNameInput" type="text" @input="event => playerList[i].name = event.target.value" :placeholder="'Player ' + (i+1)">
                 <select class="playerTerrainInput" @input="event => playerList[i].terrain = event.target.value">
                     <option value="PLAINS">Plains</option>
                     <option value="SWAMP">Swamp</option>
@@ -49,7 +49,7 @@
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    players: this.playerList
+                    players: this.getPlayerList()
                 })
                 }).then(response => response.json())
                 .then(data => gameState.state = data)
@@ -58,11 +58,14 @@
             hasDuplicates(array) {
                 return (array.filter((value, index) => array.indexOf(value) != index) != 0);
             },
+            getPlayerList() {
+                return this.playerList.map((player, i) => player.name ? player : {name: 'Player ' + (i+1), terrain: player.terrain})
+            },
             getNames() {
-                return this.playerList.map(player => player.name);
+                return this.getPlayerList().map(player => player.name);
             },
             getTerrains() {
-                return this.playerList.map(player => player.terrain);
+                return this.getPlayerList().map(player => player.terrain);
             },
             disableStart() {
                 if(this.getNames().filter(name => (name == '')).length > 0){
