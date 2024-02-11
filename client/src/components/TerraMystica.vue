@@ -4,8 +4,9 @@
 </script>
 
 <template>
-    <div class="gameScreen" @wheel.prevent="zoomBoard" @mousedown.left.capture="pan=true" @mouseup.left.capture="pan=false" v-on="pan ? {'mousemove': panBoard} : {}" ref="board">
-        <HexArray :zoomLevel="boardZoomLevel" :offsetX="boardOffset.x+'px'" :offsetY="boardOffset.y+'px'"/>
+    <div class="gameScreen" @wheel.prevent="zoomBoard" @mousedown.middle.capture="pan=true" @mouseup.middle.capture="pan=false" @mouseleave="pan=false"
+            v-on="pan ? {'mousemove': panBoard} : {}" ref="boardContainer">
+        <HexArray :zoomLevel="boardZoomLevel" :offsetX="boardOffset.x+'px'" :offsetY="boardOffset.y+'px'" ref="board"/>
     </div>
     <div class="playerScreen">
         <PlayerArray/>
@@ -35,17 +36,18 @@ export default {
             const scale = 1
             this.boardOffset.x += scale * event.movementX;
             this.boardOffset.y += scale * event.movementY;
-            if(this.boardOffset.x < -this.$refs.board.clientWidth/2) {
-                this.boardOffset.x = -this.$refs.board.clientWidth/2
+
+            const paddingX = Math.abs((this.$refs.boardContainer.clientWidth - this.$refs.board.$el.clientWidth * this.boardZoomLevel)/2);
+
+            const offsetY = this.$refs.board.$el.clientWidth * 0.0222; // offset from margin
+            const paddingY = Math.abs((this.$refs.boardContainer.clientHeight - (this.$refs.board.$el.clientHeight + offsetY) * this.boardZoomLevel)/2);
+
+            if(Math.abs(this.boardOffset.x) > paddingX) {
+                this.boardOffset.x = Math.sign(this.boardOffset.x) * paddingX;
             }
-            if(this.boardOffset.x > this.$refs.board.clientWidth/2) {
-                this.boardOffset.x = this.$refs.board.clientWidth/2
-            }
-            if(this.boardOffset.y < -this.$refs.board.clientHeight/2) {
-                this.boardOffset.y = -this.$refs.board.clientHeight/2
-            }
-            if(this.boardOffset.y > this.$refs.board.clientHeight/2) {
-                this.boardOffset.y = this.$refs.board.clientHeight/2
+
+            if(Math.abs(this.boardOffset.y) > paddingY) {
+                this.boardOffset.y = Math.sign(this.boardOffset.y) * paddingY;
             }
         }
     }
