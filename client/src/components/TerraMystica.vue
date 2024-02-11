@@ -25,6 +25,7 @@ export default {
     },
     methods: {
         zoomBoard(event) {
+            console.log(event.pageX - this.$refs.boardContainer.offsetLeft, event.pageY - this.$refs.boardContainer.offsetTop);
             this.boardZoomLevel *= 1-event.deltaY/1000;
             if(this.boardZoomLevel < 0.5) {
                 this.boardZoomLevel = 0.5;
