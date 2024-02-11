@@ -30,7 +30,7 @@ export default {
     margin-bottom: 60px;
     text-align: left;
     font-size: 0;
-    transform: scale(v-bind(zoomLevel)) translate(v-bind(offsetX), v-bind(offsetY));
+    transform: translate(v-bind(offsetX), v-bind(offsetY)) scale(v-bind(zoomLevel)) ;
 }
 </style>
 
