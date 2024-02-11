@@ -65,6 +65,10 @@
     font-size: 1vw;
 }
 
+.tileButton:disabled {
+    pointer-events: none;
+}
+
 .tileButton:hover:enabled {
     cursor: pointer;
     filter: brightness(0.7);

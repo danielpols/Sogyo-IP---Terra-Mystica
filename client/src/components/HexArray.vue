@@ -12,7 +12,7 @@
 <script>
 
 export default {
-    props: ['zoomLevel']
+    props: ['zoomLevel', 'offsetX', 'offsetY']
 }
 
 </script>
@@ -30,7 +30,7 @@ export default {
     margin-bottom: 60px;
     text-align: left;
     font-size: 0;
-    transform: scale(v-bind(zoomLevel));
+    transform: scale(v-bind(zoomLevel)) translate(v-bind(offsetX), v-bind(offsetY));
 }
 </style>
 
