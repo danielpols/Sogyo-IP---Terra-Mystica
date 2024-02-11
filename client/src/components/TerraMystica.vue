@@ -18,7 +18,8 @@ export default {
     data () {
         return {
             boardZoomLevel: 1,
-            boardOffset: {x: 0, y:0},
+            boardOffset: {x: 0, y: 0},
+            boardPanMargins: {x: 0, y: 0},
             pan: false
         }
     },
@@ -33,14 +34,15 @@ export default {
             }
         },
         panBoard(event) {
-            const scale = 1
-            this.boardOffset.x += scale * event.movementX;
-            this.boardOffset.y += scale * event.movementY;
+            this.boardOffset.x += event.movementX;
+            this.boardOffset.y += event.movementY;
 
             const paddingX = Math.abs((this.$refs.boardContainer.clientWidth - this.$refs.board.$el.clientWidth * this.boardZoomLevel)/2);
 
             const offsetY = this.$refs.board.$el.clientWidth * 0.0222; // offset from margin
             const paddingY = Math.abs((this.$refs.boardContainer.clientHeight - (this.$refs.board.$el.clientHeight + offsetY) * this.boardZoomLevel)/2);
+
+            console.log(this.boardPanMargins.x, this.boardPanMargins.y)
 
             if(Math.abs(this.boardOffset.x) > paddingX) {
                 this.boardOffset.x = Math.sign(this.boardOffset.x) * paddingX;
@@ -50,6 +52,10 @@ export default {
                 this.boardOffset.y = Math.sign(this.boardOffset.y) * paddingY;
             }
         }
+    },
+    mounted() {
+        this.boardPanMargins.x = this.$refs.boardContainer.clientWidth / 4;
+        this.boardPanMargins.y = this.$refs.boardContainer.clientHeight / 4;
     }
 }
 </script>
