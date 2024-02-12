@@ -17,7 +17,7 @@
     props: ['tile'],
     computed: {
         borderCSS() {
-            var borderColour = this.tile.buildable ? "white" : "dimgrey";
+            var borderColour = this.tile.buildable ? "white" : "grey";
             if(this.tile.terrain == "RIVER") {
                 borderColour = "transparent";
             }
