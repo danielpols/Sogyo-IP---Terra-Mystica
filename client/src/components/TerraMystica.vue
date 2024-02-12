@@ -25,7 +25,17 @@ export default {
     },
     methods: {
         zoomBoard(event) {
-            console.log(event.pageX - this.$refs.boardContainer.offsetLeft, event.pageY - this.$refs.boardContainer.offsetTop);
+            const topLeftX = (z) => this.$refs.board.$el.offsetLeft + this.boardOffset.x + this.$refs.board.$el.clientWidth*(1-z)/2;
+            const topLeftY = (z) => this.$refs.board.$el.offsetTop + this.boardOffset.y + this.$refs.board.$el.clientHeight*(1-z)/2;
+
+            const mouseX = (z) => (event.pageX - topLeftX(z))/z;    
+            const mouseY = (z) => (event.pageY - topLeftY(z))/z;
+
+            const centerX = topLeftX + this.$refs.board.$el.clientWidth/(2*this.boardZoomLevel);
+            const centerY = topLeftY + this.$refs.board.$el.clientHeight/(2*this.boardZoomLevel);
+            
+            const oldZoom = this.boardZoomLevel;
+
             this.boardZoomLevel *= 1-event.deltaY/1000;
             if(this.boardZoomLevel < 0.5) {
                 this.boardZoomLevel = 0.5;
@@ -33,6 +43,11 @@ export default {
             if(this.boardZoomLevel > 3) {
                 this.boardZoomLevel = 3;
             }
+
+            const dz = this.boardZoomLevel/oldZoom;
+            console.log(mouseX(this.boardZoomLevel), mouseY(this.boardZoomLevel));
+            this.boardOffset.x = -this.boardZoomLevel*mouseX(oldZoom) + (event.pageX-this.$refs.board.$el.offsetLeft-this.$refs.board.$el.clientWidth*(1-this.boardZoomLevel)/2);
+            this.boardOffset.y = -this.boardZoomLevel*mouseY(oldZoom) + (event.pageY-this.$refs.board.$el.offsetTop-this.$refs.board.$el.clientHeight*(1-this.boardZoomLevel)/2);
         },
         panBoard(event) {
             this.boardOffset.x += event.movementX;
