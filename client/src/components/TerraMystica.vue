@@ -78,7 +78,7 @@ export default {
     width: 60%;
     padding: 3%;
     border: 5px solid brown;
-    overflow: hidden    ;
+    overflow: hidden;
 }
 
 .playerScreen {

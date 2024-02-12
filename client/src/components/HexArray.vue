@@ -24,6 +24,7 @@ export default {
     display: grid;
     list-style-type: none;
     grid-template-columns: repeat(26, 1fr);
+    overflow: visible;
     margin: 0;
     padding: 0;
     width: 100%;
