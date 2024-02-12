@@ -11,6 +11,10 @@
 
 <script>
 
+export default {
+    props: ['zoomLevel', 'offsetX', 'offsetY']
+}
+
 </script>
 
 <style scoped>
@@ -20,12 +24,14 @@
     display: grid;
     list-style-type: none;
     grid-template-columns: repeat(26, 1fr);
+    overflow: visible;
     margin: 0;
     padding: 0;
     width: 100%;
-    margin-bottom: 60px;
+    margin-bottom: 2.22%;
     text-align: left;
     font-size: 0;
+    transform: translate(v-bind(offsetX), v-bind(offsetY)) scale(v-bind(zoomLevel)) ;
 }
 </style>
 

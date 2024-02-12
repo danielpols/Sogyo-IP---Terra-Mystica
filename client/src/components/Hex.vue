@@ -15,8 +15,8 @@
         <div class="tileContainer" :style="borderCSS">
             <div class="tileBorder">
                 <a class="tile">
-                    <button type="button" class="tileButton" @click="build" :style="buttonCSS" :disabled="tile.terrain=='RIVER'"
-                    ><component :is="icon"/></button>
+                    <button type="button" class="tileButton" @click="build" :style="buttonCSS" :disabled="!tile.buildable"
+                    :key="tile.building"><component :is="icon"/></button>
                 </a>
             </div>
         </div>

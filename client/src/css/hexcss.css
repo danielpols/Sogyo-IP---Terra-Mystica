@@ -7,6 +7,7 @@
     border-bottom: 1px solid transparent;
     width: 100%;
     padding-bottom: 86.602%;
+    pointer-events: none;
 }
 
 .tileListItem * {
@@ -24,6 +25,7 @@
 
 .tileContainer, .tileContainer * {
     position: absolute;
+    pointer-events: all;
 }
 
 .tileContainer {
@@ -36,7 +38,7 @@
     transform: rotate3d(0, 0, 1, -60deg) skewY(30deg);
 }
 
-.tileContainer:has(.tileButton:hover) {
+.tileContainer:has(.tileButton:hover:enabled) {
     background-color: transparent;
 }
 
@@ -63,6 +65,10 @@
     background-color: var(--bg-color);
     color: var(--text-color);
     font-size: 1vw;
+}
+
+.tileButton:disabled {
+    pointer-events: none;
 }
 
 .tileButton:hover:enabled {
