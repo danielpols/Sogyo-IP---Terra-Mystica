@@ -38,7 +38,7 @@
     transform: rotate3d(0, 0, 1, -60deg) skewY(30deg);
 }
 
-.tileContainer:has(.tileButton:hover) {
+.tileContainer:has(.tileButton:hover:enabled) {
     background-color: transparent;
 }
 
