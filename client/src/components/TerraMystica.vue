@@ -25,14 +25,11 @@ export default {
     },
     methods: {
         zoomBoard(event) {
-            const topLeftX = (z) => this.$refs.board.$el.offsetLeft + this.boardOffset.x + this.$refs.board.$el.clientWidth*(1-z)/2;
-            const topLeftY = (z) => this.$refs.board.$el.offsetTop + this.boardOffset.y + this.$refs.board.$el.clientHeight*(1-z)/2;
+            const unpannedDX = (z) => event.pageX-this.$refs.board.$el.offsetLeft-this.$refs.board.$el.clientWidth*(1-z)/2
+            const unpannedDY = (z) => event.pageY-this.$refs.board.$el.offsetTop-this.$refs.board.$el.clientHeight*(1-z)/2
 
-            const mouseX = (z) => (event.pageX - topLeftX(z))/z;    
-            const mouseY = (z) => (event.pageY - topLeftY(z))/z;
-
-            const centerX = topLeftX + this.$refs.board.$el.clientWidth/(2*this.boardZoomLevel);
-            const centerY = topLeftY + this.$refs.board.$el.clientHeight/(2*this.boardZoomLevel);
+            const mouseX = (z) => (unpannedDX(z) - this.boardOffset.x)/z;    
+            const mouseY = (z) => (unpannedDY(z) - this.boardOffset.y)/z;
             
             const oldZoom = this.boardZoomLevel;
 
@@ -44,10 +41,9 @@ export default {
                 this.boardZoomLevel = 3;
             }
 
-            const dz = this.boardZoomLevel/oldZoom;
             console.log(mouseX(this.boardZoomLevel), mouseY(this.boardZoomLevel));
-            this.boardOffset.x = -this.boardZoomLevel*mouseX(oldZoom) + (event.pageX-this.$refs.board.$el.offsetLeft-this.$refs.board.$el.clientWidth*(1-this.boardZoomLevel)/2);
-            this.boardOffset.y = -this.boardZoomLevel*mouseY(oldZoom) + (event.pageY-this.$refs.board.$el.offsetTop-this.$refs.board.$el.clientHeight*(1-this.boardZoomLevel)/2);
+            this.boardOffset.x = unpannedDX(this.boardZoomLevel)-this.boardZoomLevel*mouseX(oldZoom);
+            this.boardOffset.y = unpannedDY(this.boardZoomLevel)-this.boardZoomLevel*mouseY(oldZoom);
         },
         panBoard(event) {
             this.boardOffset.x += event.movementX;
