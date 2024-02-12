@@ -1,6 +1,5 @@
 <script setup>
     import '../css/hexcss.css'
-    import { shallowRef } from 'vue';
     import { gameState, tileColors } from '@/global';
     import None from './buildings/None.vue';
     import Dwelling from './buildings/Dwelling.vue';
@@ -11,14 +10,8 @@
 </script>
 
 <template>
-    <div class="tileContainer" :style="borderCSS">
-        <div class="tileBorder">
-            <a class="tile">
-                <button type="button" class="tileButton" @click="build" :style="buttonCSS" :disabled="!tile.buildable"
-                :key="tile.building"><component :is="icon"/></button>
-            </a>
-        </div>
-    </div>
+    <button type="button" class="tileButton" @click="build" :style="buttonCSS" :disabled="!tile.buildable"
+    :key="tile.building"><component :is="icon"/></button>
 </template>
 
 <script>
@@ -58,15 +51,6 @@
                 '--bg-color': tileColors(this.tile.terrain),
                 '--text-color': textColour
             };
-        },
-        borderCSS() {
-            var borderColour = this.tile.buildable ? "white" : "dimgrey";
-            if(this.tile.terrain == "RIVER") {
-                borderColour = "transparent";
-            }
-            return {
-                '--border-color': borderColour
-            }
         }
     },
     beforeUpdate () {

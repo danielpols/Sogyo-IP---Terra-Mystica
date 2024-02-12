@@ -1,12 +1,13 @@
 <script setup>
     import { gameState } from '@/global';
     import Hex from './Hex.vue';
+import HexContainer from './HexContainer.vue';
 </script>
 
 <template>
     <ul class="tileList">
         <li class="tileListItem" v-if="gameState.state.board" v-for="tile in gameState.state.board.tiles" >
-            <Hex :tile="tile"/>
+            <HexContainer :tile="tile"/>
         </li>
     </ul>
 </template>
