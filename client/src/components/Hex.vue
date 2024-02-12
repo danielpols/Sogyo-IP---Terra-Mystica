@@ -11,16 +11,14 @@
 </script>
 
 <template>
-    <li class="tileListItem">
-        <div class="tileContainer" :style="borderCSS">
-            <div class="tileBorder">
-                <a class="tile">
-                    <button type="button" class="tileButton" @click="build" :style="buttonCSS" :disabled="!tile.buildable"
-                    :key="tile.building"><component :is="icon"/></button>
-                </a>
-            </div>
+    <div class="tileContainer" :style="borderCSS">
+        <div class="tileBorder">
+            <a class="tile">
+                <button type="button" class="tileButton" @click="build" :style="buttonCSS" :disabled="!tile.buildable"
+                :key="tile.building"><component :is="icon"/></button>
+            </a>
         </div>
-    </li>
+    </div>
 </template>
 
 <script>

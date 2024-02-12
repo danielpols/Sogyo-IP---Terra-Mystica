@@ -1,27 +1,4 @@
-.tileListItem {
-    position: relative;
-    display: inline;
-    box-sizing: border-box;
-    grid-column-end: span 2;
-    outline: 1px solid transparent;
-    border-bottom: 1px solid transparent;
-    width: 100%;
-    padding-bottom: 86.602%;
-    pointer-events: none;
-}
 
-.tileListItem * {
-    margin: 0;
-    padding: 0;
-}
-
-.tileListItem:nth-child(25n+1) {
-    grid-column-start: 1;
-}
-
-.tileListItem:nth-child(25n+14) {
-    grid-column-start: 2;
-}
 
 .tileContainer, .tileContainer * {
     position: absolute;
