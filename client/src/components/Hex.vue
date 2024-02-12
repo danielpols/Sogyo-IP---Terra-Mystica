@@ -67,6 +67,24 @@
   }
 </script>
 
-<style scoped src="../css/hexcss.css">
+<style scoped>
+.tileButton {
+    border-width: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-size: 1vw;
+}
+
+.tileButton:disabled {
+    pointer-events: none;
+}
+
+.tileButton:hover:enabled {
+    cursor: pointer;
+    filter: brightness(0.7);
+}
 </style>
 
