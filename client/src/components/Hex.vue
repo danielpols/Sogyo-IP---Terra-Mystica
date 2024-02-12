@@ -1,11 +1,14 @@
 <script setup>
     import { gameState, tileColors } from '@/global';
 import Building from './Building.vue';
+import HexPopup from './HexPopup.vue';
 </script>
 
 <template>
-    <button type="button" class="tileButton" @click="build" :style="buttonCSS" :disabled="!tile.buildable"
-    :key="tile.building"><Building :icon="getIcon(tile.building)"/></button>
+    <button type="button" class="tileButton" @click="popup = !popup" :style="buttonCSS" :disabled="!tile.buildable"
+    :key="tile.building"><Building :icon="getIcon(tile.building)"/>
+        <HexPopup class="tilePopup" :style="popupCSS"/>
+    </button>
 </template>
 
 <script>
@@ -13,7 +16,7 @@ import Building from './Building.vue';
     props: ['tile'],
     data () {
         return {
-            icon: "None"
+            popup: false
         }
     },
     methods: {
@@ -43,6 +46,11 @@ import Building from './Building.vue';
                 '--bg-color': tileColors(this.tile.terrain),
                 '--text-color': textColour
             };
+        },
+        popupCSS() {
+            return {
+                '--popup-visibility': this.popup ? "visible" : "hidden"
+            }
         }
     }
   }
@@ -57,6 +65,8 @@ import Building from './Building.vue';
     background-color: var(--bg-color);
     color: var(--text-color);
     font-size: 1vw;
+
+    overflow: visible;
 }
 
 .tileButton:disabled {
@@ -66,6 +76,10 @@ import Building from './Building.vue';
 .tileButton:hover:enabled {
     cursor: pointer;
     filter: brightness(0.7);
+}
+
+.tilePopup {
+    visibility: var(--popup-visibility);
 }
 </style>
 

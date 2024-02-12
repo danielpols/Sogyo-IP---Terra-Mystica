@@ -37,15 +37,27 @@
 
 .tileContainer {
     overflow: hidden;
-    visibility: visible;
-    background-color: var(--border-color);
-    clip-path: polygon(50% 0, 100% 0, 100% 50%, 50% 100%, 0 100%, 0 50%);
+    visibility: hidden;
+    background-color: transparent;
     width: 100%;
     padding-bottom: 115.47%;
     transform: rotate3d(0, 0, 1, -60deg) skewY(30deg);
 }
 
-.tileContainer:has(.tileButton:hover:enabled) {
+.tileContainer::before {
+    content: "";
+    display: block;
+    position: absolute;
+    overflow: hidden;
+    visibility: visible;
+    background-color: var(--border-color);
+    clip-path: polygon(50% 0, 100% 0, 100% 50%, 50% 100%, 0 100%, 0 50%);
+    width: 100%;
+    padding-bottom: 115.47%;
+    z-index: -1;
+}
+
+.tileContainer:has(.tileButton:hover:enabled)::before {
     background-color: transparent;
 }
 
