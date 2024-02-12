@@ -1,17 +1,11 @@
 <script setup>
-    import '../css/hexcss.css'
     import { gameState, tileColors } from '@/global';
-    import None from './buildings/None.vue';
-    import Dwelling from './buildings/Dwelling.vue';
-    import TradingCity from './buildings/TradingCity.vue';
-    import Stronghold from './buildings/Stronghold.vue';
-    import Temple from './buildings/Temple.vue';
-    import Sanctuary from './buildings/Sanctuary.vue';
+import Building from './Building.vue';
 </script>
 
 <template>
     <button type="button" class="tileButton" @click="build" :style="buttonCSS" :disabled="!tile.buildable"
-    :key="tile.building"><component :is="icon"/></button>
+    :key="tile.building"><Building :icon="getIcon(tile.building)"/></button>
 </template>
 
 <script>
@@ -38,10 +32,8 @@
             .then(data => gameState.state = data)
             .catch(error => console.log(error));
         },
-        updateIcon() {
-            if(this.tile.building == "DWELLING") {
-                this.icon = "Dwelling";
-            }
+        getIcon(building) {
+            return building.substring(0, 1) + building.substring(1).toLowerCase();
         }
     },
     computed: {
@@ -52,17 +44,6 @@
                 '--text-color': textColour
             };
         }
-    },
-    beforeUpdate () {
-        this.updateIcon();
-    },
-    components: {
-        None,
-        Dwelling,
-        TradingCity,
-        Stronghold,
-        Temple,
-        Sanctuary
     }
   }
 </script>

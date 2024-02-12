@@ -1,5 +1,4 @@
 <script setup>
-    import '../css/hexcss.css'
     import Hex from './Hex.vue';
 </script>
 
