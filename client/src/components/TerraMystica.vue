@@ -4,7 +4,7 @@
 </script>
 
 <template>
-    <div class="gameScreen" @wheel.prevent="zoomBoard" @mousedown.middle.capture="pan=true" @mouseup.middle.capture="pan=false" @mouseleave="pan=false"
+    <div class="gameScreen" @wheel.prevent="zoomBoard" @mousedown.middle.prevent.capture="pan=true" @mouseup.middle.capture="pan=false" @mouseleave="pan=false"
             v-on="pan ? {'mousemove': panBoard} : {}" ref="boardContainer">
         <HexArray :zoomLevel="boardZoomLevel" :offsetX="boardOffset.x+'px'" :offsetY="boardOffset.y+'px'" ref="board"/>
     </div>

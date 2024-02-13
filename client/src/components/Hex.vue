@@ -1,36 +1,18 @@
 <script setup>
-    import '../css/hexcss.css'
-    import { shallowRef } from 'vue';
     import { gameState, tileColors } from '@/global';
-    import None from './buildings/None.vue';
-    import Dwelling from './buildings/Dwelling.vue';
-    import TradingCity from './buildings/TradingCity.vue';
-    import Stronghold from './buildings/Stronghold.vue';
-    import Temple from './buildings/Temple.vue';
-    import Sanctuary from './buildings/Sanctuary.vue';
+import Building from './Building.vue';
 </script>
 
 <template>
-    <li class="tileListItem">
-        <div class="tileContainer" :style="borderCSS">
-            <div class="tileBorder">
-                <a class="tile">
-                    <button type="button" class="tileButton" @click="build" :style="buttonCSS" :disabled="!tile.buildable"
-                    :key="tile.building"><component :is="icon"/></button>
-                </a>
-            </div>
-        </div>
-    </li>
+    <button type="button" class="tileButton" @click="$emit('togglePopup')" :style="buttonCSS" :disabled="!tile.buildable"
+    :key="tile.building"><Building :icon="getIcon(tile.building)"/>
+    </button>
 </template>
 
 <script>
   export default {
     props: ['tile'],
-    data () {
-        return {
-            icon: "None"
-        }
-    },
+    emits: ['togglePopup'],
     methods: {
         async build() {
             await fetch('terra/api/build', {
@@ -47,10 +29,8 @@
             .then(data => gameState.state = data)
             .catch(error => console.log(error));
         },
-        updateIcon() {
-            if(this.tile.building == "DWELLING") {
-                this.icon = "Dwelling";
-            }
+        getIcon(building) {
+            return building.substring(0, 1) + building.substring(1).toLowerCase();
         }
     },
     computed: {
@@ -60,31 +40,31 @@
                 '--bg-color': tileColors(this.tile.terrain),
                 '--text-color': textColour
             };
-        },
-        borderCSS() {
-            var borderColour = this.tile.buildable ? "white" : "dimgrey";
-            if(this.tile.terrain == "RIVER") {
-                borderColour = "transparent";
-            }
-            return {
-                '--border-color': borderColour
-            }
         }
-    },
-    beforeUpdate () {
-        this.updateIcon();
-    },
-    components: {
-        None,
-        Dwelling,
-        TradingCity,
-        Stronghold,
-        Temple,
-        Sanctuary
     }
   }
 </script>
 
-<style scoped src="../css/hexcss.css">
+<style scoped>
+.tileButton {
+    border-width: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-size: 1vw;
+
+    overflow: visible;
+}
+
+.tileButton:disabled {
+    pointer-events: none;
+}
+
+.tileButton:hover:enabled {
+    cursor: pointer;
+    filter: brightness(0.7);
+}
 </style>
 
