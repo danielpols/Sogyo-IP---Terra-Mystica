@@ -4,7 +4,7 @@
 </script>
 
 <template>
-    <HexPopup class="tilePopup"/>
+    <HexPopup class="tilePopup" :style="popupCSS"/>
     <div class="tileBorder" :style="borderCSS">
         <div class="tileContainer">
             <a class="tile">
@@ -17,6 +17,11 @@
 <script>
   export default {
     props: ['tile'],
+    data () {
+        return {
+            showPopup: false
+        }
+    },
     computed: {
         borderCSS() {
             var borderColour = this.tile.buildable ? "white" : "grey";
@@ -25,6 +30,11 @@
             }
             return {
                 '--border-color': borderColour
+            }
+        },
+        popupCSS() {
+            return {
+                '--popup-visibility': this.showPopup ? 'visible' : 'hidden'
             }
         }
     }
@@ -78,13 +88,18 @@
     display: block;
     position: absolute;
     z-index: 1;
-    visibility: visible;
+    visibility: var(--popup-visibility);
 
     width: 100%;
 
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+}
+
+.tilePopup:has(~ .tileBorder .tileButton:enabled:hover) {
+    visibility: visible;
+    opacity: 0.5;
 }
 </style>
 

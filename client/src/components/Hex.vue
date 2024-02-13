@@ -1,7 +1,6 @@
 <script setup>
     import { gameState, tileColors } from '@/global';
 import Building from './Building.vue';
-import HexPopup from './HexPopup.vue';
 </script>
 
 <template>
