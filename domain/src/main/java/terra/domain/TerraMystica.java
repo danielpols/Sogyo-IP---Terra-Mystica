@@ -21,6 +21,18 @@ public class TerraMystica implements ITerraMystica {
         this.player = player;
     }
 
+    public List<String> getPlayerNames() {
+        return player.getAllPlayerNames();
+    }
+
+    public Terrain getPlayerTerrain(String name) {
+        return player.getPlayerTerrain(name);
+    }
+
+    public boolean playerHasTurn(String name) {
+        return player.playerHasTurn(name);
+    }
+
     public int[][] getTileLocations() {
         return rootTile.getTileLocations();
     }
@@ -36,10 +48,6 @@ public class TerraMystica implements ITerraMystica {
     public boolean tileIsBuildable(int[] location) {
         return rootTile.isBuildable(TileLocation.fromArray(location),
                 player.getTurnPlayer());
-    }
-
-    public Player[] getPlayers() {
-        return player.getAllPlayers().toArray(Player[]::new);
     }
 
     public void passTurn() {

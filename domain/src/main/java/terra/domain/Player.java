@@ -32,17 +32,32 @@ public class Player {
         }
     }
 
-    public List<Player> getAllPlayers() {
-        ArrayList<Player> list = new ArrayList<Player>();
-        getAllPlayers(list);
+    public List<String> getAllPlayerNames() {
+        ArrayList<String> list = new ArrayList<String>();
+        getAllPlayerNames(list);
         return list;
     }
 
-    public void getAllPlayers(List<Player> list) {
-        if (!list.contains(this)) {
-            list.add(this);
-            nextPlayer.getAllPlayers(list);
+    public void getAllPlayerNames(List<String> list) {
+        if (!list.contains(name)) {
+            list.add(name);
+            nextPlayer.getAllPlayerNames(list);
         }
+    }
+
+    public Terrain getPlayerTerrain(String name) {
+        return findPlayer(name).terrain;
+    }
+
+    public boolean playerHasTurn(String name) {
+        return findPlayer(name).turn;
+    }
+
+    private Player findPlayer(String name) {
+        if (this.name.equals(name)) {
+            return this;
+        }
+        return nextPlayer.findPlayer(name);
     }
 
     public Player getTurnPlayer() {

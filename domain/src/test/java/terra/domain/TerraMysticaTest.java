@@ -49,8 +49,7 @@ public class TerraMysticaTest {
         ITerraMystica game = new TerraMysticaFactory().startGame(names,
                 playerTerrains, terrains);
         assertArrayEquals(names.toArray(String[]::new),
-                Arrays.stream(game.getPlayers()).map(p -> p.getName())
-                        .toArray(String[]::new));
+                game.getPlayerNames().toArray(String[]::new));
     }
 
     @Test
@@ -66,8 +65,8 @@ public class TerraMysticaTest {
                 playerTerrains, terrains);
 
         game.passTurn();
-        assertEquals(names.get(1), Arrays.stream(game.getPlayers())
-                .filter(p -> p.hasTurn()).findAny().get().getName());
+        assertEquals(names.get(1), game.getPlayerNames().stream()
+                .filter(n -> game.playerHasTurn(n)).findAny().get());
     }
 
     @Test

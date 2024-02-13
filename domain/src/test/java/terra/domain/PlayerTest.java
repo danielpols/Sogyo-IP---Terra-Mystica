@@ -15,7 +15,7 @@ public class PlayerTest {
         List<String> names = Arrays.asList("Henk", "Jaap");
         List<Terrain> terrains = Arrays.asList(Terrain.DESERT, Terrain.PLAINS);
         Player player = new Player(names, terrains);
-        assertEquals(2, player.getAllPlayers().size());
+        assertEquals(2, player.getAllPlayerNames().size());
     }
 
     @Test
@@ -48,8 +48,8 @@ public class PlayerTest {
                 Terrain.SWAMP);
         Player player = new Player(names, terrains);
         player.getTurnPlayer().passTurn();
-        assertEquals(1, player.getAllPlayers().stream().filter(p -> p.hasTurn())
-                .count());
+        assertEquals(1, player.getAllPlayerNames().stream()
+                .filter(n -> player.playerHasTurn(n)).count());
     }
 
 }

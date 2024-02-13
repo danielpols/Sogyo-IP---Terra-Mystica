@@ -1,6 +1,6 @@
 package terra.api.models;
 
-import terra.domain.Player;
+import terra.domain.ITerraMystica;
 import terra.domain.Terrain;
 
 public class PlayerDTO {
@@ -9,10 +9,10 @@ public class PlayerDTO {
     private Terrain terrain;
     private boolean turn;
 
-    public PlayerDTO(Player player) {
-        this.name = player.getName();
-        this.terrain = player.getTerrain();
-        this.turn = player.hasTurn();
+    public PlayerDTO(ITerraMystica game, String name) {
+        this.name = name;
+        this.terrain = game.getPlayerTerrain(name);
+        this.turn = game.playerHasTurn(name);
     }
 
     public String getName() {
