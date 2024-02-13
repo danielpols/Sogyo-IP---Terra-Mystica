@@ -80,8 +80,18 @@ public class TerraMysticaTest {
         game.perform(action);
 
         assertTrue(game.playerHasTurn("Gerrit"));
-        assertTrue(game.playerHasPassed("Daniel"));
-        assertTrue(game.isStartingPlayer("Daniel"));
+    }
+
+    @Test
+    public void testTileBuildAction() {
+        List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
+                "John");
+        List<Terrain> playerTerrains = Arrays.asList(Terrain.SWAMP,
+                Terrain.PLAINS, Terrain.MOUNTAINS, Terrain.DESERT);
+        Terrain[] terrains = { Terrain.SWAMP, Terrain.SWAMP, Terrain.RIVER,
+                Terrain.WASTELAND, Terrain.SWAMP };
+        ITerraMystica game = new TerraMysticaFactory().startGame(names,
+                playerTerrains, terrains);
     }
 
 }

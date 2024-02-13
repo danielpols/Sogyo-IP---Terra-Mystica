@@ -54,6 +54,12 @@ public class TerrainTest {
     }
 
     @Test
+    public void testDesertMovesToPlains() {
+        assertEquals(Terrain.PLAINS,
+                Terrain.DESERT.getNextTowards(Terrain.PLAINS));
+    }
+
+    @Test
     public void testCanMoveTwoStepsTowardsTile() {
         assertEquals(Terrain.MOUNTAINS,
                 Terrain.DESERT.getNextTowards(Terrain.FOREST, 2));
@@ -113,6 +119,19 @@ public class TerrainTest {
         }, () -> {
             assertEquals(Terrain.DESERT, Terrain.getTerrain('D'));
         });
+    }
+
+    @Test
+    public void testNextTowardsSelfIsSelf() {
+        Terrain source = Terrain.DESERT;
+        assertEquals(source, source.getNextTowards(source));
+    }
+
+    @Test
+    public void testZeroStepsTowardsOtherIsSelf() {
+        Terrain source = Terrain.DESERT;
+        Terrain target = Terrain.MOUNTAINS;
+        assertEquals(source, source.getNextTowards(target, 0));
     }
 
 }

@@ -106,7 +106,7 @@ public class Tile {
 
 record TileLocation(int row, int col) {
     protected int[] toArray() {
-        return new int[] { row, col };
+        return new int[] { row(), col() };
     }
 
     protected static TileLocation fromArray(int[] array) {
