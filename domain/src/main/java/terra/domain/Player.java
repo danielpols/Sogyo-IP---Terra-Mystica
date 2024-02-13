@@ -3,11 +3,15 @@ package terra.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import terra.domain.actions.PlayerAction;
+
 public class Player {
 
     private final String name;
     private final Terrain terrain;
     private boolean turn;
+    private boolean passed = false;
+    private boolean startPlayer = false;
     private final Player nextPlayer;
 
     private int shippingRange = 1;
@@ -53,11 +57,23 @@ public class Player {
         return findPlayer(name).turn;
     }
 
+    public boolean playerHasPassed(String name) {
+        return findPlayer(name).passed;
+    }
+
+    public boolean isStartingPlayer(String name) {
+        return findPlayer(name).startPlayer;
+    }
+
     private Player findPlayer(String name) {
         if (this.name.equals(name)) {
             return this;
         }
         return nextPlayer.findPlayer(name);
+    }
+
+    protected void perform(PlayerAction action) {
+
     }
 
     public Player getTurnPlayer() {

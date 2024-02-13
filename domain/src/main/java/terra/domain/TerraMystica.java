@@ -3,13 +3,19 @@ package terra.domain;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import terra.domain.actions.GameAction;
+import terra.domain.actions.PlayerAction;
+
 public class TerraMystica implements ITerraMystica {
+
+    private final ActionBuilder actionBuilder;
 
     private final int boardSize;
     private Tile rootTile;
     private Player player;
 
     public TerraMystica(Player player, Terrain[] board, int boardSize) {
+        this.actionBuilder = new ActionBuilder(this);
         this.boardSize = boardSize;
         List<Tile> tiles = IntStream.range(0, board.length)
                 .mapToObj(i -> new Tile(
@@ -33,6 +39,14 @@ public class TerraMystica implements ITerraMystica {
         return player.playerHasTurn(name);
     }
 
+    public boolean playerHasPassed(String name) {
+        return player.playerHasPassed(name);
+    }
+
+    public boolean isStartingPlayer(String name) {
+        return player.isStartingPlayer(name);
+    }
+
     public int[][] getTileLocations() {
         return rootTile.getTileLocations();
     }
@@ -48,6 +62,16 @@ public class TerraMystica implements ITerraMystica {
     public boolean tileIsBuildable(int[] location) {
         return rootTile.isBuildable(TileLocation.fromArray(location),
                 player.getTurnPlayer());
+    }
+
+    public GameAction getPassAction(String playerName) {
+        return actionBuilder.getPassAction(playerName);
+    }
+
+    public void perform(GameAction action) {
+        if (action instanceof PlayerAction) {
+            player.perform((PlayerAction) action);
+        }
     }
 
     public void passTurn() {

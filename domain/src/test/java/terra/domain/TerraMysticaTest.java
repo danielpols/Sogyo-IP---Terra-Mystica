@@ -1,15 +1,14 @@
 package terra.domain;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
+
+import terra.domain.actions.PassAction;
 
 public class TerraMysticaTest {
 
@@ -137,6 +136,33 @@ public class TerraMysticaTest {
         assertEquals(Building.DWELLING,
                 game.getTileBuilding(new int[] { 0, 3 }));
         assertEquals(Terrain.SWAMP, game.getTileTerrain(new int[] { 0, 3 }));
+    }
+
+    @Test
+    public void testPassAction() {
+        List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
+                "John");
+        List<Terrain> playerTerrains = Arrays.asList(Terrain.SWAMP,
+                Terrain.PLAINS, Terrain.MOUNTAINS, Terrain.DESERT);
+        Terrain[] terrains = { Terrain.SWAMP, Terrain.SWAMP, Terrain.RIVER,
+                Terrain.WASTELAND, Terrain.SWAMP };
+        ITerraMystica game = new TerraMysticaFactory().startGame(names,
+                playerTerrains, terrains);
+
+        assertNull(game.getPassAction("Gerrit"));
+
+        assertInstanceOf(PassAction.class, game.getPassAction("Daniel"));
+
+        PassAction action = (PassAction) game.getPassAction("Daniel");
+
+        assertEquals("Daniel", action.getPlayerName());
+        assertTrue(action.isStarting());
+
+        game.perform(action);
+
+        assertTrue(game.playerHasTurn("Gerrit"));
+        assertTrue(game.playerHasPassed("Daniel"));
+        assertTrue(game.isStartingPlayer("Daniel"));
     }
 
 }
