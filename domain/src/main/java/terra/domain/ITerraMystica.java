@@ -28,8 +28,4 @@ public interface ITerraMystica {
 
     void perform(GameAction action);
 
-    void passTurn();
-
-    void build(int[] location, Building building);
-
 }
