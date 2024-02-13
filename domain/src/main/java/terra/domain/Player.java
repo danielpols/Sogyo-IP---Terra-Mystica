@@ -3,6 +3,7 @@ package terra.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import terra.domain.actions.PassAction;
 import terra.domain.actions.PlayerAction;
 
 public class Player {
@@ -73,7 +74,67 @@ public class Player {
     }
 
     protected void perform(PlayerAction action) {
+        if (action instanceof PassAction) {
+            findPlayer(action.getPlayerName()).pass();
+        }
+    }
 
+    private Player getTurnPlayer() {
+        if (turn) {
+            return this;
+        }
+        return nextPlayer.getTurnPlayer();
+    }
+
+    private boolean noneHavePassed() {
+        if (passed) {
+            return false;
+        }
+        if (turn) {
+            return true;
+        }
+        return nextPlayer.noneHavePassed();
+    }
+
+    private boolean allHavePassed() {
+        if (!passed) {
+            return false;
+        }
+        if (turn && passed) {
+            return true;
+        }
+        return nextPlayer.allHavePassed();
+    }
+
+    private boolean firstToPass() {
+        return getTurnPlayer().nextPlayer.noneHavePassed();
+    }
+
+    private boolean lastToPass() {
+        return getTurnPlayer().nextPlayer.allHavePassed();
+    }
+
+    private void pass() {
+        if (turn) {
+            if (firstToPass()) {
+                startPlayer = true;
+            }
+            passed = true;
+            if (!lastToPass()) {
+                switchTurn();
+            }
+        }
+    }
+
+    private void switchTurn() {
+        if (turn) {
+            turn = !turn;
+            nextPlayer.switchTurn();
+        } else if (passed) {
+            nextPlayer.switchTurn();
+        } else {
+            turn = !turn;
+        }
     }
 
 }

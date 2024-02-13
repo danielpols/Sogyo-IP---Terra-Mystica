@@ -76,6 +76,12 @@ public class TerraMysticaTest {
         assertTrue(game.playerHasTurn("Gerrit"));
         assertTrue(game.playerHasPassed("Daniel"));
         assertTrue(game.isStartingPlayer("Daniel"));
+
+        game.perform(action);
+
+        assertTrue(game.playerHasTurn("Gerrit"));
+        assertTrue(game.playerHasPassed("Daniel"));
+        assertTrue(game.isStartingPlayer("Daniel"));
     }
 
 }
