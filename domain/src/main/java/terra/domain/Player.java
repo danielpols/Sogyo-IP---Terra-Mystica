@@ -126,6 +126,12 @@ public class Player {
         }
     }
 
+    protected void endTurn(String name) {
+        if (playerHasTurn(name)) {
+            findPlayer(name).switchTurn();
+        }
+    }
+
     private void switchTurn() {
         if (turn) {
             turn = !turn;
