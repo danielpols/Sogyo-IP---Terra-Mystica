@@ -1,7 +1,6 @@
 <script setup>
     import { gameState } from '@/global';
-    import Hex from './Hex.vue';
-import HexContainer from './HexContainer.vue';
+    import HexContainer from './HexContainer.vue';
 </script>
 
 <template>
@@ -32,7 +31,6 @@ export default {
     padding: 0;
     width: 100%;
     margin-bottom: 2.22%;
-    text-align: left;
     font-size: 0;
     transform: translate(v-bind(offsetX), v-bind(offsetY)) scale(v-bind(zoomLevel)) ;
 }
@@ -55,6 +53,12 @@ export default {
 
 .tileListItem:nth-child(25n+14) {
     grid-column-start: 2;
+}
+
+.tileListItem * {
+    margin: 0;
+    border-radius: 0;
+    padding: 0;
 }
 </style>
 

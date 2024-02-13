@@ -3,7 +3,9 @@
 </script>
 
 <template>
-    <span class="popupText">Boo!</span>
+    <div>
+        <div class="popupText">Boo!</div>
+    </div>
 </template>
 
 <script>
@@ -11,16 +13,18 @@
 
 <style scoped>
 .popupText {
-    z-index: 100;
-    position: absolute;
+    display: block;
+    position: relative;
+    z-index: 1;
+
+    border-radius: 6px;
     background-color: white;
-    border-radius: 2px;
-    width: 150%;
+    width: 100%;
+
+    height: fit-content;
 
     text-align: center;
-
-    left: 50%;
-    bottom: 50%;
-    transform: translateX(-50%);
+    color: black;
+    font-size: 8px;
 }
 </style>

@@ -5,20 +5,14 @@ import HexPopup from './HexPopup.vue';
 </script>
 
 <template>
-    <button type="button" class="tileButton" @click="popup = !popup" :style="buttonCSS" :disabled="!tile.buildable"
+    <button type="button" class="tileButton" :style="buttonCSS" :disabled="!tile.buildable"
     :key="tile.building"><Building :icon="getIcon(tile.building)"/>
-        <HexPopup class="tilePopup" :style="popupCSS"/>
     </button>
 </template>
 
 <script>
   export default {
     props: ['tile'],
-    data () {
-        return {
-            popup: false
-        }
-    },
     methods: {
         async build() {
             await fetch('terra/api/build', {
@@ -46,11 +40,6 @@ import HexPopup from './HexPopup.vue';
                 '--bg-color': tileColors(this.tile.terrain),
                 '--text-color': textColour
             };
-        },
-        popupCSS() {
-            return {
-                '--popup-visibility': this.popup ? "visible" : "hidden"
-            }
         }
     }
   }
@@ -76,10 +65,6 @@ import HexPopup from './HexPopup.vue';
 .tileButton:hover:enabled {
     cursor: pointer;
     filter: brightness(0.7);
-}
-
-.tilePopup {
-    visibility: var(--popup-visibility);
 }
 </style>
 
