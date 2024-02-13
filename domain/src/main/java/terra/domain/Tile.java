@@ -43,18 +43,6 @@ public class Tile {
         return location.isAdjacentTo(other.location);
     }
 
-    protected void build(TileLocation target, Building newBuilding,
-            Player player) {
-        findTile(target).build(newBuilding, player);
-    }
-
-    private void build(Building newBuilding, Player player) {
-        if (isBuildable(player) && building.upgradesTo(newBuilding)) {
-            terrain = player.getTerrain();
-            building = newBuilding;
-        }
-    }
-
     protected boolean isBuildable(TileLocation target, Player player) {
         return findTile(target).isBuildable(player);
     }
@@ -64,19 +52,7 @@ public class Tile {
             return false;
         }
 
-        boolean sameTerrain = sameTerrainAs(player);
-
-        if (getAllTiles().stream().filter(t -> t.hasPlayerBuilding(player))
-                .count() < 2) {
-            return !hasBuilding() && sameTerrain;
-        }
-
-        boolean indirectAdjacent = getAllIndirectAdjacentWithin(
-                player.getShippingRange() + 1).stream()
-                .filter(t -> t.hasPlayerBuilding(player)).findFirst()
-                .isPresent();
-        return (hasBuilding() && sameTerrain)
-                || (!hasBuilding() && indirectAdjacent);
+        return true;
     }
 
     private Set<Tile> getAllIndirectAdjacentWithin(int range) {
@@ -97,16 +73,8 @@ public class Tile {
         }
     }
 
-    private boolean hasPlayerBuilding(Player player) {
-        return hasBuilding() && sameTerrainAs(player);
-    }
-
     private boolean hasBuilding() {
         return !building.equals(Building.NONE);
-    }
-
-    private boolean sameTerrainAs(Player player) {
-        return terrain.equals(player.getTerrain());
     }
 
     private int compare(Tile other) {

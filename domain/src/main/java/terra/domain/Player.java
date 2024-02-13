@@ -76,44 +76,4 @@ public class Player {
 
     }
 
-    public Player getTurnPlayer() {
-        if (turn) {
-            return this;
-        }
-        return nextPlayer.getTurnPlayer();
-    }
-
-    public void passTurn() {
-        if (turn) {
-            switchTurn();
-        }
-    }
-
-    private void switchTurn() {
-        if (turn) {
-            nextPlayer.switchTurn();
-        }
-        turn = !turn;
-    }
-
-    public Player getNextPlayer() {
-        return nextPlayer;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Terrain getTerrain() {
-        return terrain;
-    }
-
-    public boolean hasTurn() {
-        return turn;
-    }
-
-    public int getShippingRange() {
-        return shippingRange;
-    }
-
 }

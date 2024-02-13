@@ -60,8 +60,7 @@ public class TerraMystica implements ITerraMystica {
     }
 
     public boolean tileIsBuildable(int[] location) {
-        return rootTile.isBuildable(TileLocation.fromArray(location),
-                player.getTurnPlayer());
+        return rootTile.isBuildable(TileLocation.fromArray(location), player);
     }
 
     public GameAction getPassAction(String playerName) {
