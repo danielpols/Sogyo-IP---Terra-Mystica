@@ -4,7 +4,7 @@ import Building from './Building.vue';
 </script>
 
 <template>
-    <button type="button" class="tileButton" :style="buttonCSS" :disabled="!tile.buildable"
+    <button type="button" class="tileButton" @click="$emit('togglePopup')" :style="buttonCSS" :disabled="!tile.buildable"
     :key="tile.building"><Building :icon="getIcon(tile.building)"/>
     </button>
 </template>
@@ -12,6 +12,7 @@ import Building from './Building.vue';
 <script>
   export default {
     props: ['tile'],
+    emits: ['togglePopup'],
     methods: {
         async build() {
             await fetch('terra/api/build', {

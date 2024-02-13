@@ -8,7 +8,7 @@
     <div class="tileBorder" :style="borderCSS">
         <div class="tileContainer">
             <a class="tile">
-                <Hex :tile="tile"/>
+                <Hex :tile="tile" @toggle-popup="showPopup = !showPopup; showPopup ? $emit('togglePopup', index) : ''"/>
             </a>
         </div>
     </div>
@@ -16,10 +16,17 @@
 
 <script>
   export default {
-    props: ['tile'],
+    props: ['tile', 'index'],
+    emits: ['togglePopup'],
+    expose: ['disablePopup'],
     data () {
         return {
             showPopup: false
+        }
+    },
+    methods: {
+        disablePopup() {
+            this.showPopup = false;
         }
     },
     computed: {
@@ -34,7 +41,8 @@
         },
         popupCSS() {
             return {
-                '--popup-visibility': this.showPopup ? 'visible' : 'hidden'
+                '--popup-visibility': this.showPopup ? 'visible' : 'hidden',
+                '--popup-hover-opacity' : this.showPopup ? 1 : 0.5
             }
         }
     }
@@ -99,7 +107,7 @@
 
 .tilePopup:has(~ .tileBorder .tileButton:enabled:hover) {
     visibility: visible;
-    opacity: 0.5;
+    opacity: var(--popup-hover-opacity);
 }
 </style>
 

@@ -5,8 +5,8 @@
 
 <template>
     <ul class="tileList">
-        <li class="tileListItem" v-if="gameState.state.board" v-for="tile in gameState.state.board.tiles" >
-            <HexContainer :tile="tile"/>
+        <li class="tileListItem" v-if="gameState.state.board" v-for="(tile, index) in gameState.state.board.tiles" >
+            <HexContainer :tile="tile" :index="index" @toggle-popup="(i) => resetOtherPopups(i)" ref="container"/>
         </li>
     </ul>
 </template>
@@ -14,7 +14,23 @@
 <script>
 
 export default {
-    props: ['zoomLevel', 'offsetX', 'offsetY']
+    props: ['zoomLevel', 'offsetX', 'offsetY'],
+    methods: {
+        resetOtherPopups(index) {
+            ([...Array(gameState.state.board.tiles.length).keys()]).filter(i => i != index)
+            .forEach(i => this.$refs.container[i.toString()].disablePopup());
+        },
+        resetAllPopups() {
+            ([...Array(gameState.state.board.tiles.length).keys()])
+            .forEach(i => this.$refs.container[i.toString()].disablePopup());
+        }
+    },
+    components: {
+        HexContainer
+    },
+    beforeUpdate () {
+        this.resetAllPopups();
+    }
 }
 
 </script>
