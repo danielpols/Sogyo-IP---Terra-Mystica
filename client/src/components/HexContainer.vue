@@ -3,8 +3,8 @@
 </script>
 
 <template>
-    <div class="tileContainer" :style="borderCSS">
-        <div class="tileBorder">
+    <div class="tileBorder" :style="borderCSS">
+        <div class="tileContainer">
             <a class="tile">
                 <Hex :tile="tile"/>
             </a>
@@ -30,12 +30,10 @@
 </script>
 
 <style scoped>
-.tileContainer, .tileContainer * {
+
+.tileBorder {
     position: absolute;
     pointer-events: all;
-}
-
-.tileContainer {
     overflow: hidden;
     visibility: hidden;
     background-color: transparent;
@@ -44,7 +42,7 @@
     transform: rotate3d(0, 0, 1, -60deg) skewY(30deg);
 }
 
-.tileContainer::before {
+.tileBorder::before {
     content: "";
     display: block;
     position: absolute;
@@ -57,11 +55,12 @@
     z-index: -1;
 }
 
-.tileContainer:has(.tileButton:hover:enabled)::before {
+.tileBorder:has(.tileButton:hover:enabled)::before {
     background-color: transparent;
 }
 
-.tileBorder {
+.tileContainer {
+    position: absolute;
     overflow: hidden;
     margin: 5%;
     width: 90%;
@@ -70,7 +69,6 @@
 
 .tile {
     display: block;
-    overflow: hidden;
     visibility: visible;
     width: 100%;
     height: 100%;
