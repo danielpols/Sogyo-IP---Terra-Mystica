@@ -126,4 +126,54 @@ public class TerraMysticaTest {
 
     }
 
+    @Test
+    public void testGamePhaseChanges() {
+        List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
+                "John");
+        List<Terrain> playerTerrains = Arrays.asList(Terrain.SWAMP,
+                Terrain.PLAINS, Terrain.MOUNTAINS, Terrain.DESERT);
+        Terrain[] terrains = { Terrain.SWAMP, Terrain.PLAINS, Terrain.MOUNTAINS,
+                Terrain.DESERT, Terrain.SWAMP, Terrain.PLAINS,
+                Terrain.MOUNTAINS, Terrain.DESERT };
+        ITerraMystica game = new TerraMysticaFactory().startGame(names,
+                playerTerrains, terrains);
+        assertEquals(GamePhase.GAME_START, game.getGamePhase());
+
+        game.perform(game.getTileActions("Daniel", new int[] { 0, 0 }).stream()
+                .filter(a -> a instanceof BuildAction).findFirst().get());
+        game.endTurn("Daniel");
+
+        game.perform(game.getTileActions("Gerrit", new int[] { 0, 1 }).stream()
+                .filter(a -> a instanceof BuildAction).findFirst().get());
+        game.endTurn("Gerrit");
+
+        game.perform(game.getTileActions("Wesley", new int[] { 0, 2 }).stream()
+                .filter(a -> a instanceof BuildAction).findFirst().get());
+        game.endTurn("Wesley");
+
+        game.perform(game.getTileActions("John", new int[] { 0, 3 }).stream()
+                .filter(a -> a instanceof BuildAction).findFirst().get());
+        game.endTurn("John");
+
+        assertEquals(GamePhase.GAME_START_REVERSE, game.getGamePhase());
+
+        game.perform(game.getTileActions("Daniel", new int[] { 0, 4 }).stream()
+                .filter(a -> a instanceof BuildAction).findFirst().get());
+        game.endTurn("Daniel");
+
+        game.perform(game.getTileActions("Gerrit", new int[] { 0, 5 }).stream()
+                .filter(a -> a instanceof BuildAction).findFirst().get());
+        game.endTurn("Gerrit");
+
+        game.perform(game.getTileActions("Wesley", new int[] { 0, 6 }).stream()
+                .filter(a -> a instanceof BuildAction).findFirst().get());
+        game.endTurn("Wesley");
+
+        game.perform(game.getTileActions("John", new int[] { 0, 7 }).stream()
+                .filter(a -> a instanceof BuildAction).findFirst().get());
+        game.endTurn("John");
+
+        assertEquals(GamePhase.GAME_ROUND, game.getGamePhase());
+    }
+
 }

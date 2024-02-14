@@ -125,8 +125,8 @@ public class TerraMystica implements ITerraMystica {
                 .count() == 0) {
             gamePhase = GamePhase.GAME_START_REVERSE;
         }
-        if (gamePhase == GamePhase.GAME_START && player.getAllPlayerNames()
-                .stream()
+        if (gamePhase == GamePhase.GAME_START_REVERSE && player
+                .getAllPlayerNames().stream()
                 .filter(n -> rootTile
                         .getAmountOfBuildingsOn(getPlayerTerrain(n)) != 2)
                 .count() == 0) {

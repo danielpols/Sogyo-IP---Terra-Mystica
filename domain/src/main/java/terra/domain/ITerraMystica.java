@@ -6,6 +6,10 @@ import terra.domain.actions.GameAction;
 
 public interface ITerraMystica {
 
+    GamePhase getGamePhase();
+
+    String getGamePhaseMessage();
+
     List<String> getPlayerNames();
 
     Terrain getPlayerTerrain(String name);
