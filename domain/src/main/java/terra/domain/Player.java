@@ -122,6 +122,8 @@ public class Player {
             passed = true;
             if (!lastToPass()) {
                 switchTurn();
+            } else {
+                turn = false;
             }
         }
     }
