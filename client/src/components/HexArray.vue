@@ -24,12 +24,6 @@ export default {
             ([...Array(gameState.state.board.tiles.length).keys()])
             .forEach(i => this.$refs.container[i.toString()].disablePopup());
         }
-    },
-    components: {
-        HexContainer
-    },
-    beforeUpdate () {
-        this.resetAllPopups();
     }
 }
 

@@ -23,8 +23,6 @@ public enum Building {
             break;
         case TRADING:
             return Stream.of(FORTRESS, CHURCH).collect(Collectors.toSet());
-        default:
-            break;
         }
         return new HashSet<Building>();
     }
