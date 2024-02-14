@@ -1,18 +1,47 @@
 package terra.api.models;
 
-import terra.domain.Building;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-public class ActionDTO {
+import terra.api.models.subactions.BuildActionDTO;
+import terra.api.models.subactions.PassActionDTO;
+import terra.domain.actions.BuildAction;
+import terra.domain.actions.GameAction;
+import terra.domain.actions.PassAction;
 
-    private int[] location;
-    private Building building;
+@JsonSubTypes(value = { @JsonSubTypes.Type(value = BuildActionDTO.class),
+        @JsonSubTypes.Type(value = PassActionDTO.class) })
+@JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
+public abstract class ActionDTO {
 
-    public int[] getLocation() {
-        return location;
+    private String playerName;
+
+    public ActionDTO() {
+
     }
 
-    public Building getBuilding() {
-        return building;
+    public ActionDTO(GameAction action) {
+        playerName = action.getPlayerName();
+    }
+
+    public static ActionDTO getActionDTO(GameAction a) {
+        if (a instanceof PassAction) {
+            return new PassActionDTO((PassAction) a);
+        }
+        if (a instanceof BuildAction) {
+            return new BuildActionDTO((BuildAction) a);
+        }
+        return null;
+    }
+
+    public abstract GameAction toAction();
+
+    public void setPlayerName(String name) {
+        playerName = name;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 
 }

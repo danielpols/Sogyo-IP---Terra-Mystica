@@ -31,7 +31,7 @@
     },
     computed: {
         borderCSS() {
-            var borderColour = this.tile.buildable ? "white" : "grey";
+            var borderColour = this.tile.actions.length > 0 ? "white" : "grey";
             if(this.tile.terrain == "RIVER") {
                 borderColour = "transparent";
             }

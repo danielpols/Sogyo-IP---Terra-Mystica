@@ -25,3 +25,16 @@ export function tileColors(terrain) {
     }
     return colour;
 }
+
+export async function doAction(action) {
+    await fetch('terra/api/act', {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(action)
+    }).then(response => response.json())
+    .then(data => gameState.state = data)
+    .catch(error => console.log(error));
+}
