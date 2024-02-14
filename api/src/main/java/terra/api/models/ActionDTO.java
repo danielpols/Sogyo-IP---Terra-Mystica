@@ -1,18 +1,21 @@
 package terra.api.models;
 
-import terra.domain.Building;
+import terra.domain.actions.GameAction;
 
-public class ActionDTO {
+public abstract class ActionDTO {
 
-    private int[] location;
-    private Building building;
+    private String playerName;
 
-    public int[] getLocation() {
-        return location;
+    public ActionDTO(GameAction action) {
+        playerName = action.getPlayerName();
     }
 
-    public Building getBuilding() {
-        return building;
+    public void setPlayerName(String name) {
+        playerName = name;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 
 }
