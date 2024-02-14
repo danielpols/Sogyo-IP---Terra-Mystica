@@ -110,6 +110,12 @@ public class TerraMysticaTest {
         List<GameAction> crossRiverActions = defaultGame
                 .getTileActions("Daniel", new int[] { 0, 3 }).stream()
                 .filter(a -> a instanceof BuildAction).toList();
+
+        assertEquals(0,
+                defaultGame.getTileActions("Daniel", new int[] { 0, 4 })
+                        .stream().filter(a -> a instanceof BuildAction).toList()
+                        .size());
+
         assertEquals(1, crossRiverActions.size());
         defaultGame.perform(crossRiverActions.get(0));
         assertEquals(Building.DWELLING,
