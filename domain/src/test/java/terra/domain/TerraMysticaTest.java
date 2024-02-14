@@ -64,6 +64,7 @@ public class TerraMysticaTest {
 
     @Test
     public void testPassAction() {
+        assertNull(defaultGame.getPassAction("Gerrit"));
         ((TerraMystica) defaultGame).setGamePhase(GamePhase.GAME_ROUND);
         assertNull(defaultGame.getPassAction("Gerrit"));
 
@@ -138,6 +139,7 @@ public class TerraMysticaTest {
         ITerraMystica game = new TerraMysticaFactory().startGame(names,
                 playerTerrains, terrains);
         assertEquals(GamePhase.GAME_START, game.getGamePhase());
+        assertEquals("Setup", game.getGamePhaseMessage());
 
         game.perform(game.getTileActions("Daniel", new int[] { 0, 0 }).stream()
                 .filter(a -> a instanceof BuildAction).findFirst().get());
@@ -156,6 +158,7 @@ public class TerraMysticaTest {
         game.endTurn("John");
 
         assertEquals(GamePhase.GAME_START_REVERSE, game.getGamePhase());
+        assertEquals("Setup", game.getGamePhaseMessage());
 
         game.perform(game.getTileActions("Daniel", new int[] { 0, 4 }).stream()
                 .filter(a -> a instanceof BuildAction).findFirst().get());
@@ -174,6 +177,31 @@ public class TerraMysticaTest {
         game.endTurn("John");
 
         assertEquals(GamePhase.GAME_ROUND, game.getGamePhase());
+    }
+
+    @Test
+    public void testRoundChanges() {
+        ((TerraMystica) defaultGame).setGamePhase(GamePhase.GAME_ROUND);
+        assertEquals("Round 1", defaultGame.getGamePhaseMessage());
+
+        defaultGame.perform(defaultGame.getPassAction("Daniel"));
+        defaultGame.startNewRoundIfAllPassed();
+        assertEquals("Round 1", defaultGame.getGamePhaseMessage());
+
+        defaultGame.perform(defaultGame.getPassAction("Gerrit"));
+        defaultGame.perform(defaultGame.getPassAction("Wesley"));
+        defaultGame.perform(defaultGame.getPassAction("John"));
+        defaultGame.startNewRoundIfAllPassed();
+        assertEquals("Round 2", defaultGame.getGamePhaseMessage());
+        IntStream.range(0, 5).forEach(i -> {
+
+            defaultGame.perform(defaultGame.getPassAction("Daniel"));
+            defaultGame.perform(defaultGame.getPassAction("Gerrit"));
+            defaultGame.perform(defaultGame.getPassAction("Wesley"));
+            defaultGame.perform(defaultGame.getPassAction("John"));
+            defaultGame.startNewRoundIfAllPassed();
+        });
+        assertEquals("Game has ended", defaultGame.getGamePhaseMessage());
     }
 
 }
