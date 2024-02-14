@@ -17,6 +17,7 @@ import terra.api.models.GameDTO;
 import terra.api.models.StartGameDTO;
 import terra.domain.ITerraMystica;
 import terra.domain.ITerraMysticaFactory;
+import terra.domain.actions.GameAction;
 import terra.persistence.ITerraMysticaRepository;
 
 @Path("/terra/api")
@@ -74,7 +75,9 @@ public class TerraController {
 
         ITerraMystica game = repository.loadGame(gameId);
 
-        game.perform(body.toAction());
+        GameAction action = body.toAction();
+        game.perform(action);
+        game.endTurn(action.getPlayerName());
 
         GameDTO output = new GameDTO(game);
         return Response.status(200).entity(output).build();

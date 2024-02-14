@@ -89,4 +89,8 @@ public class TerraMystica implements ITerraMystica {
         }
     }
 
+    public void endTurn(String playerName) {
+        player.endTurn(playerName);
+    }
+
 }

@@ -32,4 +32,6 @@ public interface ITerraMystica {
 
     void perform(GameAction action);
 
+    void endTurn(String playerName);
+
 }
