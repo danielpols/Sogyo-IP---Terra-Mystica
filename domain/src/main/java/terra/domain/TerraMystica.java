@@ -93,4 +93,11 @@ public class TerraMystica implements ITerraMystica {
         player.endTurn(playerName);
     }
 
+    public void startNewRoundIfAllPassed() {
+        if (player.getAllPlayerNames().stream().filter(n -> !playerHasPassed(n))
+                .count() == 0) {
+            player.startNewRound();
+        }
+    }
+
 }

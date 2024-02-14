@@ -34,4 +34,6 @@ public interface ITerraMystica {
 
     void endTurn(String playerName);
 
+    void startNewRoundIfAllPassed();
+
 }

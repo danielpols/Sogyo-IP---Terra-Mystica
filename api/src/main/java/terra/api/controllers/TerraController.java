@@ -78,6 +78,7 @@ public class TerraController {
         GameAction action = body.toAction();
         game.perform(action);
         game.endTurn(action.getPlayerName());
+        game.startNewRoundIfAllPassed();
 
         GameDTO output = new GameDTO(game);
         return Response.status(200).entity(output).build();

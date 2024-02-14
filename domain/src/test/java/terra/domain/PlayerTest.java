@@ -56,12 +56,30 @@ public class PlayerTest {
     }
 
     @Test
-    public void noTurnPlayerAfterAllPassed() {
+    public void testNoTurnPlayerAfterAllPassed() {
         player.perform(new PassAction("Henk", true));
         player.perform(new PassAction("Jaap", false));
         player.perform(new PassAction("Piet", false));
         assertEquals(0, player.getAllPlayerNames().stream()
                 .filter(n -> player.playerHasTurn(n)).count());
+    }
+
+    @Test
+    public void testEndOfRound() {
+        player.endTurn("Henk");
+        player.perform(new PassAction("Jaap", true));
+        player.endTurn("Piet");
+        player.perform(new PassAction("Henk", false));
+        player.perform(new PassAction("Piet", false));
+
+        assertEquals(0, player.getAllPlayerNames().stream()
+                .filter(n -> player.playerHasTurn(n)).count());
+
+        player.startNewRound();
+        assertEquals(1, player.getAllPlayerNames().stream()
+                .filter(n -> player.playerHasTurn(n)).count());
+        assertEquals("Jaap", player.getAllPlayerNames().stream()
+                .filter(n -> player.playerHasTurn(n)).findFirst().get());
     }
 
 }
