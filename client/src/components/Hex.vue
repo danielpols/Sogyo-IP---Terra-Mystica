@@ -4,7 +4,7 @@ import Building from './Building.vue';
 </script>
 
 <template>
-    <button type="button" class="tileButton" @click="$emit('togglePopup')" :style="buttonCSS" :disabled="!tile.buildable"
+    <button type="button" class="tileButton" @click="$emit('togglePopup')" :style="buttonCSS" :disabled="tile.actions.length==0"
     :key="tile.building"><Building :icon="getIcon(tile.building)"/>
     </button>
 </template>
