@@ -1,5 +1,5 @@
 <script setup>
-    import { gameState, tileColors } from '@/global';
+    import { gameState, tileColors, doAction } from '@/global';
 import Building from './Building.vue';
 </script>
 
@@ -15,16 +15,7 @@ import Building from './Building.vue';
     emits: ['togglePopup'],
     methods: {
         async act() {
-            await fetch('terra/api/act', {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(this.tile.actions[0])
-            }).then(response => response.json())
-            .then(data => gameState.state = data)
-            .catch(error => console.log(error));
+            await doAction(this.tile.actions[0]);
         },
         getIcon(building) {
             return building.substring(0, 1) + building.substring(1).toLowerCase();
