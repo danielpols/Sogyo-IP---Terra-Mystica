@@ -4,7 +4,7 @@ import Building from './Building.vue';
 </script>
 
 <template>
-    <button type="button" class="tileButton" @click="$emit('togglePopup')" :style="buttonCSS" :disabled="tile.actions.length==0"
+    <button type="button" class="tileButton" @click="act" :style="buttonCSS" :disabled="tile.actions.length==0"
     :key="tile.building"><Building :icon="getIcon(tile.building)"/>
     </button>
 </template>
@@ -14,17 +14,14 @@ import Building from './Building.vue';
     props: ['tile'],
     emits: ['togglePopup'],
     methods: {
-        async build() {
-            await fetch('terra/api/build', {
+        async act() {
+            await fetch('terra/api/act', {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    location: this.tile.location,
-                    building: "DWELLING"
-                })
+                body: JSON.stringify(this.tile.actions[0])
             }).then(response => response.json())
             .then(data => gameState.state = data)
             .catch(error => console.log(error));
