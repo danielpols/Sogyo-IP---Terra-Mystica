@@ -6,6 +6,10 @@ import terra.domain.actions.GameAction;
 
 public interface ITerraMystica {
 
+    GamePhase getGamePhase();
+
+    String getGamePhaseMessage();
+
     List<String> getPlayerNames();
 
     Terrain getPlayerTerrain(String name);
@@ -31,5 +35,9 @@ public interface ITerraMystica {
     List<GameAction> getTileActions(String playerName, int[] location);
 
     void perform(GameAction action);
+
+    void endTurn(String playerName);
+
+    void startNewRoundIfAllPassed();
 
 }

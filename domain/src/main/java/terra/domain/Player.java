@@ -149,4 +149,16 @@ public class Player {
         }
     }
 
+    protected void startNewRound() {
+        if (!passed) {
+            return;
+        }
+        passed = false;
+        if (startPlayer) {
+            turn = true;
+        }
+        startPlayer = false;
+        nextPlayer.startNewRound();
+    }
+
 }

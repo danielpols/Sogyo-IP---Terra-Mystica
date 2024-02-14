@@ -6,12 +6,14 @@ public class GameDTO {
 
     private BoardDTO board;
     private PlayerDTO[] players;
+    String message;
 
     public GameDTO(ITerraMystica game) {
         board = new BoardDTO(game);
         players = game.getPlayerNames().stream()
                 .map(name -> new PlayerDTO(game, name))
                 .toArray(PlayerDTO[]::new);
+        message = game.getGamePhaseMessage();
     }
 
     public BoardDTO getBoard() {
@@ -20,6 +22,10 @@ public class GameDTO {
 
     public PlayerDTO[] getPlayers() {
         return players;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
 }
