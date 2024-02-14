@@ -64,6 +64,7 @@ public class TerraMysticaTest {
 
     @Test
     public void testPassAction() {
+        ((TerraMystica) defaultGame).setGamePhase(GamePhase.GAME_ROUND);
         assertNull(defaultGame.getPassAction("Gerrit"));
 
         assertInstanceOf(PassAction.class, defaultGame.getPassAction("Daniel"));
