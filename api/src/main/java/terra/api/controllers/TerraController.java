@@ -12,6 +12,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import terra.api.models.ActionDTO;
 import terra.api.models.GameDTO;
 import terra.api.models.StartGameDTO;
 import terra.domain.ITerraMystica;
@@ -57,6 +58,24 @@ public class TerraController {
         repository.saveGame(gameId, game);
 
         // Use the game to create a DTO.
+        GameDTO output = new GameDTO(game);
+        return Response.status(200).entity(output).build();
+    }
+
+    @Path("/act")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response act(@Context HttpServletRequest request, ActionDTO body) {
+        System.out.println("Call made to /act");
+
+        HttpSession session = request.getSession(false);
+        String gameId = (String) session.getAttribute("gameId");
+
+        ITerraMystica game = repository.loadGame(gameId);
+
+        game.perform(body.toAction());
+
         GameDTO output = new GameDTO(game);
         return Response.status(200).entity(output).build();
     }

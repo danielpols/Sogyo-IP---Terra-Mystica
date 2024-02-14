@@ -12,6 +12,10 @@ public class PassActionDTO extends ActionDTO {
         starting = action.isStarting();
     }
 
+    public PassAction toAction() {
+        return new PassAction(getPlayerName(), starting);
+    }
+
     public void setStarting(boolean value) {
         starting = value;
     }

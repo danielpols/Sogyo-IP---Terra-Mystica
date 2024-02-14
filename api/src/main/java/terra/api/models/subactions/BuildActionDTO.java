@@ -11,11 +11,20 @@ public class BuildActionDTO extends ActionDTO {
     private Terrain playerTerrain;
     private Building targetBuilding;
 
+    public BuildActionDTO() {
+
+    }
+
     public BuildActionDTO(BuildAction action) {
         super(action);
         this.setLocation(action.getLocation());
         this.setPlayerTerrain(action.getPlayerTerrain());
         this.setTargetBuilding(action.getTargetBuilding());
+    }
+
+    public BuildAction toAction() {
+        return new BuildAction(getPlayerName(), location, playerTerrain,
+                targetBuilding);
     }
 
     public int[] getLocation() {
