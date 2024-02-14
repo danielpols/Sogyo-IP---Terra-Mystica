@@ -1,10 +1,12 @@
 package terra.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
 import terra.domain.actions.GameAction;
 import terra.domain.actions.PlayerAction;
+import terra.domain.actions.TileAction;
 
 public class TerraMystica implements ITerraMystica {
 
@@ -47,6 +49,10 @@ public class TerraMystica implements ITerraMystica {
         return player.isStartingPlayer(name);
     }
 
+    public int getPlayerShippingRange(String name) {
+        return player.getPlayerShippingRange(name);
+    }
+
     public int[][] getTileLocations() {
         return rootTile.getTileLocations();
     }
@@ -67,9 +73,19 @@ public class TerraMystica implements ITerraMystica {
         return actionBuilder.getPassAction(playerName);
     }
 
+    public List<GameAction> getTileActions(String playerName, int[] location) {
+        List<GameAction> list = new ArrayList<GameAction>();
+        list.addAll(rootTile.getTileActions(playerName,
+                TileLocation.fromArray(location), actionBuilder));
+        return list;
+    }
+
     public void perform(GameAction action) {
         if (action instanceof PlayerAction) {
             player.perform((PlayerAction) action);
+        }
+        if (action instanceof TileAction) {
+            rootTile.perform((TileAction) action);
         }
     }
 

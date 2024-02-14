@@ -66,6 +66,10 @@ public class Player {
         return findPlayer(name).startPlayer;
     }
 
+    public int getPlayerShippingRange(String name) {
+        return findPlayer(name).shippingRange;
+    }
+
     private Player findPlayer(String name) {
         if (this.name.equals(name)) {
             return this;

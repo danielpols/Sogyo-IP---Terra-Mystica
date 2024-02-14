@@ -1,8 +1,12 @@
 package terra.domain;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import terra.domain.actions.BuildAction;
+import terra.domain.actions.TileAction;
 
 public class Tile {
 
@@ -22,9 +26,17 @@ public class Tile {
                 .toList();
     }
 
+    protected boolean isAdjacentTo(Tile other) {
+        return location.isAdjacentTo(other.location);
+    }
+
     protected int[][] getTileLocations() {
         return getTileList().stream().map(t -> t.location.toArray())
                 .toArray(int[][]::new);
+    }
+
+    protected List<Tile> getTileList() {
+        return getAllTiles().stream().sorted((i, j) -> i.compare(j)).toList();
     }
 
     protected Terrain getTileTerrain(TileLocation target) {
@@ -35,24 +47,60 @@ public class Tile {
         return findTile(target).building;
     }
 
-    protected List<Tile> getTileList() {
-        return getAllTiles().stream().sorted((i, j) -> i.compare(j)).toList();
-    }
-
-    protected boolean isAdjacentTo(Tile other) {
-        return location.isAdjacentTo(other.location);
-    }
-
     protected boolean isBuildable(TileLocation target, Player player) {
-        return findTile(target).isBuildable(player);
+        if (location.equals(target)) {
+            if (terrain.equals(Terrain.RIVER)) {
+                return false;
+            }
+            return true;
+        }
+        return findTile(target).isBuildable(target, player);
     }
 
-    private boolean isBuildable(Player player) {
-        if (terrain.equals(Terrain.RIVER)) {
-            return false;
-        }
+    protected List<TileAction> getTileActions(String playerName,
+            TileLocation target, ActionBuilder builder) {
+        List<TileAction> list = new ArrayList<TileAction>();
+        Tile targetTile = findTile(target);
+        list.addAll(targetTile.getBuildAction(playerName, builder));
+        return list;
+    }
 
-        return true;
+    private List<BuildAction> getBuildAction(String playerName,
+            ActionBuilder builder) {
+        return builder.getBuildAction(playerName, this);
+    }
+
+    protected void perform(TileAction action) {
+        if (action instanceof BuildAction) {
+            findTile(TileLocation.fromArray(action.getLocation()))
+                    .build((BuildAction) action);
+        }
+    }
+
+    protected void build(BuildAction action) {
+        if (location.equals(TileLocation.fromArray(action.getLocation()))) {
+            if (building.upgradesTo(action.getTargetBuilding())) {
+                building = action.getTargetBuilding();
+                terrain = action.getPlayerTerrain();
+            }
+        }
+    }
+
+    protected int getAmountOfBuildingsOn(Terrain playerTerrain) {
+        return (int) getAllTiles().stream()
+                .filter(t -> t.terrain.equals(playerTerrain) && t.hasBuilding())
+                .count();
+    }
+
+    protected boolean hasBuilding() {
+        return !building.equals(Building.NONE);
+    }
+
+    protected boolean isIndirectlyAdjacentTo(Terrain playerTerrain,
+            int shippingRange) {
+        return getAllIndirectAdjacentWithin(shippingRange + 1).stream()
+                .filter(t -> t.terrain.equals(playerTerrain) && t.hasBuilding())
+                .count() > 0;
     }
 
     private Set<Tile> getAllIndirectAdjacentWithin(int range) {
@@ -71,10 +119,6 @@ public class Tile {
                     .forEach(t -> t.getAllIndirectAdjacentWithin(range - 1,
                             set));
         }
-    }
-
-    private boolean hasBuilding() {
-        return !building.equals(Building.NONE);
     }
 
     private int compare(Tile other) {
@@ -100,6 +144,10 @@ public class Tile {
             set.add(this);
             adjacent.forEach(t -> t.getAllTiles(set));
         }
+    }
+
+    protected int[] getLocation() {
+        return location.toArray();
     }
 
 }

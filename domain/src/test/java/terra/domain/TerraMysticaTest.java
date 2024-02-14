@@ -6,11 +6,28 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import terra.domain.actions.BuildAction;
+import terra.domain.actions.GameAction;
 import terra.domain.actions.PassAction;
 
 public class TerraMysticaTest {
+
+    ITerraMystica defaultGame;
+
+    @BeforeEach
+    public void testInit() {
+        List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
+                "John");
+        List<Terrain> playerTerrains = Arrays.asList(Terrain.SWAMP,
+                Terrain.PLAINS, Terrain.MOUNTAINS, Terrain.DESERT);
+        Terrain[] terrains = { Terrain.SWAMP, Terrain.SWAMP, Terrain.RIVER,
+                Terrain.WASTELAND, Terrain.SWAMP };
+        defaultGame = new TerraMysticaFactory().startGame(names, playerTerrains,
+                terrains);
+    }
 
     @Test
     public void testAllLocationsPresent() {
@@ -41,57 +58,65 @@ public class TerraMysticaTest {
     public void testCanGetPlayers() {
         List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
                 "John");
-        List<Terrain> playerTerrains = Arrays.asList(Terrain.SWAMP,
-                Terrain.PLAINS, Terrain.MOUNTAINS, Terrain.DESERT);
-        Terrain[] terrains = { Terrain.RIVER, Terrain.DESERT, Terrain.FOREST,
-                Terrain.WASTELAND, Terrain.LAKE };
-        ITerraMystica game = new TerraMysticaFactory().startGame(names,
-                playerTerrains, terrains);
         assertArrayEquals(names.toArray(String[]::new),
-                game.getPlayerNames().toArray(String[]::new));
+                defaultGame.getPlayerNames().toArray(String[]::new));
     }
 
     @Test
     public void testPassAction() {
-        List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
-                "John");
-        List<Terrain> playerTerrains = Arrays.asList(Terrain.SWAMP,
-                Terrain.PLAINS, Terrain.MOUNTAINS, Terrain.DESERT);
-        Terrain[] terrains = { Terrain.SWAMP, Terrain.SWAMP, Terrain.RIVER,
-                Terrain.WASTELAND, Terrain.SWAMP };
-        ITerraMystica game = new TerraMysticaFactory().startGame(names,
-                playerTerrains, terrains);
+        assertNull(defaultGame.getPassAction("Gerrit"));
 
-        assertNull(game.getPassAction("Gerrit"));
+        assertInstanceOf(PassAction.class, defaultGame.getPassAction("Daniel"));
 
-        assertInstanceOf(PassAction.class, game.getPassAction("Daniel"));
-
-        PassAction action = (PassAction) game.getPassAction("Daniel");
+        PassAction action = (PassAction) defaultGame.getPassAction("Daniel");
 
         assertEquals("Daniel", action.getPlayerName());
         assertTrue(action.isStarting());
 
-        game.perform(action);
+        defaultGame.perform(action);
 
-        assertTrue(game.playerHasTurn("Gerrit"));
-        assertTrue(game.playerHasPassed("Daniel"));
-        assertTrue(game.isStartingPlayer("Daniel"));
+        assertTrue(defaultGame.playerHasTurn("Gerrit"));
+        assertTrue(defaultGame.playerHasPassed("Daniel"));
+        assertTrue(defaultGame.isStartingPlayer("Daniel"));
 
-        game.perform(action);
+        defaultGame.perform(action);
 
-        assertTrue(game.playerHasTurn("Gerrit"));
+        assertTrue(defaultGame.playerHasTurn("Gerrit"));
     }
 
     @Test
     public void testTileBuildAction() {
-        List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
-                "John");
-        List<Terrain> playerTerrains = Arrays.asList(Terrain.SWAMP,
-                Terrain.PLAINS, Terrain.MOUNTAINS, Terrain.DESERT);
-        Terrain[] terrains = { Terrain.SWAMP, Terrain.SWAMP, Terrain.RIVER,
-                Terrain.WASTELAND, Terrain.SWAMP };
-        ITerraMystica game = new TerraMysticaFactory().startGame(names,
-                playerTerrains, terrains);
+        List<GameAction> actions = defaultGame.getTileActions("Daniel",
+                new int[] { 0, 0 });
+
+        assertEquals(1, actions.stream().filter(a -> a instanceof BuildAction)
+                .toList().size());
+        GameAction buildAction = actions.get(0);
+        assertInstanceOf(BuildAction.class, buildAction);
+        defaultGame.perform(buildAction);
+        assertEquals(Building.DWELLING,
+                defaultGame.getTileBuilding(new int[] { 0, 0 }));
+
+        assertEquals(0,
+                defaultGame.getTileActions("Daniel", new int[] { 0, 0 })
+                        .stream().filter(a -> a instanceof BuildAction).toList()
+                        .size());
+
+        defaultGame.perform(defaultGame
+                .getTileActions("Daniel", new int[] { 0, 1 }).stream()
+                .filter(a -> a instanceof BuildAction).findFirst().get());
+
+        // across the river
+        List<GameAction> crossRiverActions = defaultGame
+                .getTileActions("Daniel", new int[] { 0, 3 }).stream()
+                .filter(a -> a instanceof BuildAction).toList();
+        assertEquals(1, crossRiverActions.size());
+        defaultGame.perform(crossRiverActions.get(0));
+        assertEquals(Building.DWELLING,
+                defaultGame.getTileBuilding(new int[] { 0, 3 }));
+        assertEquals(defaultGame.getPlayerTerrain("Daniel"),
+                defaultGame.getTileTerrain(new int[] { 0, 3 }));
+
     }
 
 }

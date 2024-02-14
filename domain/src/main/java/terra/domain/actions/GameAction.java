@@ -4,8 +4,8 @@ public abstract class GameAction {
 
     protected final String playerName;
 
-    protected GameAction(String name) {
-        this.playerName = name;
+    protected GameAction(String playerName) {
+        this.playerName = playerName;
     }
 
     public String getPlayerName() {

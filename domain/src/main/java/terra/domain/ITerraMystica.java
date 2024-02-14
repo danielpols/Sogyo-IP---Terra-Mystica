@@ -16,6 +16,8 @@ public interface ITerraMystica {
 
     boolean isStartingPlayer(String name);
 
+    int getPlayerShippingRange(String name);
+
     int[][] getTileLocations();
 
     Terrain getTileTerrain(int[] location);
@@ -25,6 +27,8 @@ public interface ITerraMystica {
     boolean tileIsBuildable(int[] location);
 
     GameAction getPassAction(String playerName);
+
+    List<GameAction> getTileActions(String playerName, int[] location);
 
     void perform(GameAction action);
 
