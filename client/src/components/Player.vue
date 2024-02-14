@@ -1,5 +1,5 @@
 <script setup>
-    import { gameState, tileColors } from '@/global';
+    import { tileColors, doAction} from '@/global';
 </script>
 
 <template>
@@ -7,7 +7,7 @@
         <div class="playerBoard">
             {{ player.name }} <br/>
             {{ player.terrain }} <br/>
-            <button v-if="player.turn" type="button" @click="passTurn">Pass</button>
+            <button v-if="player.passAction != null" type="button" @click="passTurn">Pass</button>
         </div>
     </li>
 </template>
@@ -17,10 +17,7 @@
         props: ['player'],
         methods: {
             async passTurn() {
-                await fetch('terra/api/pass')
-                .then(response => response.json())
-                .then(data => {console.log(this.player.name + " passed turn."); gameState.state = data})
-                .catch(error => console.log(error));
+                await doAction(this.player.passAction);
             }
         },
         computed: {

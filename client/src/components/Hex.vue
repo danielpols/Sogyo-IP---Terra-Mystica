@@ -1,5 +1,5 @@
 <script setup>
-    import { gameState, tileColors, doAction } from '@/global';
+    import { tileColors, doAction } from '@/global';
 import Building from './Building.vue';
 </script>
 

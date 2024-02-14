@@ -7,6 +7,10 @@ public class PassActionDTO extends ActionDTO {
 
     private boolean starting;
 
+    public PassActionDTO() {
+
+    }
+
     public PassActionDTO(PassAction action) {
         super(action);
         starting = action.isStarting();
