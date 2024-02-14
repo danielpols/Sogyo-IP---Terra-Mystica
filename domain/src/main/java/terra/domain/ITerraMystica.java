@@ -28,8 +28,6 @@ public interface ITerraMystica {
 
     Building getTileBuilding(int[] location);
 
-    boolean tileIsBuildable(int[] location);
-
     GameAction getPassAction(String playerName);
 
     List<GameAction> getTileActions(String playerName, int[] location);

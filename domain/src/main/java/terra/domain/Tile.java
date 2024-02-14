@@ -47,16 +47,6 @@ public class Tile {
         return findTile(target).building;
     }
 
-    protected boolean isBuildable(TileLocation target, Player player) {
-        if (location.equals(target)) {
-            if (terrain.equals(Terrain.RIVER)) {
-                return false;
-            }
-            return true;
-        }
-        return findTile(target).isBuildable(target, player);
-    }
-
     protected List<TileAction> getTileActions(String playerName,
             TileLocation target, ActionBuilder builder) {
         List<TileAction> list = new ArrayList<TileAction>();
