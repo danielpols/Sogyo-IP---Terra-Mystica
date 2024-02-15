@@ -1,11 +1,11 @@
 <script setup>
-    import { tileColors, doAction } from '@/global';
+    import { tileColors, doAction, getIcon } from '@/global';
 import Building from './Building.vue';
 </script>
 
 <template>
     <button type="button" class="tileButton" @click="$emit('togglePopup')" :style="buttonCSS" :disabled="tile.actions.length==0"
-    :key="tile.building"><Building :icon="getIcon(tile.building)"/>
+    :key="tile.building"><Building :icon="getIcon(tile.building)" :scale="0.4"/>
     </button>
 </template>
 
@@ -16,9 +16,6 @@ import Building from './Building.vue';
     methods: {
         async act() {
             await doAction(this.tile.actions[0]);
-        },
-        getIcon(building) {
-            return building.substring(0, 1) + building.substring(1).toLowerCase();
         }
     },
     computed: {

@@ -38,3 +38,7 @@ export async function doAction(action) {
     .then(data => gameState.state = data)
     .catch(error => console.log(error));
 }
+
+export function getIcon(building) {
+    return building.substring(0, 1) + building.substring(1).toLowerCase();
+}
