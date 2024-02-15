@@ -5,6 +5,7 @@ import java.util.List;
 
 import terra.domain.actions.BuildAction;
 import terra.domain.actions.PassAction;
+import terra.domain.actions.UpgradeAction;
 
 public class ActionBuilder {
 
@@ -28,24 +29,38 @@ public class ActionBuilder {
         }
 
         Terrain playerTerrain = game.getPlayerTerrain(playerName);
-        Terrain tileTerrain = tile
-                .getTileTerrain(TileLocation.fromArray(tile.getLocation()));
-        Building tileBuilding = tile
-                .getTileBuilding(TileLocation.fromArray(tile.getLocation()));
-        if (tile.getAmountOfBuildingsOn(playerTerrain) < 2) {
-            if (tileTerrain.equals(playerTerrain)) {
-                list.add(new BuildAction(playerName, tile.getLocation(),
-                        playerTerrain, Building.DWELLING));
-            }
-        } else {
+        Terrain tileTerrain = game.getTileTerrain(tile.getLocation());
+
+        int terraformCost = tileTerrain.distanceTo(playerTerrain).getAsInt();
+
+        if (game.getGamePhase().equals(GamePhase.GAME_ROUND)) {
             if (tile.isIndirectlyAdjacentTo(playerTerrain,
                     game.getPlayerShippingRange(playerName))) {
-                list.addAll(tileBuilding.upgrades().stream()
-                        .map(u -> new BuildAction(playerName,
-                                tile.getLocation(), playerTerrain, u))
-                        .toList());
+                list.add(new BuildAction(playerName, tile.getLocation(),
+                        playerTerrain, Building.DWELLING, terraformCost));
+            }
+        } else if (!game.getGamePhase().equals(GamePhase.GAME_END)) {
+            if (tileTerrain.equals(playerTerrain)) {
+                list.add(new BuildAction(playerName, tile.getLocation(),
+                        playerTerrain, Building.DWELLING, terraformCost));
             }
         }
+        return list;
+    }
+
+    public List<UpgradeAction> getUpgradeActions(String playerName, Tile tile) {
+        List<UpgradeAction> list = new ArrayList<UpgradeAction>();
+
+        if (tile.hasBuilding() && game.getTileTerrain(tile.getLocation())
+                .equals(game.getPlayerTerrain(playerName))) {
+            Building tileBuilding = game.getTileBuilding(tile.getLocation());
+            list.addAll(
+                    tileBuilding.upgrades().stream()
+                            .map(b -> new UpgradeAction(playerName,
+                                    tile.getLocation(), tileBuilding, b))
+                            .toList());
+        }
+
         return list;
     }
 
