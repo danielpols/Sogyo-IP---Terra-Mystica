@@ -4,7 +4,7 @@
 </script>
 
 <template>
-    <HexPopup class="tilePopup" :style="popupCSS"/>
+    <HexPopup class="tilePopup" :style="popupCSS" :actions="tile.actions" @toggle-popup="showPopup = !showPopup"/>
     <div class="tileBorder" :style="borderCSS">
         <div class="tileContainer">
             <a class="tile">
@@ -42,7 +42,8 @@
         popupCSS() {
             return {
                 '--popup-visibility': this.showPopup ? 'visible' : 'hidden',
-                '--popup-hover-opacity' : this.showPopup ? 1 : 0.5
+                '--popup-hover-opacity': this.showPopup ? 1 : 0.5,
+                '--popup-pointer-events': this.showPopup ? 'all' : 'none'
             }
         }
     }
@@ -98,10 +99,12 @@
     z-index: 1;
     visibility: var(--popup-visibility);
 
+    pointer-events: var(--popup-pointer-events);
+
     width: 100%;
 
     left: 50%;
-    top: 50%;
+    top: 0%;
     transform: translate(-50%, -50%);
 }
 
