@@ -2,6 +2,7 @@ package terra.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 
 import terra.domain.actions.BuildAction;
 import terra.domain.actions.PassAction;
@@ -31,18 +32,24 @@ public class ActionBuilder {
         Terrain playerTerrain = game.getPlayerTerrain(playerName);
         Terrain tileTerrain = game.getTileTerrain(tile.getLocation());
 
-        int terraformCost = tileTerrain.distanceTo(playerTerrain).getAsInt();
+        OptionalInt terraformCost = tileTerrain.distanceTo(playerTerrain);
+
+        if (terraformCost.isEmpty()) {
+            return list;
+        }
 
         if (game.getGamePhase().equals(GamePhase.GAME_ROUND)) {
             if (tile.isIndirectlyAdjacentTo(playerTerrain,
                     game.getPlayerShippingRange(playerName))) {
                 list.add(new BuildAction(playerName, tile.getLocation(),
-                        playerTerrain, Building.DWELLING, terraformCost));
+                        playerTerrain, Building.DWELLING,
+                        terraformCost.getAsInt()));
             }
         } else if (!game.getGamePhase().equals(GamePhase.GAME_END)) {
             if (tileTerrain.equals(playerTerrain)) {
                 list.add(new BuildAction(playerName, tile.getLocation(),
-                        playerTerrain, Building.DWELLING, terraformCost));
+                        playerTerrain, Building.DWELLING,
+                        terraformCost.getAsInt()));
             }
         }
         return list;
