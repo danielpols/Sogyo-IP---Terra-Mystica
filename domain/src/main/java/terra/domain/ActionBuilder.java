@@ -53,6 +53,10 @@ public class ActionBuilder {
                         false)
                 : new Resource(0, 0, 0);
 
+        if (!game.playerCanPayCost(playerName, buildCost)) {
+            return list;
+        }
+
         if (buildableDuringRound || buildableDuringSetup) {
             list.add(new BuildAction(playerName, buildCost, tile.getLocation(),
                     playerTerrain, Building.DWELLING,
@@ -73,6 +77,9 @@ public class ActionBuilder {
                             && !getTerrain(t).equals(getTerrain(tile)))
                     .count() > 0;
             list.addAll(tileBuilding.upgrades().stream()
+                    .filter(b -> game.playerCanPayCost(playerName,
+                            game.getPlayerBuildingCost(playerName, b,
+                                    tileAdjacentToOpponent)))
                     .map(b -> new UpgradeAction(playerName,
                             game.getPlayerBuildingCost(playerName, b,
                                     tileAdjacentToOpponent),

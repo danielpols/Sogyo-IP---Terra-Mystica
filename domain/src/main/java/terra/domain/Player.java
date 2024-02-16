@@ -166,11 +166,25 @@ public class Player {
                 builtList.put(upgradeAction.getSourceBuilding(),
                         builtList.get(upgradeAction.getSourceBuilding()) - 1);
             }
-            resource = resource.subtract(action.getCost());
+            findPlayer(action.getPlayerName()).payForCost(action.getCost());
         }
         if (action instanceof PassAction) {
             findPlayer(action.getPlayerName()).pass();
         }
+    }
+
+    protected boolean canPayForCost(String name, Resource cost) {
+        return findPlayer(name).canPayForCost(cost);
+    }
+
+    private boolean canPayForCost(Resource cost) {
+        return resource.coin() >= cost.coin()
+                && resource.worker() >= cost.worker()
+                && resource.priest() >= cost.priest();
+    }
+
+    private void payForCost(Resource cost) {
+        resource = resource.subtract(cost);
     }
 
     private Player getTurnPlayer() {
