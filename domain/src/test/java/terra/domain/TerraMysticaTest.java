@@ -24,7 +24,7 @@ public class TerraMysticaTest {
         List<Terrain> playerTerrains = Arrays.asList(Terrain.SWAMP,
                 Terrain.PLAINS, Terrain.MOUNTAINS, Terrain.DESERT);
         Terrain[] terrains = { Terrain.SWAMP, Terrain.SWAMP, Terrain.RIVER,
-                Terrain.WASTELAND, Terrain.SWAMP };
+                Terrain.SWAMP, Terrain.SWAMP };
         defaultGame = new TerraMysticaFactory().startGame(names, playerTerrains,
                 terrains);
     }
@@ -89,7 +89,7 @@ public class TerraMysticaTest {
     @Test
     public void testTileBuildAction() {
         List<GameAction> actions = defaultGame.getTileActions("Daniel",
-                new int[] { 0, 0 });
+                new int[] { 0, 1 });
 
         assertEquals(1, actions.stream().filter(a -> a instanceof BuildAction)
                 .toList().size());
@@ -97,16 +97,12 @@ public class TerraMysticaTest {
         assertInstanceOf(BuildAction.class, buildAction);
         defaultGame.perform(buildAction);
         assertEquals(Building.DWELLING,
-                defaultGame.getTileBuilding(new int[] { 0, 0 }));
+                defaultGame.getTileBuilding(new int[] { 0, 1 }));
 
         assertEquals(0,
-                defaultGame.getTileActions("Daniel", new int[] { 0, 0 })
+                defaultGame.getTileActions("Daniel", new int[] { 0, 1 })
                         .stream().filter(a -> a instanceof BuildAction).toList()
                         .size());
-
-        defaultGame.perform(defaultGame
-                .getTileActions("Daniel", new int[] { 0, 1 }).stream()
-                .filter(a -> a instanceof BuildAction).findFirst().get());
 
         // across the river
         ((TerraMystica) defaultGame).setGamePhase(GamePhase.GAME_ROUND);
