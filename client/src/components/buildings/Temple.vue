@@ -2,9 +2,10 @@
 </script>
 
 <template>
-    <svg class="temple" viewBox="0 0 100 100">
-        <polygon points="30,70 70,70 70,40, 60,33 50,40 50,50 30,50" 
-        fill="none" stroke="black" stroke-width="3"/>
+    <svg class="temple" viewBox="28 28 44 44">
+        <circle cx="50" cy="50" r="20" fill="none" stroke="black" stroke-width="3"/>
+        <line x1="28" y1="50" x2="72" y2="50" fill="none" stroke="black" stroke-width="3"/>
+        <line x1="50" y1="28" x2="50" y2="72" fill="none" stroke="black" stroke-width="3"/>
     </svg>
 </template>
 
@@ -12,11 +13,4 @@
 </script>
 
 <style scoped>
-.temple {
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-}
 </style>

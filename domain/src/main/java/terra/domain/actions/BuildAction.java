@@ -5,16 +5,22 @@ import terra.domain.Terrain;
 
 public class BuildAction extends TileAction {
 
-    private final Building targetBuilding;
+    private final int terraformCost;
+    private final Terrain playerTerrain;
 
     public BuildAction(String playerName, int[] location, Terrain playerTerrain,
-            Building targetBuilding) {
-        super(playerName, location, playerTerrain);
-        this.targetBuilding = targetBuilding;
+            Building targetBuilding, int terraformCost) {
+        super(playerName, location, targetBuilding);
+        this.playerTerrain = playerTerrain;
+        this.terraformCost = terraformCost;
     }
 
-    public Building getTargetBuilding() {
-        return targetBuilding;
+    public int getTerraformCost() {
+        return terraformCost;
+    }
+
+    public Terrain getPlayerTerrain() {
+        return playerTerrain;
     }
 
 }

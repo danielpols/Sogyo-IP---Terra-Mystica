@@ -7,6 +7,7 @@ import java.util.Set;
 
 import terra.domain.actions.BuildAction;
 import terra.domain.actions.TileAction;
+import terra.domain.actions.UpgradeAction;
 
 public class Tile {
 
@@ -52,6 +53,7 @@ public class Tile {
         List<TileAction> list = new ArrayList<TileAction>();
         Tile targetTile = findTile(target);
         list.addAll(targetTile.getBuildAction(playerName, builder));
+        list.addAll(targetTile.getUpgradeActions(playerName, builder));
         return list;
     }
 
@@ -60,18 +62,35 @@ public class Tile {
         return builder.getBuildAction(playerName, this);
     }
 
+    private List<UpgradeAction> getUpgradeActions(String playerName,
+            ActionBuilder builder) {
+        return builder.getUpgradeActions(playerName, this);
+    }
+
     protected void perform(TileAction action) {
         if (action instanceof BuildAction) {
             findTile(TileLocation.fromArray(action.getLocation()))
                     .build((BuildAction) action);
         }
+        if (action instanceof UpgradeAction) {
+            findTile(TileLocation.fromArray(action.getLocation()))
+                    .upgrade((UpgradeAction) action);
+        }
     }
 
-    protected void build(BuildAction action) {
+    private void build(BuildAction action) {
         if (location.equals(TileLocation.fromArray(action.getLocation()))) {
             if (building.upgradesTo(action.getTargetBuilding())) {
                 building = action.getTargetBuilding();
                 terrain = action.getPlayerTerrain();
+            }
+        }
+    }
+
+    private void upgrade(UpgradeAction action) {
+        if (location.equals(TileLocation.fromArray(action.getLocation()))) {
+            if (building.upgradesTo(action.getTargetBuilding())) {
+                building = action.getTargetBuilding();
             }
         }
     }

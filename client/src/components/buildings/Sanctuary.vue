@@ -2,9 +2,11 @@
 </script>
 
 <template>
-    <svg class="sanctuary" viewBox="0 0 100 100">
-        <polygon points="30,70 70,70 70,40, 60,33 50,40 50,50 30,50" 
-        fill="none" stroke="black" stroke-width="3"/>
+    <svg class="sanctuary" viewBox="15 35 70 30">
+        <line x1="30" y1="35" x2="70" y2="35" fill="none" stroke="black" stroke-width="3"/>
+        <line x1="30" y1="65" x2="70" y2="65" fill="none" stroke="black" stroke-width="3"/>
+        <path d="M 30,35 a15,15 0 0,0 0,30" fill="none" stroke="black" stroke-width="3"/>
+        <path d="M 70,65 a15,15 0 0,0 0,-30" fill="none" stroke="black" stroke-width="3"/>
     </svg>
 </template>
 
@@ -12,11 +14,4 @@
 </script>
 
 <style scoped>
-.sanctuary {
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-}
 </style>

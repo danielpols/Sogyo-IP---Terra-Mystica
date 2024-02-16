@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <svg class="stronghold" viewBox="0 0 100 100">
+    <svg class="stronghold" viewBox="18 29 64 41">
         <rect x="20" y="40" width="10" height="30" 
         stroke="black" stroke-width="3" fill="none"/>
         <rect x="70" y="40" width="10" height="30" 
@@ -20,11 +20,4 @@
 </script>
 
 <style scoped>
-.stronghold {
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-}
 </style>

@@ -10,6 +10,7 @@ public class BuildActionDTO extends ActionDTO {
     private int[] location;
     private Terrain playerTerrain;
     private Building targetBuilding;
+    private int terraformCost;
 
     public BuildActionDTO() {
 
@@ -20,11 +21,12 @@ public class BuildActionDTO extends ActionDTO {
         this.setLocation(action.getLocation());
         this.setPlayerTerrain(action.getPlayerTerrain());
         this.setTargetBuilding(action.getTargetBuilding());
+        this.setTerraformCost(action.getTerraformCost());
     }
 
     public BuildAction toAction() {
         return new BuildAction(getPlayerName(), location, playerTerrain,
-                targetBuilding);
+                targetBuilding, terraformCost);
     }
 
     public int[] getLocation() {
@@ -49,6 +51,14 @@ public class BuildActionDTO extends ActionDTO {
 
     public void setTargetBuilding(Building targetBuilding) {
         this.targetBuilding = targetBuilding;
+    }
+
+    public int getTerraformCost() {
+        return terraformCost;
+    }
+
+    public void setTerraformCost(int terraformCost) {
+        this.terraformCost = terraformCost;
     }
 
 }

@@ -1,6 +1,11 @@
 package terra.domain;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -109,6 +114,7 @@ public class TerraMysticaTest {
                 .filter(a -> a instanceof BuildAction).findFirst().get());
 
         // across the river
+        ((TerraMystica) defaultGame).setGamePhase(GamePhase.GAME_ROUND);
         List<GameAction> crossRiverActions = defaultGame
                 .getTileActions("Daniel", new int[] { 0, 3 }).stream()
                 .filter(a -> a instanceof BuildAction).toList();
@@ -202,6 +208,29 @@ public class TerraMysticaTest {
             defaultGame.startNewRoundIfAllPassed();
         });
         assertEquals("Game has ended", defaultGame.getGamePhaseMessage());
+    }
+
+    @Test
+    public void testBuildingUpgrades() {
+
+        defaultGame.perform(
+                defaultGame.getTileActions("Daniel", new int[] { 0, 0 })
+                        .stream().findFirst().get());
+
+        ((TerraMystica) defaultGame).setGamePhase(GamePhase.GAME_ROUND);
+        assertEquals(Building.DWELLING,
+                defaultGame.getTileBuilding(new int[] { 0, 0 }));
+        assertEquals(1, defaultGame.getTileActions("Daniel", new int[] { 0, 0 })
+                .size());
+
+        defaultGame.perform(
+                defaultGame.getTileActions("Daniel", new int[] { 0, 0 })
+                        .stream().findFirst().get());
+
+        assertEquals(Building.TRADING,
+                defaultGame.getTileBuilding(new int[] { 0, 0 }));
+        assertEquals(2, defaultGame.getTileActions("Daniel", new int[] { 0, 0 })
+                .size());
     }
 
 }

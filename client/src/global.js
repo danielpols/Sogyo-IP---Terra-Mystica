@@ -38,3 +38,19 @@ export async function doAction(action) {
     .then(data => gameState.state = data)
     .catch(error => console.log(error));
 }
+
+export function getIcon(building) {
+    switch(building) {
+        case "DWELLING":
+            return "Dwelling";
+        case "TRADING":
+            return "TradingCity";
+        case "FORTRESS":
+            return "Stronghold";
+        case "CHURCH":
+            return "Temple";
+        case "SANCTUARY":
+            return "Sanctuary";
+    }
+    return building.substring(0, 1) + building.substring(1).toLowerCase();
+}
