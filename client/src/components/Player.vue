@@ -5,7 +5,7 @@
 <template>
     <li class="playerItem" :style="playerCSS">
         <div class="playerBoard">
-            {{ player.name }} <br/>
+            {{ player.name }} {{ player.resources[0]+"/"+player.resources[1]+"/"+player.resources[2] }}<br/>
             {{ player.terrain }} <br/>
             <button v-if="player.passAction != null" type="button" @click="passTurn">Pass</button>
         </div>
