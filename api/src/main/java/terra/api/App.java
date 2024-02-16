@@ -59,8 +59,8 @@ public class App {
         // Create the dependencies we want to inject
         ITerraMysticaFactory factory = new TerraMysticaFactory();
         ITerraMysticaRepository repository = new TerraMysticaRepository(
-                new MockTerraMysticaDatabase());
-        TerraController controller = new TerraController(factory, repository);
+                new MockTerraMysticaDatabase(), factory);
+        TerraController controller = new TerraController(repository);
         // Register our MancalaController
         return new ResourceConfig().register(controller);
         // Note: Jetty (and most other frameworks) can also handle Dependency

@@ -1,17 +1,19 @@
 package terra.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 
+import terra.domain.Building;
 import terra.domain.ITerraMystica;
-import terra.domain.Player;
-import terra.domain.TerraMystica;
+import terra.domain.TerraMysticaFactory;
 import terra.domain.Terrain;
+import terra.domain.actions.BuildAction;
 
 public class TerraRepositoryTest {
 
@@ -19,9 +21,15 @@ public class TerraRepositoryTest {
     public void testCanObtainStartingBoard() {
 
         ITerraMysticaRepository repository = new TerraMysticaRepository(
-                new MockTerraMysticaDatabase());
+                new MockTerraMysticaDatabase(), new TerraMysticaFactory());
 
-        Terrain[] terrain = repository.getStartingTerrain();
+        repository.initialiseGame("yo", Arrays.asList("Daniel", "Gerrit"),
+                Arrays.asList(Terrain.PLAINS, Terrain.MOUNTAINS));
+
+        ITerraMystica game = repository.loadGame("yo");
+
+        Terrain[] terrain = Arrays.stream(game.getTileLocations())
+                .map(l -> game.getTileTerrain(l)).toArray(Terrain[]::new);
 
         Terrain[] actual = IntStream.range(0, 5).mapToObj(i -> terrain[i])
                 .toArray(Terrain[]::new);
@@ -34,17 +42,20 @@ public class TerraRepositoryTest {
     @Test
     public void testCanSaveAndLoadGame() {
         ITerraMysticaRepository repository = new TerraMysticaRepository(
-                new MockTerraMysticaDatabase());
-
-        ITerraMystica game = new TerraMystica(
-                new Player(Arrays.asList("Daniel", "Gerrit"),
-                        Arrays.asList(Terrain.LAKE, Terrain.MOUNTAINS)),
-                repository.getStartingTerrain(), 13);
+                new MockTerraMysticaDatabase(), new TerraMysticaFactory());
         String id = "bla";
 
-        repository.saveGame(id, game);
+        repository.initialiseGame(id, Arrays.asList("Daniel", "Gerrit"),
+                Arrays.asList(Terrain.PLAINS, Terrain.MOUNTAINS));
 
-        assertSame(game, repository.loadGame(id));
+        repository.saveAction(id, new BuildAction("Daniel", new int[] { 0, 0 },
+                Terrain.PLAINS, Building.DWELLING, 0));
+
+        ITerraMystica game = repository.loadGame(id);
+
+        assertEquals(Building.DWELLING,
+                game.getTileBuilding(new int[] { 0, 0 }));
+        assertTrue(game.playerHasTurn("Gerrit"));
     }
 
 }
