@@ -6,6 +6,8 @@ import Building from './Building.vue';
 <template>
     <button type="button" class="tileButton" @click="$emit('togglePopup')" :style="buttonCSS" :disabled="tile.actions.length==0"
     :key="tile.building"><Building :icon="getIcon(tile.building)" :scale="0.4"/>
+        {{ tile.building=="NONE" && tile.actions.length > 0 && tile.actions[0].terraformCost > 0 
+            ? tile.actions[0].terraformCost+" V" : "" }}
     </button>
 </template>
 
