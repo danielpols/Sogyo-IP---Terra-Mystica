@@ -53,7 +53,8 @@ public class ActionBuilder {
                         false)
                 : new Resource(0, 0, 0);
 
-        if (!game.playerCanPayCost(playerName, buildCost)) {
+        if (!game.playerCanPayCost(playerName, buildCost) || !game
+                .playerCanBuildBuilding(playerName, Building.DWELLING)) {
             return list;
         }
 
@@ -79,7 +80,8 @@ public class ActionBuilder {
             list.addAll(tileBuilding.upgrades().stream()
                     .filter(b -> game.playerCanPayCost(playerName,
                             game.getPlayerBuildingCost(playerName, b,
-                                    tileAdjacentToOpponent)))
+                                    tileAdjacentToOpponent))
+                            && game.playerCanBuildBuilding(playerName, b))
                     .map(b -> new UpgradeAction(playerName,
                             game.getPlayerBuildingCost(playerName, b,
                                     tileAdjacentToOpponent),

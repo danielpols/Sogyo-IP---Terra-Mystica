@@ -31,6 +31,8 @@ public interface ITerraMystica {
 
     boolean playerCanPayCost(String name, Resource cost);
 
+    boolean playerCanBuildBuilding(String name, Building building);
+
     int[][] getTileLocations();
 
     Terrain getTileTerrain(int[] location);

@@ -111,6 +111,11 @@ public class Player {
         return findPlayer(name).getIncome();
     }
 
+    protected void gainIncome(String name) {
+        findPlayer(name).resource = findPlayer(name).resource
+                .add(findPlayer(name).getIncome());
+    }
+
     private Resource getIncome() {
         Resource income = new Resource(0, 1, 0); // default
         income = income
@@ -181,6 +186,14 @@ public class Player {
         return resource.coin() >= cost.coin()
                 && resource.worker() >= cost.worker()
                 && resource.priest() >= cost.priest();
+    }
+
+    protected boolean canBuildBuilding(String name, Building building) {
+        return findPlayer(name).canBuildBuilding(building);
+    }
+
+    private boolean canBuildBuilding(Building building) {
+        return amountBuilt.get(building) < rewards.get(building).size();
     }
 
     private void payForCost(Resource cost) {

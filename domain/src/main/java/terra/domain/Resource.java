@@ -18,6 +18,9 @@ public record Resource(int coin, int worker, int priest) {
     }
 
     private static Resource sum(List<Resource> list) {
+        if (list.size() == 0) {
+            return new Resource(0, 0, 0);
+        }
         if (list.size() == 1) {
             return list.get(0);
         }

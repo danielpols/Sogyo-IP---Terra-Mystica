@@ -94,6 +94,10 @@ public class TerraMystica implements ITerraMystica {
         return player.canPayForCost(name, cost);
     }
 
+    public boolean playerCanBuildBuilding(String name, Building building) {
+        return player.canBuildBuilding(name, building);
+    }
+
     public int[][] getTileLocations() {
         return rootTile.getTileLocations();
     }
@@ -158,6 +162,7 @@ public class TerraMystica implements ITerraMystica {
             gamePhase = GamePhase.GAME_ROUND;
             player.endTurn(player.getAllPlayerNames().stream()
                     .filter(n -> playerHasTurn(n)).findFirst().get());
+            allPlayersTakeIncome();
         }
     }
 
@@ -165,11 +170,16 @@ public class TerraMystica implements ITerraMystica {
         if (player.getAllPlayerNames().stream().filter(n -> !playerHasPassed(n))
                 .count() == 0) {
             player.startNewRound();
+            allPlayersTakeIncome();
             roundNumber++;
         }
         if (roundNumber == 6) {
             gamePhase = GamePhase.GAME_END;
         }
+    }
+
+    private void allPlayersTakeIncome() {
+        player.getAllPlayerNames().forEach(n -> player.gainIncome(n));
     }
 
     protected void setGamePhase(GamePhase phase) {
