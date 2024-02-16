@@ -1,8 +1,11 @@
 package terra.persistence;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-import terra.domain.ITerraMystica;
+import terra.domain.Terrain;
+import terra.domain.actions.GameAction;
 
 public class MockTerraMysticaDatabase implements ITerraMysticaDatabase {
 
@@ -11,22 +14,46 @@ public class MockTerraMysticaDatabase implements ITerraMysticaDatabase {
             + "MFRRDFRRRPMP" + "RRRMRWRFRDSLD" + "DLPRRRLSRMPM"
             + "WSMLWFDPMRLFW";
 
-    private HashMap<String, ITerraMystica> database;
+    private HashMap<String, List<String>> names;
+    private HashMap<String, List<Terrain>> terrains;
+    private HashMap<String, List<GameAction>> actions;
 
     public MockTerraMysticaDatabase() {
-        database = new HashMap<String, ITerraMystica>();
+        names = new HashMap<String, List<String>>();
+        terrains = new HashMap<String, List<Terrain>>();
+        actions = new HashMap<String, List<GameAction>>();
     }
 
     public String getStartingBoard() {
         return start;
     }
 
-    public void saveGame(String id, ITerraMystica game) {
-        database.put(id, game);
+    public boolean hasID(String id) {
+        return names.keySet().contains(id) && terrains.keySet().contains(id)
+                && actions.keySet().contains(id);
     }
 
-    public ITerraMystica loadGame(String id) {
-        return database.get(id);
+    public void initialiseGame(String id, List<String> playerNames,
+            List<Terrain> playerTerrains) {
+        names.put(id, playerNames);
+        terrains.put(id, playerTerrains);
+        actions.put(id, new ArrayList<GameAction>());
+    }
+
+    public List<String> getPlayerNames(String id) {
+        return names.get(id);
+    }
+
+    public List<Terrain> getPlayerTerrains(String id) {
+        return terrains.get(id);
+    }
+
+    public List<GameAction> getGameActions(String id) {
+        return actions.get(id);
+    }
+
+    public void saveAction(String id, GameAction action) {
+        actions.get(id).add(action);
     }
 
 }

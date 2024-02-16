@@ -1,13 +1,25 @@
 package terra.persistence;
 
-import terra.domain.ITerraMystica;
+import java.util.List;
+
+import terra.domain.Terrain;
+import terra.domain.actions.GameAction;
 
 public interface ITerraMysticaDatabase {
 
     String getStartingBoard();
 
-    void saveGame(String id, ITerraMystica game);
+    boolean hasID(String id);
 
-    ITerraMystica loadGame(String id);
+    void initialiseGame(String id, List<String> playerNames,
+            List<Terrain> playerTerrains);
+
+    List<String> getPlayerNames(String id);
+
+    List<Terrain> getPlayerTerrains(String id);
+
+    List<GameAction> getGameActions(String id);
+
+    void saveAction(String id, GameAction action);
 
 }

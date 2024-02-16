@@ -16,19 +16,14 @@ import terra.api.models.ActionDTO;
 import terra.api.models.GameDTO;
 import terra.api.models.StartGameDTO;
 import terra.domain.ITerraMystica;
-import terra.domain.ITerraMysticaFactory;
-import terra.domain.actions.GameAction;
 import terra.persistence.ITerraMysticaRepository;
 
 @Path("/terra/api")
 public class TerraController {
 
-    private ITerraMysticaFactory factory;
     private ITerraMysticaRepository repository;
 
-    public TerraController(ITerraMysticaFactory factory,
-            ITerraMysticaRepository repository) {
-        this.factory = factory;
+    public TerraController(ITerraMysticaRepository repository) {
         this.repository = repository;
     }
 
@@ -53,10 +48,10 @@ public class TerraController {
         String gameId = UUID.randomUUID().toString();
         session.setAttribute("gameId", gameId);
 
-        ITerraMystica game = factory.startGame(body.getStartingNames(),
-                body.getStartingTerrains(), repository.getStartingTerrain());
+        repository.initialiseGame(gameId, body.getStartingNames(),
+                body.getStartingTerrains());
 
-        repository.saveGame(gameId, game);
+        ITerraMystica game = repository.loadGame(gameId);
 
         // Use the game to create a DTO.
         GameDTO output = new GameDTO(game);
@@ -73,12 +68,9 @@ public class TerraController {
         HttpSession session = request.getSession(false);
         String gameId = (String) session.getAttribute("gameId");
 
-        ITerraMystica game = repository.loadGame(gameId);
+        repository.saveAction(gameId, body.toAction());
 
-        GameAction action = body.toAction();
-        game.perform(action);
-        game.endTurn(action.getPlayerName());
-        game.startNewRoundIfAllPassed();
+        ITerraMystica game = repository.loadGame(gameId);
 
         GameDTO output = new GameDTO(game);
         return Response.status(200).entity(output).build();
