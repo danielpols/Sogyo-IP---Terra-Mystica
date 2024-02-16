@@ -4,7 +4,6 @@ plugins {
     id 'java-library'
     id 'jacoco'
     id 'org.barfuin.gradle.jacocolog' version '3.1.0'
-    id 'checkstyle'
 }
 
 repositories {
@@ -26,12 +25,6 @@ test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
     finalizedBy jacocoTestCoverageVerification
-    finalizedBy checkstyleMain
-    finalizedBy checkstyleTest
-}
-
-checkstyle {
-    toolVersion = '10.3'
 }
 
 jacocoTestReport {
