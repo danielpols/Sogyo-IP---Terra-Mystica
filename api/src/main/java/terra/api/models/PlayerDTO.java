@@ -1,6 +1,7 @@
 package terra.api.models;
 
 import terra.domain.ITerraMystica;
+import terra.domain.Resource;
 import terra.domain.Terrain;
 
 public class PlayerDTO {
@@ -11,6 +12,8 @@ public class PlayerDTO {
     private boolean passed;
     private boolean starting;
 
+    private int[] resources;
+
     private ActionDTO passAction;
 
     public PlayerDTO(ITerraMystica game, String name) {
@@ -19,6 +22,10 @@ public class PlayerDTO {
         this.turn = game.playerHasTurn(name);
         this.passed = game.playerHasPassed(name);
         this.starting = game.isStartingPlayer(name);
+
+        Resource playerResources = game.getPlayerResource(name);
+        this.setResources(new int[] { playerResources.coin(),
+                playerResources.worker(), playerResources.priest() });
 
         this.passAction = ActionDTO.getActionDTO(game.getPassAction(name));
     }
@@ -45,6 +52,14 @@ public class PlayerDTO {
 
     public ActionDTO getPassAction() {
         return this.passAction;
+    }
+
+    public int[] getResources() {
+        return resources;
+    }
+
+    public void setResources(int[] resources) {
+        this.resources = resources;
     }
 
 }
