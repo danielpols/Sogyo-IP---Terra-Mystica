@@ -149,6 +149,30 @@ public class Player {
         }
     }
 
+    protected void endTurnReverse(String name) {
+        if (playerHasTurn(name)) {
+            findPlayer(name).switchTurnReverse();
+        }
+    }
+
+    private Player findPreviousPlayer(String playerName) {
+        if (nextPlayer.name.equals(playerName)) {
+            return this;
+        }
+        return nextPlayer.findPreviousPlayer(playerName);
+    }
+
+    private void switchTurnReverse() {
+        if (turn) {
+            turn = !turn;
+            findPreviousPlayer(name).switchTurnReverse();
+        } else if (passed) {
+            findPreviousPlayer(name).switchTurnReverse();
+        } else {
+            turn = !turn;
+        }
+    }
+
     protected void startNewRound() {
         if (!passed) {
             return;

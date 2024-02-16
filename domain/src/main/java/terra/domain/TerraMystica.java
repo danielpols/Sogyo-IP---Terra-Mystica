@@ -104,22 +104,30 @@ public class TerraMystica implements ITerraMystica {
     }
 
     public void perform(GameAction action) {
-        if (action instanceof PlayerAction) {
-            player.perform((PlayerAction) action);
-        }
-        if (action instanceof TileAction) {
-            rootTile.perform((TileAction) action);
+        if (playerHasTurn(action.getPlayerName())) {
+            if (action instanceof PlayerAction) {
+                player.perform((PlayerAction) action);
+            }
+            if (action instanceof TileAction) {
+                rootTile.perform((TileAction) action);
+            }
         }
     }
 
     public void endTurn(String playerName) {
-        player.endTurn(playerName);
+        if (gamePhase == GamePhase.GAME_START_REVERSE) {
+            player.endTurnReverse(playerName);
+        } else {
+            player.endTurn(playerName);
+        }
         if (gamePhase == GamePhase.GAME_START && player.getAllPlayerNames()
                 .stream()
                 .filter(n -> rootTile
                         .getAmountOfBuildingsOn(getPlayerTerrain(n)) != 1)
                 .count() == 0) {
             gamePhase = GamePhase.GAME_START_REVERSE;
+            player.endTurnReverse(player.getAllPlayerNames().stream()
+                    .filter(n -> playerHasTurn(n)).findFirst().get());
         }
         if (gamePhase == GamePhase.GAME_START_REVERSE && player
                 .getAllPlayerNames().stream()
@@ -127,6 +135,8 @@ public class TerraMystica implements ITerraMystica {
                         .getAmountOfBuildingsOn(getPlayerTerrain(n)) != 2)
                 .count() == 0) {
             gamePhase = GamePhase.GAME_ROUND;
+            player.endTurn(player.getAllPlayerNames().stream()
+                    .filter(n -> playerHasTurn(n)).findFirst().get());
         }
     }
 
