@@ -25,8 +25,8 @@ public class BuildActionDTO extends ActionDTO {
     }
 
     public BuildAction toAction() {
-        return new BuildAction(getPlayerName(), location, playerTerrain,
-                targetBuilding, terraformCost);
+        return new BuildAction(getPlayerName(), costResource(), location,
+                playerTerrain, targetBuilding, terraformCost);
     }
 
     public int[] getLocation() {

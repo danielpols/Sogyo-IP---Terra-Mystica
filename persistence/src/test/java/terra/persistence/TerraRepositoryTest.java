@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import terra.domain.Building;
 import terra.domain.ITerraMystica;
+import terra.domain.Resource;
 import terra.domain.TerraMysticaFactory;
 import terra.domain.Terrain;
 import terra.domain.actions.BuildAction;
@@ -48,8 +49,10 @@ public class TerraRepositoryTest {
         repository.initialiseGame(id, Arrays.asList("Daniel", "Gerrit"),
                 Arrays.asList(Terrain.PLAINS, Terrain.MOUNTAINS));
 
-        repository.saveAction(id, new BuildAction("Daniel", new int[] { 0, 0 },
-                Terrain.PLAINS, Building.DWELLING, 0));
+        repository.saveAction(id,
+                new BuildAction("Daniel", new Resource(0, 0, 0),
+                        new int[] { 0, 0 }, Terrain.PLAINS, Building.DWELLING,
+                        0));
 
         ITerraMystica game = repository.loadGame(id);
 

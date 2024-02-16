@@ -30,7 +30,7 @@ public class ActionBuilder {
         }
 
         Terrain playerTerrain = game.getPlayerTerrain(playerName);
-        Terrain tileTerrain = game.getTileTerrain(tile.getLocation());
+        Terrain tileTerrain = getTerrain(tile);
 
         OptionalInt terraformCost = tileTerrain.distanceTo(playerTerrain);
 
@@ -38,19 +38,30 @@ public class ActionBuilder {
             return list;
         }
 
-        if (game.getGamePhase().equals(GamePhase.GAME_ROUND)) {
-            if (tile.isIndirectlyAdjacentTo(playerTerrain,
-                    game.getPlayerShippingRange(playerName))) {
-                list.add(new BuildAction(playerName, tile.getLocation(),
-                        playerTerrain, Building.DWELLING,
-                        terraformCost.getAsInt()));
-            }
-        } else if (!game.getGamePhase().equals(GamePhase.GAME_END)) {
-            if (tileTerrain.equals(playerTerrain)) {
-                list.add(new BuildAction(playerName, tile.getLocation(),
-                        playerTerrain, Building.DWELLING,
-                        terraformCost.getAsInt()));
-            }
+        boolean buildableDuringRound = game.getGamePhase()
+                .equals(GamePhase.GAME_ROUND)
+                && tile.isIndirectlyAdjacentTo(playerTerrain,
+                        game.getPlayerShippingRange(playerName));
+
+        boolean buildableDuringSetup = (game.getGamePhase()
+                .equals(GamePhase.GAME_START)
+                || game.getGamePhase().equals(GamePhase.GAME_START_REVERSE))
+                && tileTerrain.equals(playerTerrain);
+
+        Resource buildCost = game.getGamePhase().equals(GamePhase.GAME_ROUND)
+                ? game.getPlayerBuildingCost(playerName, Building.DWELLING,
+                        false)
+                : new Resource(0, 0, 0);
+
+        if (!game.playerCanPayCost(playerName, buildCost) || !game
+                .playerCanBuildBuilding(playerName, Building.DWELLING)) {
+            return list;
+        }
+
+        if (buildableDuringRound || buildableDuringSetup) {
+            list.add(new BuildAction(playerName, buildCost, tile.getLocation(),
+                    playerTerrain, Building.DWELLING,
+                    terraformCost.getAsInt()));
         }
         return list;
     }
@@ -59,18 +70,30 @@ public class ActionBuilder {
         List<UpgradeAction> list = new ArrayList<UpgradeAction>();
 
         if (tile.hasBuilding()
-                && game.getTileTerrain(tile.getLocation())
-                        .equals(game.getPlayerTerrain(playerName))
+                && getTerrain(tile).equals(game.getPlayerTerrain(playerName))
                 && game.getGamePhase().equals(GamePhase.GAME_ROUND)) {
             Building tileBuilding = game.getTileBuilding(tile.getLocation());
-            list.addAll(
-                    tileBuilding.upgrades().stream()
-                            .map(b -> new UpgradeAction(playerName,
-                                    tile.getLocation(), tileBuilding, b))
-                            .toList());
+            boolean tileAdjacentToOpponent = tile.getAdjacent().stream()
+                    .filter(t -> t.hasBuilding()
+                            && !getTerrain(t).equals(getTerrain(tile)))
+                    .count() > 0;
+            list.addAll(tileBuilding.upgrades().stream()
+                    .filter(b -> game.playerCanPayCost(playerName,
+                            game.getPlayerBuildingCost(playerName, b,
+                                    tileAdjacentToOpponent))
+                            && game.playerCanBuildBuilding(playerName, b))
+                    .map(b -> new UpgradeAction(playerName,
+                            game.getPlayerBuildingCost(playerName, b,
+                                    tileAdjacentToOpponent),
+                            tile.getLocation(), tileBuilding, b))
+                    .toList());
         }
 
         return list;
+    }
+
+    private Terrain getTerrain(Tile t) {
+        return game.getTileTerrain(t.getLocation());
     }
 
 }
