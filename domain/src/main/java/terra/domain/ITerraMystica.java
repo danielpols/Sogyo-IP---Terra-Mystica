@@ -29,6 +29,8 @@ public interface ITerraMystica {
     Resource getPlayerBuildingCost(String name, Building building,
             boolean adjacent);
 
+    Resource getPlayerTerraformCost(String name, int steps);
+
     boolean playerCanPayCost(String name, Resource cost);
 
     boolean playerCanBuildBuilding(String name, Building building);

@@ -53,6 +53,9 @@ public class ActionBuilder {
                         false)
                 : new Resource(0, 0, 0);
 
+        buildCost = buildCost.add(game.getPlayerTerraformCost(playerName,
+                terraformCost.getAsInt()));
+
         if (!game.playerCanPayCost(playerName, buildCost) || !game
                 .playerCanBuildBuilding(playerName, Building.DWELLING)) {
             return list;

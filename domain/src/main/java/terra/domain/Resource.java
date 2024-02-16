@@ -13,6 +13,10 @@ public record Resource(int coin, int worker, int priest) {
                 priest - other.priest);
     }
 
+    public Resource multiply(int c) {
+        return new Resource(c * coin, c * worker, c * priest);
+    }
+
     public Resource addAll(List<Resource> list) {
         return add(sum(list));
     }
