@@ -22,8 +22,8 @@ public class UpgradeActionDTO extends ActionDTO {
     }
 
     public UpgradeAction toAction() {
-        return new UpgradeAction(getPlayerName(), location, sourceBuilding,
-                targetBuilding);
+        return new UpgradeAction(getPlayerName(), costResource(), location,
+                sourceBuilding, targetBuilding);
     }
 
     public int[] getLocation() {
