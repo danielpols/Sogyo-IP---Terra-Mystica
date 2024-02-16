@@ -8,6 +8,8 @@ import java.util.stream.IntStream;
 
 import terra.domain.actions.GameAction;
 import terra.domain.actions.PassAction;
+import terra.domain.actions.ShippingAction;
+import terra.domain.actions.ShovelAction;
 import terra.domain.actions.TileAction;
 import terra.domain.actions.UpgradeAction;
 
@@ -204,6 +206,14 @@ public class Player {
         }
         if (action instanceof PassAction) {
             findPlayer(action.getPlayerName()).pass();
+        }
+        if (action instanceof ShippingAction) {
+            findPlayer(action.getPlayerName()).payForCost(action.getCost());
+            findPlayer(action.getPlayerName()).shippingRange++;
+        }
+        if (action instanceof ShovelAction) {
+            findPlayer(action.getPlayerName()).payForCost(action.getCost());
+            findPlayer(action.getPlayerName()).terraformStep++;
         }
     }
 
