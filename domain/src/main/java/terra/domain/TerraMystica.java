@@ -90,6 +90,10 @@ public class TerraMystica implements ITerraMystica {
         return player.getBuildingCost(name, building, adjacent);
     }
 
+    public Resource getPlayerTerraformCost(String name, int steps) {
+        return player.getTerraformCost(name, steps);
+    }
+
     public boolean playerCanPayCost(String name, Resource cost) {
         return player.canPayForCost(name, cost);
     }

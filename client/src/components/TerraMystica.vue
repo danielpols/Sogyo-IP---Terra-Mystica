@@ -1,9 +1,11 @@
 <script setup>
+    import { gameState } from '@/global';
     import HexArray from './HexArray.vue'
     import PlayerArray from './PlayerArray.vue';
 </script>
 
 <template>
+    <div class="banner"> {{ gameState.state.message }} </div>
     <div class="gameScreen" @wheel.prevent="zoomBoard" @mousedown.middle.prevent.capture="pan=true" @mouseup.middle.capture="pan=false" @mouseleave="pan=false"
             v-on="pan ? {'mousemove': panBoard} : {}" ref="boardContainer">
         <HexArray :zoomLevel="boardZoomLevel" :offsetX="boardOffset.x+'px'" :offsetY="boardOffset.y+'px'" ref="board"/>
@@ -73,6 +75,10 @@ export default {
 </script>
 
 <style scoped>
+.banner {
+    font-size: 25px;
+}
+
 .gameScreen {
     display: inline-block;
     width: 60%;
