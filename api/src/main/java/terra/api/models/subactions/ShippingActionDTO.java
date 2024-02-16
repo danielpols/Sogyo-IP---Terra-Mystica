@@ -13,11 +13,20 @@ public class ShippingActionDTO extends ActionDTO {
 
     public ShippingActionDTO(ShippingAction action) {
         super(action);
-        newRange = action.getNewRange();
+        setNewRange(action.getNewRange());
     }
 
     public ShippingAction toAction() {
-        return new ShippingAction(getPlayerName(), costResource(), newRange);
+        return new ShippingAction(getPlayerName(), costResource(),
+                getNewRange());
+    }
+
+    public int getNewRange() {
+        return newRange;
+    }
+
+    public void setNewRange(int newRange) {
+        this.newRange = newRange;
     }
 
 }

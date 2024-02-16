@@ -14,11 +14,11 @@
                 </li>
                 <li class="playerSubListItem">
                     Shipping: {{ player.shippingRange }}
-                    <button class="sailButton" v-if="player.shippingAction != null" type="button">Upgrade!</button>
+                    <button class="sailButton" v-if="player.shippingAction != null" type="button" @click="upgradeShipping">Upgrade!</button>
                 </li>
                 <li class="playerSubListItem">
                     Terraform cost:<br/>({{ player.terraformCost[0] }}/{{ player.terraformCost[1] }}/{{ player.terraformCost[2] }})
-                    <button class="shovelButton" v-if="player.shovelAction != null" type="button">Upgrade!</button>
+                    <button class="shovelButton" v-if="player.shovelAction != null" type="button" @click="upgradeShovel">Upgrade!</button>
                 </li>
             </ul>
         </div>
@@ -33,7 +33,7 @@
                 await doAction(this.player.passAction);
             },
             async upgradeShipping() {
-                await doAction(this.playser.shippingAction);
+                await doAction(this.player.shippingAction);
             },
             async upgradeShovel() {
                 await doAction(this.player.shovelAction);

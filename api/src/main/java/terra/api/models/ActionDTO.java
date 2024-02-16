@@ -18,6 +18,8 @@ import terra.domain.actions.UpgradeAction;
 
 @JsonSubTypes(value = { @JsonSubTypes.Type(value = BuildActionDTO.class),
         @JsonSubTypes.Type(value = PassActionDTO.class),
+        @JsonSubTypes.Type(value = ShippingActionDTO.class),
+        @JsonSubTypes.Type(value = ShovelActionDTO.class),
         @JsonSubTypes.Type(value = UpgradeActionDTO.class) })
 @JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
 public abstract class ActionDTO {
