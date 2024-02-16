@@ -94,6 +94,10 @@ public class TerraMystica implements ITerraMystica {
         return player.getTerraformCost(name, steps);
     }
 
+    public Resource getPlayerImprovementCost(String name, String type) {
+        return player.getPlayerImprovementCost(name, type);
+    }
+
     public boolean playerCanPayCost(String name, Resource cost) {
         return player.canPayForCost(name, cost);
     }
@@ -117,6 +121,20 @@ public class TerraMystica implements ITerraMystica {
     public GameAction getPassAction(String playerName) {
         if (gamePhase == GamePhase.GAME_ROUND) {
             return actionBuilder.getPassAction(playerName);
+        }
+        return null;
+    }
+
+    public GameAction getShippingAction(String playerName) {
+        if (gamePhase == GamePhase.GAME_ROUND) {
+            return actionBuilder.getShippingAction(playerName);
+        }
+        return null;
+    }
+
+    public GameAction getShovelAction(String playerName) {
+        if (gamePhase == GamePhase.GAME_ROUND) {
+            return actionBuilder.getShovelAction(playerName);
         }
         return null;
     }

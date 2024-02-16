@@ -24,7 +24,7 @@ public class Player {
     private HashMap<Building, List<Resource>> rewards = new HashMap<Building, List<Resource>>();
 
     private int shippingRange = 1;
-    private int maxRange = 4;
+    private int maxRange = 3;
     private Resource rangeCost = new Resource(4, 0, 1);
 
     private Resource[] terraformCost = { new Resource(0, 3, 0),
@@ -162,6 +162,23 @@ public class Player {
     protected Resource getTerraformCost(String name, int steps) {
         return findPlayer(name).terraformCost[findPlayer(name).terraformStep]
                 .multiply(steps);
+    }
+
+    protected Resource getPlayerImprovementCost(String name, String type) {
+        if (type.equals("Shipping")) {
+            if (findPlayer(name).shippingRange <= findPlayer(name).maxRange) {
+                return findPlayer(name).rangeCost;
+            }
+        }
+
+        if (type.equals("Shovel")) {
+            if (findPlayer(name).terraformStep < findPlayer(
+                    name).terraformCost.length) {
+                return findPlayer(name).tfImproveCost;
+            }
+        }
+
+        return null;
     }
 
     private Player findPlayer(String name) {

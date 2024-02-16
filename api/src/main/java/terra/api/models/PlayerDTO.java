@@ -18,6 +18,8 @@ public class PlayerDTO {
     private int[] resources;
 
     private ActionDTO passAction;
+    private ActionDTO shippingAction;
+    private ActionDTO shovelAction;
 
     public PlayerDTO(ITerraMystica game, String name) {
         this.name = name;
@@ -37,6 +39,9 @@ public class PlayerDTO {
                 playerResources.worker(), playerResources.priest() });
 
         this.passAction = ActionDTO.getActionDTO(game.getPassAction(name));
+        this.shippingAction = ActionDTO
+                .getActionDTO(game.getShippingAction(name));
+        this.shovelAction = ActionDTO.getActionDTO(game.getShovelAction(name));
     }
 
     public String getName() {
@@ -85,6 +90,22 @@ public class PlayerDTO {
 
     public void setTerraformCost(int[] terraformCost) {
         this.terraformCost = terraformCost;
+    }
+
+    public ActionDTO getShippingAction() {
+        return shippingAction;
+    }
+
+    public void setShippingAction(ActionDTO shippingAction) {
+        this.shippingAction = shippingAction;
+    }
+
+    public ActionDTO getShovelAction() {
+        return shovelAction;
+    }
+
+    public void setShovelAction(ActionDTO shovelAction) {
+        this.shovelAction = shovelAction;
     }
 
 }
