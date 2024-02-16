@@ -166,21 +166,21 @@ public class TerraMysticaTest {
         assertEquals(GamePhase.GAME_START_REVERSE, game.getGamePhase());
         assertEquals("Setup", game.getGamePhaseMessage());
 
-        game.perform(game.getTileActions("Daniel", new int[] { 0, 4 }).stream()
+        game.perform(game.getTileActions("John", new int[] { 0, 7 }).stream()
                 .filter(a -> a instanceof BuildAction).findFirst().get());
-        game.endTurn("Daniel");
-
-        game.perform(game.getTileActions("Gerrit", new int[] { 0, 5 }).stream()
-                .filter(a -> a instanceof BuildAction).findFirst().get());
-        game.endTurn("Gerrit");
+        game.endTurn("John");
 
         game.perform(game.getTileActions("Wesley", new int[] { 0, 6 }).stream()
                 .filter(a -> a instanceof BuildAction).findFirst().get());
         game.endTurn("Wesley");
 
-        game.perform(game.getTileActions("John", new int[] { 0, 7 }).stream()
+        game.perform(game.getTileActions("Gerrit", new int[] { 0, 5 }).stream()
                 .filter(a -> a instanceof BuildAction).findFirst().get());
-        game.endTurn("John");
+        game.endTurn("Gerrit");
+
+        game.perform(game.getTileActions("Daniel", new int[] { 0, 4 }).stream()
+                .filter(a -> a instanceof BuildAction).findFirst().get());
+        game.endTurn("Daniel");
 
         assertEquals(GamePhase.GAME_ROUND, game.getGamePhase());
     }

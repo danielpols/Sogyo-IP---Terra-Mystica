@@ -58,8 +58,10 @@ public class ActionBuilder {
     public List<UpgradeAction> getUpgradeActions(String playerName, Tile tile) {
         List<UpgradeAction> list = new ArrayList<UpgradeAction>();
 
-        if (tile.hasBuilding() && game.getTileTerrain(tile.getLocation())
-                .equals(game.getPlayerTerrain(playerName))) {
+        if (tile.hasBuilding()
+                && game.getTileTerrain(tile.getLocation())
+                        .equals(game.getPlayerTerrain(playerName))
+                && game.getGamePhase().equals(GamePhase.GAME_ROUND)) {
             Building tileBuilding = game.getTileBuilding(tile.getLocation());
             list.addAll(
                     tileBuilding.upgrades().stream()

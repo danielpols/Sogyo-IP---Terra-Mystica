@@ -82,4 +82,11 @@ public class PlayerTest {
                 .filter(n -> player.playerHasTurn(n)).findFirst().get());
     }
 
+    @Test
+    public void testReverseTurn() {
+        player.endTurn("Henk");
+        player.endTurnReverse("Jaap");
+        assertTrue(player.playerHasTurn("Henk"));
+    }
+
 }
