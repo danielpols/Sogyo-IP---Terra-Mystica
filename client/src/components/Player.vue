@@ -13,11 +13,11 @@
                     <button class="passButton" v-if="player.passAction != null" type="button" @click="passTurn">Pass</button>
                 </li>
                 <li class="playerSubListItem">
-                    bla
+                    Shipping: {{ player.shippingRange }}
                     <button class="sailButton" v-if="player.shippingAction != null" type="button">Upgrade!</button>
                 </li>
                 <li class="playerSubListItem">
-                    bla
+                    Terraform cost:<br/>({{ player.terraformCost[0] }}/{{ player.terraformCost[1] }}/{{ player.terraformCost[2] }})
                     <button class="shovelButton" v-if="player.shovelAction != null" type="button">Upgrade!</button>
                 </li>
             </ul>

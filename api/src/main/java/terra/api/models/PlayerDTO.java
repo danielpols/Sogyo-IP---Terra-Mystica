@@ -12,6 +12,9 @@ public class PlayerDTO {
     private boolean passed;
     private boolean starting;
 
+    private int shippingRange;
+    private int[] terraformCost;
+
     private int[] resources;
 
     private ActionDTO passAction;
@@ -22,6 +25,12 @@ public class PlayerDTO {
         this.turn = game.playerHasTurn(name);
         this.passed = game.playerHasPassed(name);
         this.starting = game.isStartingPlayer(name);
+
+        this.setShippingRange(game.getPlayerShippingRange(name));
+
+        Resource tCost = game.getPlayerTerraformCost(name, 1);
+        this.terraformCost = new int[] { tCost.coin(), tCost.worker(),
+                tCost.priest() };
 
         Resource playerResources = game.getPlayerResource(name);
         this.setResources(new int[] { playerResources.coin(),
@@ -60,6 +69,22 @@ public class PlayerDTO {
 
     public void setResources(int[] resources) {
         this.resources = resources;
+    }
+
+    public int getShippingRange() {
+        return shippingRange;
+    }
+
+    public void setShippingRange(int shippingRange) {
+        this.shippingRange = shippingRange;
+    }
+
+    public int[] getTerraformCost() {
+        return terraformCost;
+    }
+
+    public void setTerraformCost(int[] terraformCost) {
+        this.terraformCost = terraformCost;
     }
 
 }
