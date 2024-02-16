@@ -1,15 +1,16 @@
 package terra.domain.actions;
 
 import terra.domain.Building;
+import terra.domain.Resource;
 
-public class TileAction extends GameAction {
+public abstract class TileAction extends GameAction {
 
     private final int[] location;
     private final Building targetBuilding;
 
-    protected TileAction(String playerName, int[] location,
+    protected TileAction(String playerName, Resource cost, int[] location,
             Building targetBuilding) {
-        super(playerName);
+        super(playerName, cost);
         this.location = location;
         this.targetBuilding = targetBuilding;
     }

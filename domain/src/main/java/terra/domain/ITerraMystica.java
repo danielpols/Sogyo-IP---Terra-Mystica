@@ -22,6 +22,13 @@ public interface ITerraMystica {
 
     int getPlayerShippingRange(String name);
 
+    Resource getPlayerResource(String name);
+
+    Resource getPlayerIncome(String name);
+
+    Resource getPlayerBuildingCost(String name, Building building,
+            boolean adjacent);
+
     int[][] getTileLocations();
 
     Terrain getTileTerrain(int[] location);

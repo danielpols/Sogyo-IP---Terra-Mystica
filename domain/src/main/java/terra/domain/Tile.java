@@ -159,6 +159,10 @@ public class Tile {
         return location.toArray();
     }
 
+    protected List<Tile> getAdjacent() {
+        return adjacent;
+    }
+
 }
 
 record TileLocation(int row, int col) {

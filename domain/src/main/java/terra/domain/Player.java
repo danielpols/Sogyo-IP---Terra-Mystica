@@ -1,10 +1,15 @@
 package terra.domain;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.IntStream;
 
+import terra.domain.actions.GameAction;
 import terra.domain.actions.PassAction;
-import terra.domain.actions.PlayerAction;
+import terra.domain.actions.TileAction;
+import terra.domain.actions.UpgradeAction;
 
 public class Player {
 
@@ -15,7 +20,12 @@ public class Player {
     private boolean startPlayer = false;
     private final Player nextPlayer;
 
+    private HashMap<Building, Integer> amountBuilt = new HashMap<Building, Integer>();
+    private HashMap<Building, List<Resource>> rewards = new HashMap<Building, List<Resource>>();
+
     private int shippingRange = 1;
+
+    private Resource resource = new Resource(15, 3, 0);
 
     public Player(List<String> names, List<Terrain> terrains) {
         this.name = names.get(0);
@@ -23,6 +33,7 @@ public class Player {
         this.turn = true;
         this.nextPlayer = new Player(names.subList(1, names.size()),
                 terrains.subList(1, terrains.size()), this);
+        defineBuildings();
     }
 
     public Player(List<String> names, List<Terrain> terrains, Player player) {
@@ -35,6 +46,28 @@ public class Player {
             nextPlayer = new Player(names.subList(1, names.size()),
                     terrains.subList(1, terrains.size()), player);
         }
+        defineBuildings();
+    }
+
+    private void defineBuildings() {
+        Arrays.stream(Building.values()).filter(b -> !b.equals(Building.NONE))
+                .forEach(b -> amountBuilt.put(b, 0));
+        rewards.put(Building.DWELLING,
+                Arrays.asList(IntStream.range(0, 8)
+                        .mapToObj(i -> i == 7 ? new Resource(0, 0, 0)
+                                : new Resource(0, 1, 0))
+                        .toArray(Resource[]::new)));
+        rewards.put(Building.TRADING,
+                Arrays.asList(IntStream.range(0, 4)
+                        .mapToObj(i -> i < 2 ? new Resource(2, 0, 0)
+                                : new Resource(2, 0, 0))
+                        .toArray(Resource[]::new)));
+        rewards.put(Building.FORTRESS, Arrays.asList(new Resource(0, 0, 1)));
+        rewards.put(Building.CHURCH,
+                Arrays.asList(IntStream.range(0, 3)
+                        .mapToObj(i -> new Resource(0, 0, 1))
+                        .toArray(Resource[]::new)));
+        rewards.put(Building.SANCTUARY, Arrays.asList(new Resource(0, 0, 1)));
     }
 
     public List<String> getAllPlayerNames() {
@@ -70,6 +103,50 @@ public class Player {
         return findPlayer(name).shippingRange;
     }
 
+    public Resource getPlayerResource(String name) {
+        return findPlayer(name).resource;
+    }
+
+    public Resource getPlayerIncome(String name) {
+        return findPlayer(name).getIncome();
+    }
+
+    private Resource getIncome() {
+        Resource income = new Resource(0, 1, 0); // default
+        income = income
+                .addAll(amountBuilt.keySet().stream()
+                        .flatMap(k -> IntStream.range(0, amountBuilt.get(k))
+                                .mapToObj(i -> rewards.get(k).get(i)))
+                        .toList());
+        return income;
+    }
+
+    protected Resource getBuildingCost(String name, Building building,
+            boolean adjacent) {
+        return findPlayer(name).getBuildingCost(building, adjacent);
+    }
+
+    private Resource getBuildingCost(Building building, boolean adjacent) {
+        switch (building) {
+        case CHURCH:
+            return new Resource(5, 2, 0);
+        case DWELLING:
+            return new Resource(2, 1, 0);
+        case FORTRESS:
+            return new Resource(6, 4, 0);
+        case NONE:
+            break;
+        case SANCTUARY:
+            return new Resource(6, 4, 0);
+        case TRADING:
+            return new Resource(adjacent ? 3 : 6, 2, 0);
+        default:
+            break;
+
+        }
+        return new Resource(0, 0, 0);
+    }
+
     private Player findPlayer(String name) {
         if (this.name.equals(name)) {
             return this;
@@ -77,7 +154,20 @@ public class Player {
         return nextPlayer.findPlayer(name);
     }
 
-    protected void perform(PlayerAction action) {
+    protected void perform(GameAction action) {
+        if (action instanceof TileAction) {
+            TileAction tileAction = (TileAction) action;
+            HashMap<Building, Integer> builtList = findPlayer(
+                    action.getPlayerName()).amountBuilt;
+            builtList.put(tileAction.getTargetBuilding(),
+                    builtList.get(tileAction.getTargetBuilding()) + 1);
+            if (tileAction instanceof UpgradeAction) {
+                UpgradeAction upgradeAction = (UpgradeAction) tileAction;
+                builtList.put(upgradeAction.getSourceBuilding(),
+                        builtList.get(upgradeAction.getSourceBuilding()) - 1);
+            }
+            resource = resource.subtract(action.getCost());
+        }
         if (action instanceof PassAction) {
             findPlayer(action.getPlayerName()).pass();
         }

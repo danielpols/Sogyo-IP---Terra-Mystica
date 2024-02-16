@@ -1,11 +1,6 @@
 package terra.domain;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -231,6 +226,30 @@ public class TerraMysticaTest {
                 defaultGame.getTileBuilding(new int[] { 0, 0 }));
         assertEquals(2, defaultGame.getTileActions("Daniel", new int[] { 0, 0 })
                 .size());
+    }
+
+    @Test
+    public void testResourceCost() {
+
+        defaultGame.perform(
+                defaultGame.getTileActions("Daniel", new int[] { 0, 0 })
+                        .stream().findFirst().get());
+
+        ((TerraMystica) defaultGame).setGamePhase(GamePhase.GAME_ROUND);
+
+        assertEquals(new Resource(15, 3, 0),
+                defaultGame.getPlayerResource("Daniel"));
+        assertEquals(new Resource(0, 2, 0),
+                defaultGame.getPlayerIncome("Daniel"));
+
+        defaultGame.perform(
+                defaultGame.getTileActions("Daniel", new int[] { 0, 0 })
+                        .stream().findFirst().get());
+
+        assertEquals(new Resource(9, 1, 0),
+                defaultGame.getPlayerResource("Daniel"));
+        assertEquals(new Resource(2, 1, 0),
+                defaultGame.getPlayerIncome("Daniel"));
     }
 
 }

@@ -77,6 +77,19 @@ public class TerraMystica implements ITerraMystica {
         return player.getPlayerShippingRange(name);
     }
 
+    public Resource getPlayerResource(String name) {
+        return player.getPlayerResource(name);
+    }
+
+    public Resource getPlayerIncome(String name) {
+        return player.getPlayerIncome(name);
+    }
+
+    public Resource getPlayerBuildingCost(String name, Building building,
+            boolean adjacent) {
+        return player.getBuildingCost(name, building, adjacent);
+    }
+
     public int[][] getTileLocations() {
         return rootTile.getTileLocations();
     }
@@ -110,6 +123,10 @@ public class TerraMystica implements ITerraMystica {
             }
             if (action instanceof TileAction) {
                 rootTile.perform((TileAction) action);
+                if (getTileBuilding(((TileAction) action).getLocation())
+                        .equals(((TileAction) action).getTargetBuilding())) {
+                    player.perform((TileAction) action);
+                }
             }
         }
     }
