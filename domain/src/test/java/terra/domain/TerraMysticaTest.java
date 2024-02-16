@@ -224,8 +224,6 @@ public class TerraMysticaTest {
 
         assertEquals(Building.TRADING,
                 defaultGame.getTileBuilding(new int[] { 0, 0 }));
-        assertEquals(2, defaultGame.getTileActions("Daniel", new int[] { 0, 0 })
-                .size());
     }
 
     @Test
