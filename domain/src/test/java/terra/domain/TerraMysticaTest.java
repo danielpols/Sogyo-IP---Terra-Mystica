@@ -13,6 +13,7 @@ import terra.domain.actions.BuildAction;
 import terra.domain.actions.GameAction;
 import terra.domain.actions.PassAction;
 import terra.domain.actions.ShippingAction;
+import terra.domain.actions.UpgradeAction;
 
 public class TerraMysticaTest {
 
@@ -249,6 +250,36 @@ public class TerraMysticaTest {
                 defaultGame.getPlayerResource("Daniel"));
         assertEquals(new Resource(2, 1, 0),
                 defaultGame.getPlayerIncome("Daniel"));
+    }
+
+    @Test
+    public void testImprovementActions() {
+        assertNull(defaultGame.getShippingAction("Daniel"));
+        assertNull(defaultGame.getShovelAction("Daniel"));
+
+        ((TerraMystica) defaultGame).setGamePhase(GamePhase.GAME_ROUND);
+        assertNull(defaultGame.getShippingAction("Gerrit"));
+        assertNull(defaultGame.getShovelAction("Gerrit"));
+        assertNull(defaultGame.getShippingAction("Daniel"));
+        assertNull(defaultGame.getShovelAction("Daniel"));
+
+        // give priest
+        defaultGame.perform(new BuildAction("Daniel", new Resource(0, 0, 0),
+                new int[] { 0, 0 }, Terrain.SWAMP, Building.DWELLING, 0));
+        defaultGame.perform(new UpgradeAction("Daniel", new Resource(0, 0, 0),
+                new int[] { 0, 0 }, Building.DWELLING, Building.TRADING));
+        defaultGame.perform(new UpgradeAction("Daniel", new Resource(0, 0, 0),
+                new int[] { 0, 0 }, Building.TRADING, Building.CHURCH));
+
+        defaultGame.perform(new PassAction("Daniel", true));
+        defaultGame.perform(new PassAction("Gerrit", false));
+        defaultGame.perform(new PassAction("Wesley", false));
+        defaultGame.perform(new PassAction("John", false));
+
+        defaultGame.startNewRoundIfAllPassed();
+
+        assertNotNull(defaultGame.getShippingAction("Daniel"));
+        assertNotNull(defaultGame.getShovelAction("Daniel"));
     }
 
 }

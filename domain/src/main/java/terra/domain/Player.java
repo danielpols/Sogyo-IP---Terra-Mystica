@@ -168,14 +168,15 @@ public class Player {
 
     protected Resource getPlayerImprovementCost(String name, String type) {
         if (type.equals("Shipping")) {
-            if (findPlayer(name).shippingRange <= findPlayer(name).maxRange) {
+            if (findPlayer(name).shippingRange < findPlayer(name).maxRange) {
                 return findPlayer(name).rangeCost;
             }
         }
 
         if (type.equals("Shovel")) {
-            if (findPlayer(name).terraformStep < findPlayer(
-                    name).terraformCost.length) {
+            if (findPlayer(
+                    name).terraformStep < findPlayer(name).terraformCost.length
+                            - 1) {
                 return findPlayer(name).tfImproveCost;
             }
         }

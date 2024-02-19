@@ -2,15 +2,19 @@ package terra.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import terra.domain.actions.PassAction;
+import terra.domain.actions.ShippingAction;
+import terra.domain.actions.ShovelAction;
 
 public class PlayerTest {
 
@@ -87,6 +91,45 @@ public class PlayerTest {
         player.endTurn("Henk");
         player.endTurnReverse("Jaap");
         assertTrue(player.playerHasTurn("Henk"));
+    }
+
+    @Test
+    public void testBuildingCosts() {
+        assertEquals(new Resource(2, 1, 0),
+                player.getBuildingCost("Henk", Building.DWELLING, false));
+        assertEquals(new Resource(6, 2, 0),
+                player.getBuildingCost("Henk", Building.TRADING, false));
+        assertEquals(new Resource(3, 2, 0),
+                player.getBuildingCost("Henk", Building.TRADING, true));
+        assertEquals(new Resource(6, 4, 0),
+                player.getBuildingCost("Henk", Building.FORTRESS, false));
+        assertEquals(new Resource(5, 2, 0),
+                player.getBuildingCost("Henk", Building.CHURCH, false));
+        assertEquals(new Resource(6, 4, 0),
+                player.getBuildingCost("Henk", Building.SANCTUARY, false));
+
+        assertEquals(new Resource(0, 0, 0),
+                player.getBuildingCost("Henk", Building.NONE, false));
+    }
+
+    @Test
+    public void testImprovementCosts() {
+        assertEquals(new Resource(4, 0, 1),
+                player.getPlayerImprovementCost("Henk", "Shipping"));
+        assertEquals(new Resource(5, 2, 1),
+                player.getPlayerImprovementCost("Henk", "Shovel"));
+
+        IntStream.range(0, 3).forEach(i -> player
+                .perform(new ShippingAction("Henk", new Resource(0, 0, 0), 0)));
+
+        IntStream.range(0, 2)
+                .forEach(i -> player.perform(new ShovelAction("Henk",
+                        new Resource(0, 0, 0), new Resource(0, 0, 0))));
+
+        assertEquals(3, player.getPlayerShippingRange("Henk"));
+        assertNull(player.getPlayerImprovementCost("Henk", "Shipping"));
+        assertEquals(new Resource(0, 1, 0), player.getTerraformCost("Henk", 1));
+        assertNull(player.getPlayerImprovementCost("Henk", "Shovel"));
     }
 
 }
