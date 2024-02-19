@@ -37,12 +37,12 @@ De doelen van dit project opgeschreven in MoSCoW-format:
   - [x] Landtype aanpassen tijdens het bouwen.
 - Should
   - [x] Tonen op welke zeshoeken een speler mag bouwen.
-  - [ ] Laten zien hoe "moeilijk" het terraformen is.
+  - [x] Laten zien hoe "moeilijk" het terraformen is.
   - [ ] Tonen welke speler het grootste aaneengesloten gebied bezit.
-  - [ ] Spelstatus kunnen coderen/decoderen vanuit een in-memory database (zonder het hele object op te slaan).
-  - [ ] Laten zien wat de kosten van een actie zijn.
+  - [x] Spelstatus kunnen coderen/decoderen vanuit een in-memory database (zonder het hele object op te slaan).
+  - [x] Laten zien wat de kosten van een actie zijn.
 - Could
-  - [ ] Resource income implementeren.
+  - [x] Resource income implementeren.
   - [ ] Detecteren waar een stad gemaakt word (genoeg gebouwen naast elkaar).
   - [ ] Connectie maken met een externe database.
   - [ ] Facties implementeren.
