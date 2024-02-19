@@ -31,7 +31,8 @@
     },
     computed: {
         borderCSS() {
-            var borderColour = this.tile.actions.length > 0 ? "white" : "grey";
+            var borderColour = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "white" : "black";
+            borderColour = this.tile.actions.length > 0 ? borderColour : "grey";
             if(this.tile.terrain == "RIVER") {
                 borderColour = "transparent";
             }
