@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import terra.domain.actions.BuildAction;
 import terra.domain.actions.GameAction;
 import terra.domain.actions.PassAction;
+import terra.domain.actions.ShippingAction;
 
 public class TerraMysticaTest {
 
@@ -106,6 +107,10 @@ public class TerraMysticaTest {
 
         // across the river
         ((TerraMystica) defaultGame).setGamePhase(GamePhase.GAME_ROUND);
+
+        defaultGame.perform(
+                new ShippingAction("Daniel", new Resource(0, 0, 0), 1));
+
         List<GameAction> crossRiverActions = defaultGame
                 .getTileActions("Daniel", new int[] { 0, 3 }).stream()
                 .filter(a -> a instanceof BuildAction).toList();
