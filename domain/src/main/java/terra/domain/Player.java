@@ -23,7 +23,7 @@ public class Player {
     private HashMap<Building, Integer> amountBuilt = new HashMap<Building, Integer>();
     private HashMap<Building, List<Resource>> rewards = new HashMap<Building, List<Resource>>();
 
-    private int shippingRange = 1;
+    private int shippingRange = 0;
     private int maxRange = 3;
     private Resource rangeCost = new Resource(4, 0, 1);
 
