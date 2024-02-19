@@ -31,6 +31,8 @@ public interface ITerraMystica {
 
     Resource getPlayerTerraformCost(String name, int steps);
 
+    Resource getPlayerImprovementCost(String name, String type);
+
     boolean playerCanPayCost(String name, Resource cost);
 
     boolean playerCanBuildBuilding(String name, Building building);
@@ -42,6 +44,10 @@ public interface ITerraMystica {
     Building getTileBuilding(int[] location);
 
     GameAction getPassAction(String playerName);
+
+    GameAction getShippingAction(String playerName);
+
+    GameAction getShovelAction(String playerName);
 
     List<GameAction> getTileActions(String playerName, int[] location);
 

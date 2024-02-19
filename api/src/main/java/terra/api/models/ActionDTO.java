@@ -5,15 +5,21 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import terra.api.models.subactions.BuildActionDTO;
 import terra.api.models.subactions.PassActionDTO;
+import terra.api.models.subactions.ShippingActionDTO;
+import terra.api.models.subactions.ShovelActionDTO;
 import terra.api.models.subactions.UpgradeActionDTO;
 import terra.domain.Resource;
 import terra.domain.actions.BuildAction;
 import terra.domain.actions.GameAction;
 import terra.domain.actions.PassAction;
+import terra.domain.actions.ShippingAction;
+import terra.domain.actions.ShovelAction;
 import terra.domain.actions.UpgradeAction;
 
 @JsonSubTypes(value = { @JsonSubTypes.Type(value = BuildActionDTO.class),
         @JsonSubTypes.Type(value = PassActionDTO.class),
+        @JsonSubTypes.Type(value = ShippingActionDTO.class),
+        @JsonSubTypes.Type(value = ShovelActionDTO.class),
         @JsonSubTypes.Type(value = UpgradeActionDTO.class) })
 @JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
 public abstract class ActionDTO {
@@ -34,6 +40,12 @@ public abstract class ActionDTO {
     public static ActionDTO getActionDTO(GameAction a) {
         if (a instanceof PassAction) {
             return new PassActionDTO((PassAction) a);
+        }
+        if (a instanceof ShippingAction) {
+            return new ShippingActionDTO((ShippingAction) a);
+        }
+        if (a instanceof ShovelAction) {
+            return new ShovelActionDTO((ShovelAction) a);
         }
         if (a instanceof BuildAction) {
             return new BuildActionDTO((BuildAction) a);

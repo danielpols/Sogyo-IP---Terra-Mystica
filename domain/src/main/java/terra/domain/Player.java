@@ -8,6 +8,8 @@ import java.util.stream.IntStream;
 
 import terra.domain.actions.GameAction;
 import terra.domain.actions.PassAction;
+import terra.domain.actions.ShippingAction;
+import terra.domain.actions.ShovelAction;
 import terra.domain.actions.TileAction;
 import terra.domain.actions.UpgradeAction;
 
@@ -23,8 +25,8 @@ public class Player {
     private HashMap<Building, Integer> amountBuilt = new HashMap<Building, Integer>();
     private HashMap<Building, List<Resource>> rewards = new HashMap<Building, List<Resource>>();
 
-    private int shippingRange = 1;
-    private int maxRange = 4;
+    private int shippingRange = 0;
+    private int maxRange = 3;
     private Resource rangeCost = new Resource(4, 0, 1);
 
     private Resource[] terraformCost = { new Resource(0, 3, 0),
@@ -164,6 +166,24 @@ public class Player {
                 .multiply(steps);
     }
 
+    protected Resource getPlayerImprovementCost(String name, String type) {
+        if (type.equals("Shipping")) {
+            if (findPlayer(name).shippingRange < findPlayer(name).maxRange) {
+                return findPlayer(name).rangeCost;
+            }
+        }
+
+        if (type.equals("Shovel")) {
+            if (findPlayer(
+                    name).terraformStep < findPlayer(name).terraformCost.length
+                            - 1) {
+                return findPlayer(name).tfImproveCost;
+            }
+        }
+
+        return null;
+    }
+
     private Player findPlayer(String name) {
         if (this.name.equals(name)) {
             return this;
@@ -187,6 +207,14 @@ public class Player {
         }
         if (action instanceof PassAction) {
             findPlayer(action.getPlayerName()).pass();
+        }
+        if (action instanceof ShippingAction) {
+            findPlayer(action.getPlayerName()).payForCost(action.getCost());
+            findPlayer(action.getPlayerName()).shippingRange++;
+        }
+        if (action instanceof ShovelAction) {
+            findPlayer(action.getPlayerName()).payForCost(action.getCost());
+            findPlayer(action.getPlayerName()).terraformStep++;
         }
     }
 

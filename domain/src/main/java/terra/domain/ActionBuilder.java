@@ -6,6 +6,8 @@ import java.util.OptionalInt;
 
 import terra.domain.actions.BuildAction;
 import terra.domain.actions.PassAction;
+import terra.domain.actions.ShippingAction;
+import terra.domain.actions.ShovelAction;
 import terra.domain.actions.UpgradeAction;
 
 public class ActionBuilder {
@@ -19,6 +21,29 @@ public class ActionBuilder {
     public PassAction getPassAction(String playerName) {
         if (game.playerHasTurn(playerName)) {
             return new PassAction(playerName, true);
+        }
+        return null;
+    }
+
+    public ShippingAction getShippingAction(String playerName) {
+        if (game.playerHasTurn(playerName)) {
+            Resource cost = game.getPlayerImprovementCost(playerName,
+                    "Shipping");
+            if (game.playerCanPayCost(playerName, cost)) {
+                return new ShippingAction(playerName, cost,
+                        game.getPlayerShippingRange(playerName) + 1);
+            }
+        }
+        return null;
+    }
+
+    public ShovelAction getShovelAction(String playerName) {
+        if (game.playerHasTurn(playerName)) {
+            Resource cost = game.getPlayerImprovementCost(playerName, "Shovel");
+            if (game.playerCanPayCost(playerName, cost)) {
+                return new ShovelAction(playerName, cost,
+                        new Resource(0, 0, 0));
+            }
         }
         return null;
     }

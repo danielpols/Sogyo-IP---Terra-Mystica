@@ -12,9 +12,14 @@ public class PlayerDTO {
     private boolean passed;
     private boolean starting;
 
+    private int shippingRange;
+    private int[] terraformCost;
+
     private int[] resources;
 
     private ActionDTO passAction;
+    private ActionDTO shippingAction;
+    private ActionDTO shovelAction;
 
     public PlayerDTO(ITerraMystica game, String name) {
         this.name = name;
@@ -23,11 +28,20 @@ public class PlayerDTO {
         this.passed = game.playerHasPassed(name);
         this.starting = game.isStartingPlayer(name);
 
+        this.setShippingRange(game.getPlayerShippingRange(name));
+
+        Resource tCost = game.getPlayerTerraformCost(name, 1);
+        this.terraformCost = new int[] { tCost.coin(), tCost.worker(),
+                tCost.priest() };
+
         Resource playerResources = game.getPlayerResource(name);
         this.setResources(new int[] { playerResources.coin(),
                 playerResources.worker(), playerResources.priest() });
 
         this.passAction = ActionDTO.getActionDTO(game.getPassAction(name));
+        this.shippingAction = ActionDTO
+                .getActionDTO(game.getShippingAction(name));
+        this.shovelAction = ActionDTO.getActionDTO(game.getShovelAction(name));
     }
 
     public String getName() {
@@ -60,6 +74,38 @@ public class PlayerDTO {
 
     public void setResources(int[] resources) {
         this.resources = resources;
+    }
+
+    public int getShippingRange() {
+        return shippingRange;
+    }
+
+    public void setShippingRange(int shippingRange) {
+        this.shippingRange = shippingRange;
+    }
+
+    public int[] getTerraformCost() {
+        return terraformCost;
+    }
+
+    public void setTerraformCost(int[] terraformCost) {
+        this.terraformCost = terraformCost;
+    }
+
+    public ActionDTO getShippingAction() {
+        return shippingAction;
+    }
+
+    public void setShippingAction(ActionDTO shippingAction) {
+        this.shippingAction = shippingAction;
+    }
+
+    public ActionDTO getShovelAction() {
+        return shovelAction;
+    }
+
+    public void setShovelAction(ActionDTO shovelAction) {
+        this.shovelAction = shovelAction;
     }
 
 }
