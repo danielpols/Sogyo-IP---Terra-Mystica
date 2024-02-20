@@ -123,10 +123,12 @@ public class TerraMystica implements ITerraMystica {
         return null;
     }
 
-    public List<GameAction> getTileActions(String playerName, int[] location) {
+    public List<GameAction> getTileActions(String name, int[] location) {
         List<GameAction> list = new ArrayList<GameAction>();
-        list.addAll(rootTile.getTileActions(playerName,
-                TileLocation.fromArray(location), actionBuilder));
+//        list.addAll(rootTile.getTileActions(playerName,
+//                TileLocation.fromArray(location), actionBuilder));
+        list.addAll(actionBuilder.getTileActions(getPlayer(name),
+                rootTile.findTile(TileLocation.fromArray(location))));
         return list;
     }
 

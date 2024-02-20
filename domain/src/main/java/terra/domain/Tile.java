@@ -1,6 +1,5 @@
 package terra.domain;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,25 +45,6 @@ public class Tile {
 
     protected Building getTileBuilding(TileLocation target) {
         return findTile(target).building;
-    }
-
-    protected List<TileAction> getTileActions(String playerName,
-            TileLocation target, ActionBuilder builder) {
-        List<TileAction> list = new ArrayList<TileAction>();
-        Tile targetTile = findTile(target);
-        list.addAll(targetTile.getBuildAction(playerName, builder));
-        list.addAll(targetTile.getUpgradeActions(playerName, builder));
-        return list;
-    }
-
-    private List<BuildAction> getBuildAction(String playerName,
-            ActionBuilder builder) {
-        return builder.getBuildAction(playerName, this);
-    }
-
-    private List<UpgradeAction> getUpgradeActions(String playerName,
-            ActionBuilder builder) {
-        return builder.getUpgradeActions(playerName, this);
     }
 
     protected void perform(TileAction action) {
