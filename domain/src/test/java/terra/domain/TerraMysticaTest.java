@@ -61,7 +61,8 @@ public class TerraMysticaTest {
         List<String> names = Arrays.asList("Daniel", "Gerrit", "Wesley",
                 "John");
         assertArrayEquals(names.toArray(String[]::new),
-                defaultGame.getPlayerNames().toArray(String[]::new));
+                defaultGame.getPlayerInfo().stream().map(p -> p.getName())
+                        .toArray(String[]::new));
     }
 
     @Test
@@ -79,13 +80,13 @@ public class TerraMysticaTest {
 
         defaultGame.perform(action);
 
-        assertTrue(defaultGame.playerHasTurn("Gerrit"));
-        assertTrue(defaultGame.playerHasPassed("Daniel"));
-        assertTrue(defaultGame.isStartingPlayer("Daniel"));
+        assertTrue(defaultGame.getPlayer("Gerrit").hasTurn());
+        assertTrue(defaultGame.getPlayer("Daniel").hasPassed());
+        assertTrue(defaultGame.getPlayer("Daniel").isNewStartingPlayer());
 
         defaultGame.perform(action);
 
-        assertTrue(defaultGame.playerHasTurn("Gerrit"));
+        assertTrue(defaultGame.getPlayer("Gerrit").hasTurn());
     }
 
     @Test
@@ -125,7 +126,7 @@ public class TerraMysticaTest {
         defaultGame.perform(crossRiverActions.get(0));
         assertEquals(Building.DWELLING,
                 defaultGame.getTileBuilding(new int[] { 0, 3 }));
-        assertEquals(defaultGame.getPlayerTerrain("Daniel"),
+        assertEquals(defaultGame.getPlayer("Daniel").getTerrain(),
                 defaultGame.getTileTerrain(new int[] { 0, 3 }));
 
     }
@@ -237,19 +238,19 @@ public class TerraMysticaTest {
 
         ((TerraMystica) defaultGame).setGamePhase(GamePhase.GAME_ROUND);
 
-        assertEquals(new Resource(15, 3, 0),
-                defaultGame.getPlayerResource("Daniel"));
-        assertEquals(new Resource(0, 2, 0),
-                defaultGame.getPlayerIncome("Daniel"));
+        assertArrayEquals((new Resource(15, 3, 0)).toArray(),
+                defaultGame.getPlayer("Daniel").getResources());
+        assertArrayEquals((new Resource(0, 2, 0)).toArray(),
+                defaultGame.getPlayer("Daniel").getIncome());
 
         defaultGame.perform(
                 defaultGame.getTileActions("Daniel", new int[] { 0, 0 })
                         .stream().findFirst().get());
 
-        assertEquals(new Resource(9, 1, 0),
-                defaultGame.getPlayerResource("Daniel"));
-        assertEquals(new Resource(2, 1, 0),
-                defaultGame.getPlayerIncome("Daniel"));
+        assertArrayEquals((new Resource(9, 1, 0)).toArray(),
+                defaultGame.getPlayer("Daniel").getResources());
+        assertArrayEquals((new Resource(2, 1, 0)).toArray(),
+                defaultGame.getPlayer("Daniel").getIncome());
     }
 
     @Test

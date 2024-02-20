@@ -13,7 +13,7 @@ import terra.domain.actions.ShovelAction;
 import terra.domain.actions.TileAction;
 import terra.domain.actions.UpgradeAction;
 
-public class Player {
+public class Player implements IPlayerInfo {
 
     private final String name;
     private final Terrain terrain;
@@ -85,11 +85,60 @@ public class Player {
         return list;
     }
 
+    protected List<IPlayerInfo> getAllPlayers() {
+        List<IPlayerInfo> list = new ArrayList<IPlayerInfo>();
+        getAllPlayers(list);
+        return list;
+    }
+
+    private void getAllPlayers(List<IPlayerInfo> list) {
+        if (!list.contains(this)) {
+            list.add(this);
+            nextPlayer.getAllPlayers(list);
+        }
+    }
+
     public void getAllPlayerNames(List<String> list) {
         if (!list.contains(name)) {
             list.add(name);
             nextPlayer.getAllPlayerNames(list);
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Terrain getTerrain() {
+        return terrain;
+    }
+
+    public boolean hasTurn() {
+        return turn;
+    }
+
+    public boolean hasPassed() {
+        return passed;
+    }
+
+    public boolean isNewStartingPlayer() {
+        return startPlayer;
+    }
+
+    public int getShippingRange() {
+        return shippingRange;
+    }
+
+    public int[] getTerraformCost() {
+        return terraformCost[terraformStep].toArray();
+    }
+
+    public int[] getResources() {
+        return resource.toArray();
+    }
+
+    public int[] getIncome() {
+        return getIncomeResource().toArray();
     }
 
     public Terrain getPlayerTerrain(String name) {
@@ -117,15 +166,15 @@ public class Player {
     }
 
     public Resource getPlayerIncome(String name) {
-        return findPlayer(name).getIncome();
+        return findPlayer(name).getIncomeResource();
     }
 
     protected void gainIncome(String name) {
         findPlayer(name).resource = findPlayer(name).resource
-                .add(findPlayer(name).getIncome());
+                .add(findPlayer(name).getIncomeResource());
     }
 
-    private Resource getIncome() {
+    private Resource getIncomeResource() {
         Resource income = new Resource(0, 1, 0); // default
         income = income
                 .addAll(amountBuilt.keySet().stream()

@@ -21,6 +21,10 @@ public record Resource(int coin, int worker, int priest) {
         return add(sum(list));
     }
 
+    public int[] toArray() {
+        return new int[] { coin, worker, priest };
+    }
+
     private static Resource sum(List<Resource> list) {
         if (list.size() == 0) {
             return new Resource(0, 0, 0);

@@ -10,8 +10,7 @@ public class GameDTO {
 
     public GameDTO(ITerraMystica game) {
         board = new BoardDTO(game);
-        players = game.getPlayerNames().stream()
-                .map(name -> new PlayerDTO(game, name))
+        players = game.getPlayerInfo().stream().map(p -> new PlayerDTO(game, p))
                 .toArray(PlayerDTO[]::new);
         message = game.getGamePhaseMessage();
     }

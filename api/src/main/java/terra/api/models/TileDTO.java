@@ -16,9 +16,9 @@ public class TileDTO {
         this.building = game.getTileBuilding(location);
         if (game.getGamePhase() != GamePhase.GAME_END) {
             this.actions = game
-                    .getTileActions(game.getPlayerNames().stream()
-                            .filter(n -> game.playerHasTurn(n)).findFirst()
-                            .get(), location)
+                    .getTileActions(game.getPlayerInfo().stream()
+                            .filter(p -> p.hasTurn()).findFirst().get()
+                            .getName(), location)
                     .stream().map(a -> ActionDTO.getActionDTO(a))
                     .toArray(ActionDTO[]::new);
         } else {

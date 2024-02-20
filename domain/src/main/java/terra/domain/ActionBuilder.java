@@ -18,30 +18,31 @@ public class ActionBuilder {
         this.game = game;
     }
 
-    public PassAction getPassAction(String playerName) {
-        if (game.playerHasTurn(playerName)) {
-            return new PassAction(playerName, true);
+    public PassAction getPassAction(IPlayerInfo player) {
+        if (player.hasTurn()) {
+            return new PassAction(player.getName(), true);
         }
         return null;
     }
 
-    public ShippingAction getShippingAction(String playerName) {
-        if (game.playerHasTurn(playerName)) {
-            Resource cost = game.getPlayerImprovementCost(playerName,
+    public ShippingAction getShippingAction(IPlayerInfo player) {
+        if (player.hasTurn()) {
+            Resource cost = game.getPlayerImprovementCost(player.getName(),
                     "Shipping");
-            if (game.playerCanPayCost(playerName, cost)) {
-                return new ShippingAction(playerName, cost,
-                        game.getPlayerShippingRange(playerName) + 1);
+            if (game.playerCanPayCost(player.getName(), cost)) {
+                return new ShippingAction(player.getName(), cost,
+                        player.getShippingRange() + 1);
             }
         }
         return null;
     }
 
-    public ShovelAction getShovelAction(String playerName) {
-        if (game.playerHasTurn(playerName)) {
-            Resource cost = game.getPlayerImprovementCost(playerName, "Shovel");
-            if (game.playerCanPayCost(playerName, cost)) {
-                return new ShovelAction(playerName, cost,
+    public ShovelAction getShovelAction(IPlayerInfo player) {
+        if (player.hasTurn()) {
+            Resource cost = game.getPlayerImprovementCost(player.getName(),
+                    "Shovel");
+            if (game.playerCanPayCost(player.getName(), cost)) {
+                return new ShovelAction(player.getName(), cost,
                         new Resource(0, 0, 0));
             }
         }
@@ -54,7 +55,7 @@ public class ActionBuilder {
             return list;
         }
 
-        Terrain playerTerrain = game.getPlayerTerrain(playerName);
+        Terrain playerTerrain = game.getPlayer(playerName).getTerrain();
         Terrain tileTerrain = getTerrain(tile);
 
         OptionalInt terraformCost = tileTerrain.distanceTo(playerTerrain);
@@ -66,7 +67,7 @@ public class ActionBuilder {
         boolean buildableDuringRound = game.getGamePhase()
                 .equals(GamePhase.GAME_ROUND)
                 && tile.isIndirectlyAdjacentTo(playerTerrain,
-                        game.getPlayerShippingRange(playerName));
+                        game.getPlayer(playerName).getShippingRange());
 
         boolean buildableDuringSetup = (game.getGamePhase()
                 .equals(GamePhase.GAME_START)
@@ -98,7 +99,8 @@ public class ActionBuilder {
         List<UpgradeAction> list = new ArrayList<UpgradeAction>();
 
         if (tile.hasBuilding()
-                && getTerrain(tile).equals(game.getPlayerTerrain(playerName))
+                && getTerrain(tile)
+                        .equals(game.getPlayer(playerName).getTerrain())
                 && game.getGamePhase().equals(GamePhase.GAME_ROUND)) {
             Building tileBuilding = game.getTileBuilding(tile.getLocation());
             boolean tileAdjacentToOpponent = tile.getAdjacent().stream()

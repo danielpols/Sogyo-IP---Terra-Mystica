@@ -53,36 +53,18 @@ public class TerraMystica implements ITerraMystica {
         }
     }
 
-    public List<String> getPlayerNames() {
-        return player.getAllPlayerNames();
+    public List<IPlayerInfo> getPlayerInfo() {
+        return player.getAllPlayers();
     }
 
-    public Terrain getPlayerTerrain(String name) {
-        return player.getPlayerTerrain(name);
+    public IPlayerInfo getPlayer(String name) {
+        return getPlayerInfo().stream().filter(p -> p.getName().equals(name))
+                .findFirst().get();
     }
 
-    public boolean playerHasTurn(String name) {
-        return player.playerHasTurn(name);
-    }
-
-    public boolean playerHasPassed(String name) {
-        return player.playerHasPassed(name);
-    }
-
-    public boolean isStartingPlayer(String name) {
-        return player.isStartingPlayer(name);
-    }
-
-    public int getPlayerShippingRange(String name) {
-        return player.getPlayerShippingRange(name);
-    }
-
-    public Resource getPlayerResource(String name) {
-        return player.getPlayerResource(name);
-    }
-
-    public Resource getPlayerIncome(String name) {
-        return player.getPlayerIncome(name);
+    public IPlayerInfo getTurnPlayer() {
+        return getPlayerInfo().stream().filter(p -> p.hasTurn()).findFirst()
+                .get();
     }
 
     public Resource getPlayerBuildingCost(String name, Building building,
@@ -120,21 +102,21 @@ public class TerraMystica implements ITerraMystica {
 
     public GameAction getPassAction(String playerName) {
         if (gamePhase == GamePhase.GAME_ROUND) {
-            return actionBuilder.getPassAction(playerName);
+            return actionBuilder.getPassAction(getPlayer(playerName));
         }
         return null;
     }
 
     public GameAction getShippingAction(String playerName) {
         if (gamePhase == GamePhase.GAME_ROUND) {
-            return actionBuilder.getShippingAction(playerName);
+            return actionBuilder.getShippingAction(getPlayer(playerName));
         }
         return null;
     }
 
     public GameAction getShovelAction(String playerName) {
         if (gamePhase == GamePhase.GAME_ROUND) {
-            return actionBuilder.getShovelAction(playerName);
+            return actionBuilder.getShovelAction(getPlayer(playerName));
         }
         return null;
     }
@@ -147,7 +129,7 @@ public class TerraMystica implements ITerraMystica {
     }
 
     public void perform(GameAction action) {
-        if (playerHasTurn(action.getPlayerName())) {
+        if (getPlayer(action.getPlayerName()).hasTurn()) {
             if (action instanceof PlayerAction) {
                 player.perform((PlayerAction) action);
             }
@@ -167,30 +149,26 @@ public class TerraMystica implements ITerraMystica {
         } else {
             player.endTurn(playerName);
         }
-        if (gamePhase == GamePhase.GAME_START && player.getAllPlayerNames()
-                .stream()
-                .filter(n -> rootTile
-                        .getAmountOfBuildingsOn(getPlayerTerrain(n)) != 1)
+        if (gamePhase == GamePhase.GAME_START && getPlayerInfo().stream()
+                .filter(p -> rootTile
+                        .getAmountOfBuildingsOn(p.getTerrain()) != 1)
                 .count() == 0) {
             gamePhase = GamePhase.GAME_START_REVERSE;
-            player.endTurnReverse(player.getAllPlayerNames().stream()
-                    .filter(n -> playerHasTurn(n)).findFirst().get());
+            player.endTurnReverse(getTurnPlayer().getName());
         }
-        if (gamePhase == GamePhase.GAME_START_REVERSE && player
-                .getAllPlayerNames().stream()
-                .filter(n -> rootTile
-                        .getAmountOfBuildingsOn(getPlayerTerrain(n)) != 2)
-                .count() == 0) {
+        if (gamePhase == GamePhase.GAME_START_REVERSE
+                && getPlayerInfo().stream()
+                        .filter(p -> rootTile
+                                .getAmountOfBuildingsOn(p.getTerrain()) != 2)
+                        .count() == 0) {
             gamePhase = GamePhase.GAME_ROUND;
-            player.endTurn(player.getAllPlayerNames().stream()
-                    .filter(n -> playerHasTurn(n)).findFirst().get());
+            player.endTurn(getTurnPlayer().getName());
             allPlayersTakeIncome();
         }
     }
 
     public void startNewRoundIfAllPassed() {
-        if (player.getAllPlayerNames().stream().filter(n -> !playerHasPassed(n))
-                .count() == 0) {
+        if (getPlayerInfo().stream().filter(p -> !p.hasPassed()).count() == 0) {
             player.startNewRound();
             allPlayersTakeIncome();
             roundNumber++;
