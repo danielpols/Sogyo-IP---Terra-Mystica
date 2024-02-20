@@ -128,9 +128,8 @@ public class Player implements IPlayerInfo, IPlayerActionInfo {
         return getIncomeResource().toArray();
     }
 
-    protected void gainIncome(String name) {
-        getPlayer(name).resource = getPlayer(name).resource
-                .add(getPlayer(name).getIncomeResource());
+    protected void gainIncome() {
+        resource = resource.add(getIncomeResource());
     }
 
     private Resource getIncomeResource() {
@@ -174,11 +173,6 @@ public class Player implements IPlayerInfo, IPlayerActionInfo {
                 .multiply(terrain.distanceTo(origin).getAsInt());
     }
 
-    protected Resource getTerraformCost(String name, int steps) {
-        return getPlayer(name).terraformCost[getPlayer(name).terraformStep]
-                .multiply(steps);
-    }
-
     public Resource getShippingImprovementCost() {
         if (shippingRange < maxRange) {
             return rangeCost;
@@ -187,28 +181,20 @@ public class Player implements IPlayerInfo, IPlayerActionInfo {
     }
 
     public Resource getShovelImprovementCost() {
-        if (terraformStep < terraformCost.length) {
+        if (terraformStep < terraformCost.length - 1) {
             return tfImproveCost;
         }
         return null;
     }
 
-    protected Resource getPlayerImprovementCost(String name, String type) {
-        if (type.equals("Shipping")) {
-            if (getPlayer(name).shippingRange < getPlayer(name).maxRange) {
-                return getPlayer(name).rangeCost;
-            }
-        }
+    public boolean canPayCost(Resource cost) {
+        return resource.coin() >= cost.coin()
+                && resource.worker() >= cost.worker()
+                && resource.priest() >= cost.priest();
+    }
 
-        if (type.equals("Shovel")) {
-            if (getPlayer(
-                    name).terraformStep < getPlayer(name).terraformCost.length
-                            - 1) {
-                return getPlayer(name).tfImproveCost;
-            }
-        }
-
-        return null;
+    public boolean canBuildBuilding(Building building) {
+        return amountBuilt.get(building) < rewards.get(building).size();
     }
 
     protected Player getPlayer(String name) {
@@ -218,60 +204,44 @@ public class Player implements IPlayerInfo, IPlayerActionInfo {
         return nextPlayer.getPlayer(name);
     }
 
-    protected void perform(GameAction action) {
-        if (action instanceof TileAction) {
-            TileAction tileAction = (TileAction) action;
-            HashMap<Building, Integer> builtList = getPlayer(
-                    action.getPlayerName()).amountBuilt;
-            builtList.put(tileAction.getTargetBuilding(),
-                    builtList.get(tileAction.getTargetBuilding()) + 1);
-            if (tileAction instanceof UpgradeAction) {
-                UpgradeAction upgradeAction = (UpgradeAction) tileAction;
-                builtList.put(upgradeAction.getSourceBuilding(),
-                        builtList.get(upgradeAction.getSourceBuilding()) - 1);
-            }
-            getPlayer(action.getPlayerName()).payForCost(action.getCost());
-        }
-        if (action instanceof PassAction) {
-            getPlayer(action.getPlayerName()).pass();
-        }
-        if (action instanceof ShippingAction) {
-            getPlayer(action.getPlayerName()).payForCost(action.getCost());
-            getPlayer(action.getPlayerName()).shippingRange++;
-        }
-        if (action instanceof ShovelAction) {
-            getPlayer(action.getPlayerName()).payForCost(action.getCost());
-            getPlayer(action.getPlayerName()).terraformStep++;
-        }
-    }
-
-    protected boolean canPayForCost(String name, Resource cost) {
-        return getPlayer(name).canPayCost(cost);
-    }
-
-    public boolean canPayCost(Resource cost) {
-        return resource.coin() >= cost.coin()
-                && resource.worker() >= cost.worker()
-                && resource.priest() >= cost.priest();
-    }
-
-    protected boolean canBuildBuilding(String name, Building building) {
-        return getPlayer(name).canBuildBuilding(building);
-    }
-
-    public boolean canBuildBuilding(Building building) {
-        return amountBuilt.get(building) < rewards.get(building).size();
-    }
-
-    private void payForCost(Resource cost) {
-        resource = resource.subtract(cost);
-    }
-
-    private Player getTurnPlayer() {
+    protected Player getTurnPlayer() {
         if (turn) {
             return this;
         }
         return nextPlayer.getTurnPlayer();
+    }
+
+    protected void perform(GameAction action) {
+        Player targetPlayer = getPlayer(action.getPlayerName());
+        if (action instanceof TileAction) {
+            TileAction tileAction = (TileAction) action;
+            targetPlayer.buildBuilding(tileAction instanceof UpgradeAction
+                    ? ((UpgradeAction) tileAction).getSourceBuilding()
+                    : null, tileAction.getTargetBuilding());
+            targetPlayer.payForCost(action.getCost());
+        }
+        if (action instanceof PassAction) {
+            targetPlayer.pass();
+        }
+        if (action instanceof ShippingAction) {
+            targetPlayer.shippingRange++;
+            targetPlayer.payForCost(action.getCost());
+        }
+        if (action instanceof ShovelAction) {
+            targetPlayer.terraformStep++;
+            targetPlayer.payForCost(action.getCost());
+        }
+    }
+
+    private void buildBuilding(Building source, Building target) {
+        if (source != null) {
+            amountBuilt.put(source, amountBuilt.get(source) - 1);
+        }
+        amountBuilt.put(target, amountBuilt.get(target) + 1);
+    }
+
+    private void payForCost(Resource cost) {
+        resource = resource.subtract(cost);
     }
 
     private boolean noneHavePassed() {

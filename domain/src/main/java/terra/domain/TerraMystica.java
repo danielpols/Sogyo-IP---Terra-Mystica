@@ -60,13 +60,11 @@ public class TerraMystica implements ITerraMystica {
     }
 
     public Player getPlayer(String name) {
-        return player.getAllPlayers().stream()
-                .filter(p -> p.getName().equals(name)).findFirst().get();
+        return player.getPlayer(name);
     }
 
     public Player getTurnPlayer() {
-        return player.getAllPlayers().stream().filter(p -> p.hasTurn())
-                .findFirst().get();
+        return player.getTurnPlayer();
     }
 
     public int[][] getTileLocations() {
@@ -162,7 +160,7 @@ public class TerraMystica implements ITerraMystica {
     }
 
     private void allPlayersTakeIncome() {
-        player.getAllPlayers().forEach(p -> player.gainIncome(p.getName()));
+        player.getAllPlayers().forEach(p -> player.gainIncome());
     }
 
     protected void setGamePhase(GamePhase phase) {

@@ -1,9 +1,6 @@
 package terra.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -115,9 +112,9 @@ public class PlayerTest {
     @Test
     public void testImprovementCosts() {
         assertEquals(new Resource(4, 0, 1),
-                player.getPlayerImprovementCost("Henk", "Shipping"));
+                player.getPlayer("Henk").getShippingImprovementCost());
         assertEquals(new Resource(5, 2, 1),
-                player.getPlayerImprovementCost("Henk", "Shovel"));
+                player.getPlayer("Henk").getShovelImprovementCost());
 
         IntStream.range(0, 3).forEach(i -> player
                 .perform(new ShippingAction("Henk", new Resource(0, 0, 0), 0)));
@@ -127,9 +124,10 @@ public class PlayerTest {
                         new Resource(0, 0, 0), new Resource(0, 0, 0))));
 
         assertEquals(3, player.getPlayer("Henk").getShippingRange());
-        assertNull(player.getPlayerImprovementCost("Henk", "Shipping"));
-        assertEquals(new Resource(0, 1, 0), player.getTerraformCost("Henk", 1));
-        assertNull(player.getPlayerImprovementCost("Henk", "Shovel"));
+        assertArrayEquals((new Resource(0, 1, 0)).toArray(),
+                player.getPlayer("Henk").getTerraformCost());
+        assertNull(player.getPlayer("Henk").getShippingImprovementCost());
+        assertNull(player.getPlayer("Henk").getShovelImprovementCost());
     }
 
 }
