@@ -68,6 +68,24 @@ public class PlayerTest {
     }
 
     @Test
+    public void testRepeatTurnIfAllOtherHavePassed() {
+        player.perform(new PassAction("Henk", true));
+        player.perform(new PassAction("Jaap", false));
+        assertEquals("Piet", player.getTurnPlayer().getName());
+        player.endTurn("Piet");
+        assertEquals("Piet", player.getTurnPlayer().getName());
+        player.endTurnReverse("Piet");
+        assertEquals("Piet", player.getTurnPlayer().getName());
+    }
+
+    @Test
+    public void testNonActivePlayerCannotEndTurn() {
+        player.endTurn("Piet");
+        player.endTurnReverse("Jaap");
+        assertEquals("Henk", player.getTurnPlayer().getName());
+    }
+
+    @Test
     public void testEndOfRound() {
         player.endTurn("Henk");
         player.perform(new PassAction("Jaap", true));
@@ -138,6 +156,10 @@ public class PlayerTest {
                 Terrain.DESERT, Building.DWELLING, 0));
         player.perform(new UpgradeAction("Henk", Resource.free(), null,
                 Building.DWELLING, Building.TRADING));
+        player.perform(new UpgradeAction("Henk", Resource.free(), null,
+                Building.TRADING, Building.FORTRESS));
+
+        assertFalse(player.canBuildBuilding(Building.FORTRESS));
     }
 
 }
