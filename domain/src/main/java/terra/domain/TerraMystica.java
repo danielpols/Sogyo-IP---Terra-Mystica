@@ -59,14 +59,14 @@ public class TerraMystica implements ITerraMystica {
         return list;
     }
 
-    public IPlayerInfo getPlayer(String name) {
-        return getPlayerInfo().stream().filter(p -> p.getName().equals(name))
-                .findFirst().get();
+    public Player getPlayer(String name) {
+        return player.getAllPlayers().stream()
+                .filter(p -> p.getName().equals(name)).findFirst().get();
     }
 
-    public IPlayerInfo getTurnPlayer() {
-        return getPlayerInfo().stream().filter(p -> p.hasTurn()).findFirst()
-                .get();
+    public Player getTurnPlayer() {
+        return player.getAllPlayers().stream().filter(p -> p.hasTurn())
+                .findFirst().get();
     }
 
     public Resource getPlayerBuildingCost(String name, Building building,

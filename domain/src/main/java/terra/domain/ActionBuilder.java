@@ -18,18 +18,17 @@ public class ActionBuilder {
         this.game = game;
     }
 
-    public PassAction getPassAction(IPlayerInfo player) {
+    public PassAction getPassAction(IPlayerActionInfo player) {
         if (player.hasTurn()) {
             return new PassAction(player.getName(), true);
         }
         return null;
     }
 
-    public ShippingAction getShippingAction(IPlayerInfo player) {
+    public ShippingAction getShippingAction(IPlayerActionInfo player) {
         if (player.hasTurn()) {
-            Resource cost = game.getPlayerImprovementCost(player.getName(),
-                    "Shipping");
-            if (game.playerCanPayCost(player.getName(), cost)) {
+            Resource cost = player.getShippingImprovementCost();
+            if (player.canPayCost(cost)) {
                 return new ShippingAction(player.getName(), cost,
                         player.getShippingRange() + 1);
             }
@@ -37,11 +36,10 @@ public class ActionBuilder {
         return null;
     }
 
-    public ShovelAction getShovelAction(IPlayerInfo player) {
+    public ShovelAction getShovelAction(IPlayerActionInfo player) {
         if (player.hasTurn()) {
-            Resource cost = game.getPlayerImprovementCost(player.getName(),
-                    "Shovel");
-            if (game.playerCanPayCost(player.getName(), cost)) {
+            Resource cost = player.getShovelImprovementCost();
+            if (player.canPayCost(cost)) {
                 return new ShovelAction(player.getName(), cost,
                         new Resource(0, 0, 0));
             }

@@ -4,6 +4,8 @@ interface IPlayerActionInfo {
 
     String getName();
 
+    boolean hasTurn();
+
     Terrain getTerrain();
 
     int getShippingRange();
