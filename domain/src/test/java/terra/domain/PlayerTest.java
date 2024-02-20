@@ -30,33 +30,33 @@ public class PlayerTest {
 
     @Test
     public void testCanGetAllPlayers() {
-        assertEquals(3, player.getAllPlayerNames().size());
+        assertEquals(3, player.getAllPlayers().size());
     }
 
     @Test
     public void testActivePlayerCanEndTurn() {
-        assertTrue(player.playerHasTurn("Henk"));
+        assertTrue(player.getPlayer("Henk").hasTurn());
         player.endTurn("Henk");
-        assertTrue(player.playerHasTurn("Jaap"));
-        assertFalse(player.playerHasTurn("Henk"));
+        assertTrue(player.getPlayer("Jaap").hasTurn());
+        assertFalse(player.getPlayer("Henk").hasTurn());
         player.endTurn("Piet");
-        assertTrue(player.playerHasTurn("Jaap"));
+        assertTrue(player.getPlayer("Jaap").hasTurn());
     }
 
     @Test
     public void testOnlyOneActivePlayer() {
         player.endTurn("Henk");
-        assertEquals(1, player.getAllPlayerNames().stream()
-                .filter(n -> player.playerHasTurn(n)).count());
+        assertEquals(1, player.getAllPlayers().stream().filter(p -> p.hasTurn())
+                .count());
     }
 
     @Test
     public void testEndTurnSkipsPassedPlayers() {
         player.perform(new PassAction("Henk", true));
         player.endTurn("Jaap");
-        assertTrue(player.playerHasTurn("Piet"));
+        assertTrue(player.getPlayer("Piet").hasTurn());
         player.endTurn("Piet");
-        assertTrue(player.playerHasTurn("Jaap"));
+        assertTrue(player.getPlayer("Jaap").hasTurn());
     }
 
     @Test
@@ -64,8 +64,8 @@ public class PlayerTest {
         player.perform(new PassAction("Henk", true));
         player.perform(new PassAction("Jaap", false));
         player.perform(new PassAction("Piet", false));
-        assertEquals(0, player.getAllPlayerNames().stream()
-                .filter(n -> player.playerHasTurn(n)).count());
+        assertEquals(0, player.getAllPlayers().stream().filter(p -> p.hasTurn())
+                .count());
     }
 
     @Test
@@ -76,21 +76,21 @@ public class PlayerTest {
         player.perform(new PassAction("Henk", false));
         player.perform(new PassAction("Piet", false));
 
-        assertEquals(0, player.getAllPlayerNames().stream()
-                .filter(n -> player.playerHasTurn(n)).count());
+        assertEquals(0, player.getAllPlayers().stream().filter(p -> p.hasTurn())
+                .count());
 
         player.startNewRound();
-        assertEquals(1, player.getAllPlayerNames().stream()
-                .filter(n -> player.playerHasTurn(n)).count());
-        assertEquals("Jaap", player.getAllPlayerNames().stream()
-                .filter(n -> player.playerHasTurn(n)).findFirst().get());
+        assertEquals(1, player.getAllPlayers().stream().filter(p -> p.hasTurn())
+                .count());
+        assertEquals("Jaap", player.getAllPlayers().stream()
+                .filter(p -> p.hasTurn()).findFirst().get().getName());
     }
 
     @Test
     public void testReverseTurn() {
         player.endTurn("Henk");
         player.endTurnReverse("Jaap");
-        assertTrue(player.playerHasTurn("Henk"));
+        assertTrue(player.getPlayer("Henk").hasTurn());
     }
 
     @Test
@@ -126,7 +126,7 @@ public class PlayerTest {
                 .forEach(i -> player.perform(new ShovelAction("Henk",
                         new Resource(0, 0, 0), new Resource(0, 0, 0))));
 
-        assertEquals(3, player.getPlayerShippingRange("Henk"));
+        assertEquals(3, player.getPlayer("Henk").getShippingRange());
         assertNull(player.getPlayerImprovementCost("Henk", "Shipping"));
         assertEquals(new Resource(0, 1, 0), player.getTerraformCost("Henk", 1));
         assertNull(player.getPlayerImprovementCost("Henk", "Shovel"));

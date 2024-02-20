@@ -79,12 +79,6 @@ public class Player implements IPlayerInfo {
         rewards.put(Building.SANCTUARY, Arrays.asList(new Resource(0, 0, 1)));
     }
 
-    public List<String> getAllPlayerNames() {
-        ArrayList<String> list = new ArrayList<String>();
-        getAllPlayerNames(list);
-        return list;
-    }
-
     protected List<IPlayerInfo> getAllPlayers() {
         List<IPlayerInfo> list = new ArrayList<IPlayerInfo>();
         getAllPlayers(list);
@@ -95,13 +89,6 @@ public class Player implements IPlayerInfo {
         if (!list.contains(this)) {
             list.add(this);
             nextPlayer.getAllPlayers(list);
-        }
-    }
-
-    public void getAllPlayerNames(List<String> list) {
-        if (!list.contains(name)) {
-            list.add(name);
-            nextPlayer.getAllPlayerNames(list);
         }
     }
 
@@ -141,37 +128,9 @@ public class Player implements IPlayerInfo {
         return getIncomeResource().toArray();
     }
 
-    public Terrain getPlayerTerrain(String name) {
-        return findPlayer(name).terrain;
-    }
-
-    public boolean playerHasTurn(String name) {
-        return findPlayer(name).turn;
-    }
-
-    public boolean playerHasPassed(String name) {
-        return findPlayer(name).passed;
-    }
-
-    public boolean isStartingPlayer(String name) {
-        return findPlayer(name).startPlayer;
-    }
-
-    public int getPlayerShippingRange(String name) {
-        return findPlayer(name).shippingRange;
-    }
-
-    public Resource getPlayerResource(String name) {
-        return findPlayer(name).resource;
-    }
-
-    public Resource getPlayerIncome(String name) {
-        return findPlayer(name).getIncomeResource();
-    }
-
     protected void gainIncome(String name) {
-        findPlayer(name).resource = findPlayer(name).resource
-                .add(findPlayer(name).getIncomeResource());
+        getPlayer(name).resource = getPlayer(name).resource
+                .add(getPlayer(name).getIncomeResource());
     }
 
     private Resource getIncomeResource() {
@@ -186,7 +145,7 @@ public class Player implements IPlayerInfo {
 
     protected Resource getBuildingCost(String name, Building building,
             boolean adjacent) {
-        return findPlayer(name).getBuildingCost(building, adjacent);
+        return getPlayer(name).getBuildingCost(building, adjacent);
     }
 
     private Resource getBuildingCost(Building building, boolean adjacent) {
@@ -211,39 +170,39 @@ public class Player implements IPlayerInfo {
     }
 
     protected Resource getTerraformCost(String name, int steps) {
-        return findPlayer(name).terraformCost[findPlayer(name).terraformStep]
+        return getPlayer(name).terraformCost[getPlayer(name).terraformStep]
                 .multiply(steps);
     }
 
     protected Resource getPlayerImprovementCost(String name, String type) {
         if (type.equals("Shipping")) {
-            if (findPlayer(name).shippingRange < findPlayer(name).maxRange) {
-                return findPlayer(name).rangeCost;
+            if (getPlayer(name).shippingRange < getPlayer(name).maxRange) {
+                return getPlayer(name).rangeCost;
             }
         }
 
         if (type.equals("Shovel")) {
-            if (findPlayer(
-                    name).terraformStep < findPlayer(name).terraformCost.length
+            if (getPlayer(
+                    name).terraformStep < getPlayer(name).terraformCost.length
                             - 1) {
-                return findPlayer(name).tfImproveCost;
+                return getPlayer(name).tfImproveCost;
             }
         }
 
         return null;
     }
 
-    private Player findPlayer(String name) {
+    protected Player getPlayer(String name) {
         if (this.name.equals(name)) {
             return this;
         }
-        return nextPlayer.findPlayer(name);
+        return nextPlayer.getPlayer(name);
     }
 
     protected void perform(GameAction action) {
         if (action instanceof TileAction) {
             TileAction tileAction = (TileAction) action;
-            HashMap<Building, Integer> builtList = findPlayer(
+            HashMap<Building, Integer> builtList = getPlayer(
                     action.getPlayerName()).amountBuilt;
             builtList.put(tileAction.getTargetBuilding(),
                     builtList.get(tileAction.getTargetBuilding()) + 1);
@@ -252,23 +211,23 @@ public class Player implements IPlayerInfo {
                 builtList.put(upgradeAction.getSourceBuilding(),
                         builtList.get(upgradeAction.getSourceBuilding()) - 1);
             }
-            findPlayer(action.getPlayerName()).payForCost(action.getCost());
+            getPlayer(action.getPlayerName()).payForCost(action.getCost());
         }
         if (action instanceof PassAction) {
-            findPlayer(action.getPlayerName()).pass();
+            getPlayer(action.getPlayerName()).pass();
         }
         if (action instanceof ShippingAction) {
-            findPlayer(action.getPlayerName()).payForCost(action.getCost());
-            findPlayer(action.getPlayerName()).shippingRange++;
+            getPlayer(action.getPlayerName()).payForCost(action.getCost());
+            getPlayer(action.getPlayerName()).shippingRange++;
         }
         if (action instanceof ShovelAction) {
-            findPlayer(action.getPlayerName()).payForCost(action.getCost());
-            findPlayer(action.getPlayerName()).terraformStep++;
+            getPlayer(action.getPlayerName()).payForCost(action.getCost());
+            getPlayer(action.getPlayerName()).terraformStep++;
         }
     }
 
     protected boolean canPayForCost(String name, Resource cost) {
-        return findPlayer(name).canPayForCost(cost);
+        return getPlayer(name).canPayForCost(cost);
     }
 
     private boolean canPayForCost(Resource cost) {
@@ -278,7 +237,7 @@ public class Player implements IPlayerInfo {
     }
 
     protected boolean canBuildBuilding(String name, Building building) {
-        return findPlayer(name).canBuildBuilding(building);
+        return getPlayer(name).canBuildBuilding(building);
     }
 
     private boolean canBuildBuilding(Building building) {
@@ -339,8 +298,8 @@ public class Player implements IPlayerInfo {
     }
 
     protected void endTurn(String name) {
-        if (playerHasTurn(name)) {
-            findPlayer(name).switchTurn();
+        if (getPlayer(name).hasTurn()) {
+            getPlayer(name).switchTurn();
         }
     }
 
@@ -356,8 +315,8 @@ public class Player implements IPlayerInfo {
     }
 
     protected void endTurnReverse(String name) {
-        if (playerHasTurn(name)) {
-            findPlayer(name).switchTurnReverse();
+        if (getPlayer(name).hasTurn()) {
+            getPlayer(name).switchTurnReverse();
         }
     }
 
