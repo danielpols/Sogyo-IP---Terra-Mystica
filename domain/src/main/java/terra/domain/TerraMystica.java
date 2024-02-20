@@ -69,27 +69,6 @@ public class TerraMystica implements ITerraMystica {
                 .findFirst().get();
     }
 
-    public Resource getPlayerBuildingCost(String name, Building building,
-            boolean adjacent) {
-        return player.getBuildingCost(name, building, adjacent);
-    }
-
-    public Resource getPlayerTerraformCost(String name, int steps) {
-        return player.getTerraformCost(name, steps);
-    }
-
-    public Resource getPlayerImprovementCost(String name, String type) {
-        return player.getPlayerImprovementCost(name, type);
-    }
-
-    public boolean playerCanPayCost(String name, Resource cost) {
-        return player.canPayForCost(name, cost);
-    }
-
-    public boolean playerCanBuildBuilding(String name, Building building) {
-        return player.canBuildBuilding(name, building);
-    }
-
     public int[][] getTileLocations() {
         return rootTile.getTileLocations();
     }

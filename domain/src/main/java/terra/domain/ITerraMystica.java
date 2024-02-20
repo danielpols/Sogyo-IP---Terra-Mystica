@@ -14,17 +14,6 @@ public interface ITerraMystica {
 
     IPlayerInfo getPlayer(String name);
 
-    Resource getPlayerBuildingCost(String name, Building building,
-            boolean adjacent);
-
-    Resource getPlayerTerraformCost(String name, int steps);
-
-    Resource getPlayerImprovementCost(String name, String type);
-
-    boolean playerCanPayCost(String name, Resource cost);
-
-    boolean playerCanBuildBuilding(String name, Building building);
-
     int[][] getTileLocations();
 
     Terrain getTileTerrain(int[] location);
