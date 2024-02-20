@@ -106,8 +106,8 @@ public class ActionBuilder {
                 && game.getGamePhase().equals(GamePhase.GAME_ROUND)) {
             Building tileBuilding = game.getTileBuilding(tile.getLocation());
             boolean adjacencyBonus = tile.getAdjacent().stream()
-                    .filter(t -> t.hasBuilding()
-                            && !getTerrain(t).equals(getTerrain(tile)))
+                    .filter(t -> t.hasBuilding())
+                    .filter(t -> !getTerrain(t).equals(getTerrain(tile)))
                     .count() > 0;
             list.addAll(tileBuilding.upgrades().stream()
                     .filter(b -> player.canPayCost(

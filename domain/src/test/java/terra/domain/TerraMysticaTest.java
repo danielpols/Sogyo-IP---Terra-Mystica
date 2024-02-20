@@ -13,6 +13,7 @@ import terra.domain.actions.BuildAction;
 import terra.domain.actions.GameAction;
 import terra.domain.actions.PassAction;
 import terra.domain.actions.ShippingAction;
+import terra.domain.actions.ShovelAction;
 import terra.domain.actions.UpgradeAction;
 
 public class TerraMysticaTest {
@@ -26,7 +27,7 @@ public class TerraMysticaTest {
         List<Terrain> playerTerrains = Arrays.asList(Terrain.SWAMP,
                 Terrain.PLAINS, Terrain.MOUNTAINS, Terrain.DESERT);
         Terrain[] terrains = { Terrain.SWAMP, Terrain.SWAMP, Terrain.RIVER,
-                Terrain.SWAMP, Terrain.SWAMP };
+                Terrain.SWAMP, Terrain.SWAMP, Terrain.PLAINS };
         defaultGame = new TerraMysticaFactory().startGame(names, playerTerrains,
                 terrains);
     }
@@ -280,6 +281,108 @@ public class TerraMysticaTest {
 
         assertNotNull(defaultGame.getShippingAction("Daniel"));
         assertNotNull(defaultGame.getShovelAction("Daniel"));
+    }
+
+    @Test
+    public void testInvalidBuildActions() {
+        defaultGame.perform(new BuildAction("Daniel", new Resource(15, 3, 0),
+                new int[] { 0, 0 }, Terrain.SWAMP, Building.DWELLING, 0));
+
+        IntStream.range(0, 6).forEach(i -> {
+
+            defaultGame.perform(new BuildAction("Daniel", Resource.free(),
+                    new int[] { 0, 0 }, Terrain.SWAMP, Building.DWELLING, 0));
+        });
+
+        // cannot build on river
+        assertEquals(0, defaultGame.getTileActions("Daniel", new int[] { 0, 2 })
+                .size());
+
+        // cannot build on other terrains during setup
+        assertEquals(0, defaultGame.getTileActions("Daniel", new int[] { 0, 5 })
+                .size());
+
+        ((TerraMystica) defaultGame).setGamePhase(GamePhase.GAME_ROUND);
+
+        // cannot build with no resources
+        assertArrayEquals(new int[] { 0, 0, 0 },
+                defaultGame.getPlayer("Daniel").getResources());
+        assertEquals(0, defaultGame.getTileActions("Daniel", new int[] { 0, 1 })
+                .size());
+
+        defaultGame.perform(new BuildAction("Daniel", new Resource(-5, -5, -5),
+                new int[] { 0, 0 }, Terrain.SWAMP, Building.DWELLING, 0));
+
+        // cannot build due to building limit
+        assertEquals(0, defaultGame.getTileActions("Daniel", new int[] { 0, 1 })
+                .size());
+    }
+
+    @Test
+    public void testInvalidUpgradeActions() {
+
+        TerraMystica game = (TerraMystica) defaultGame;
+
+        game.setGamePhase(GamePhase.GAME_ROUND);
+
+        // cannot upgrade empty tile
+        assertEquals(0,
+                game.getTileActions("Daniel", new int[] { 0, 0 }).size());
+
+        game.perform(new BuildAction("Daniel", Resource.free(),
+                new int[] { 0, 0 }, Terrain.SWAMP, Building.DWELLING, 0));
+        game.perform(new PassAction("Daniel", true));
+
+        // cannot upgrade non-owned tile
+        assertEquals(0,
+                game.getTileActions("Gerrit", new int[] { 0, 0 }).size());
+
+        game.perform(new BuildAction("Gerrit", Resource.free(),
+                new int[] { 0, 1 }, Terrain.PLAINS, Building.DWELLING, 0));
+        game.perform(new BuildAction("Gerrit", Resource.free(),
+                new int[] { 0, 2 }, Terrain.PLAINS, Building.DWELLING, 0));
+
+        assertEquals(1,
+                game.getTileActions("Gerrit", new int[] { 0, 1 }).size());
+        assertEquals(1,
+                game.getTileActions("Gerrit", new int[] { 0, 2 }).size());
+
+        IntStream.range(0, 3).forEach(i -> {
+            game.perform(new UpgradeAction("Gerrit", new Resource(4, 1, 0),
+                    new int[] { 0, 1 }, Building.DWELLING, Building.TRADING));
+        });
+
+        // no resources
+        assertEquals(0,
+                game.getTileActions("Gerrit", new int[] { 0, 2 }).size());
+
+        game.perform(new UpgradeAction("Gerrit", new Resource(-6, -6, 0),
+                new int[] { 0, 1 }, Building.DWELLING, Building.TRADING));
+
+        // no buildings left
+        assertEquals(0,
+                game.getTileActions("Gerrit", new int[] { 0, 2 }).size());
+    }
+
+    @Test
+    public void testActionGetters() {
+        ((TerraMystica) defaultGame).setGamePhase(GamePhase.GAME_ROUND);
+        defaultGame.perform(new BuildAction("Daniel", new Resource(0, -2, -1),
+                new int[] { 0, 0 }, Terrain.SWAMP, Building.DWELLING, 0));
+
+        assertEquals(1,
+                ((ShippingAction) defaultGame.getShippingAction("Daniel"))
+                        .getNewRange());
+
+        // this is placeholder
+        assertEquals(Resource.free(),
+                ((ShovelAction) defaultGame.getShovelAction("Daniel"))
+                        .getNewCost());
+
+        assertEquals(0,
+                ((BuildAction) defaultGame
+                        .getTileActions("Daniel", new int[] { 0, 1 }).get(0))
+                        .getTerraformCost());
     }
 
 }
