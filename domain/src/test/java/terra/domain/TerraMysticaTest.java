@@ -41,8 +41,8 @@ public class TerraMysticaTest {
         assertArrayEquals(
                 Arrays.stream(expected).map(i -> TileLocation.fromArray(i))
                         .toArray(TileLocation[]::new),
-                Arrays.stream(game.getTileLocations())
-                        .map(i -> TileLocation.fromArray(i))
+                game.getTileInfo().stream()
+                        .map(t -> TileLocation.fromArray(t.getLocation()))
                         .toArray(TileLocation[]::new));
     }
 
@@ -51,9 +51,10 @@ public class TerraMysticaTest {
         Terrain[] terrains = { Terrain.RIVER, Terrain.DESERT, Terrain.FOREST,
                 Terrain.WASTELAND, Terrain.LAKE };
         ITerraMystica game = new TerraMystica(null, terrains, 2);
-        int[][] locations = game.getTileLocations();
+        int[][] locations = game.getTileInfo().stream()
+                .map(t -> t.getLocation()).toArray(int[][]::new);
         assertAll(IntStream.range(0, terrains.length).mapToObj(i -> (() -> {
-            assertEquals(terrains[i], game.getTileTerrain(locations[i]));
+            assertEquals(terrains[i], game.getTile(locations[i]).getTerrain());
         })));
     }
 
@@ -101,7 +102,7 @@ public class TerraMysticaTest {
         assertInstanceOf(BuildAction.class, buildAction);
         defaultGame.perform(buildAction);
         assertEquals(Building.DWELLING,
-                defaultGame.getTileBuilding(new int[] { 0, 1 }));
+                defaultGame.getTile(new int[] { 0, 1 }).getBuilding());
 
         assertEquals(0,
                 defaultGame.getTileActions("Daniel", new int[] { 0, 1 })
@@ -125,9 +126,9 @@ public class TerraMysticaTest {
         assertEquals(1, crossRiverActions.size());
         defaultGame.perform(crossRiverActions.get(0));
         assertEquals(Building.DWELLING,
-                defaultGame.getTileBuilding(new int[] { 0, 3 }));
+                defaultGame.getTile(new int[] { 0, 3 }).getBuilding());
         assertEquals(defaultGame.getPlayer("Daniel").getTerrain(),
-                defaultGame.getTileTerrain(new int[] { 0, 3 }));
+                defaultGame.getTile(new int[] { 0, 3 }).getTerrain());
 
     }
 
@@ -217,7 +218,7 @@ public class TerraMysticaTest {
 
         ((TerraMystica) defaultGame).setGamePhase(GamePhase.GAME_ROUND);
         assertEquals(Building.DWELLING,
-                defaultGame.getTileBuilding(new int[] { 0, 0 }));
+                defaultGame.getTile(new int[] { 0, 0 }).getBuilding());
         assertEquals(1, defaultGame.getTileActions("Daniel", new int[] { 0, 0 })
                 .size());
 
@@ -226,7 +227,7 @@ public class TerraMysticaTest {
                         .stream().findFirst().get());
 
         assertEquals(Building.TRADING,
-                defaultGame.getTileBuilding(new int[] { 0, 0 }));
+                defaultGame.getTile(new int[] { 0, 0 }).getBuilding());
     }
 
     @Test
@@ -383,6 +384,14 @@ public class TerraMysticaTest {
                 ((BuildAction) defaultGame
                         .getTileActions("Daniel", new int[] { 0, 1 }).get(0))
                         .getTerraformCost());
+    }
+
+    @Test
+    public void testNoActionsAtGameEnd() {
+        ((TerraMystica) defaultGame).setGamePhase(GamePhase.GAME_END);
+
+        assertEquals(0, defaultGame.getTileActions("Daniel", new int[] { 0, 0 })
+                .size());
     }
 
 }

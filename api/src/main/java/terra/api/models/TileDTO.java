@@ -1,8 +1,8 @@
 package terra.api.models;
 
 import terra.domain.Building;
-import terra.domain.GamePhase;
 import terra.domain.ITerraMystica;
+import terra.domain.ITileInfo;
 import terra.domain.Terrain;
 
 public class TileDTO {
@@ -11,19 +11,14 @@ public class TileDTO {
     private Building building;
     private ActionDTO[] actions;
 
-    public TileDTO(ITerraMystica game, int[] location) {
-        this.terrain = game.getTileTerrain(location);
-        this.building = game.getTileBuilding(location);
-        if (game.getGamePhase() != GamePhase.GAME_END) {
-            this.actions = game
-                    .getTileActions(game.getPlayerInfo().stream()
-                            .filter(p -> p.hasTurn()).findFirst().get()
-                            .getName(), location)
-                    .stream().map(a -> ActionDTO.getActionDTO(a))
-                    .toArray(ActionDTO[]::new);
-        } else {
-            this.actions = new ActionDTO[0];
-        }
+    public TileDTO(ITerraMystica game, ITileInfo tile) {
+        this.terrain = tile.getTerrain();
+        this.building = tile.getBuilding();
+        this.actions = game
+                .getTileActions(game.getTurnPlayer().getName(),
+                        tile.getLocation())
+                .stream().map(a -> ActionDTO.getActionDTO(a))
+                .toArray(ActionDTO[]::new);
     }
 
     public Terrain getTerrain() {

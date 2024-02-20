@@ -59,20 +59,18 @@ public class TerraMystica implements ITerraMystica {
         return player.getPlayer(name);
     }
 
-    public Player getTurnPlayer() {
+    public IPlayerInfo getTurnPlayer() {
         return player.getTurnPlayer();
     }
 
-    public int[][] getTileLocations() {
-        return rootTile.getTileLocations();
+    public List<ITileInfo> getTileInfo() {
+        List<ITileInfo> list = new ArrayList<ITileInfo>();
+        list.addAll(rootTile.getTileList());
+        return list;
     }
 
-    public Terrain getTileTerrain(int[] location) {
-        return rootTile.getTileTerrain(TileLocation.fromArray(location));
-    }
-
-    public Building getTileBuilding(int[] location) {
-        return rootTile.getTileBuilding(TileLocation.fromArray(location));
+    public ITileInfo getTile(int[] location) {
+        return rootTile.findTile(TileLocation.fromArray(location));
     }
 
     public GameAction getPassAction(String playerName) {
@@ -98,8 +96,6 @@ public class TerraMystica implements ITerraMystica {
 
     public List<GameAction> getTileActions(String name, int[] location) {
         List<GameAction> list = new ArrayList<GameAction>();
-//        list.addAll(rootTile.getTileActions(playerName,
-//                TileLocation.fromArray(location), actionBuilder));
         list.addAll(actionBuilder.getTileActions(getPlayer(name),
                 rootTile.findTile(TileLocation.fromArray(location))));
         return list;
@@ -112,7 +108,7 @@ public class TerraMystica implements ITerraMystica {
             }
             if (action instanceof TileAction) {
                 rootTile.perform((TileAction) action);
-                if (getTileBuilding(((TileAction) action).getLocation())
+                if (getTile(((TileAction) action).getLocation()).getBuilding()
                         .equals(((TileAction) action).getTargetBuilding())) {
                     player.perform((TileAction) action);
                 }

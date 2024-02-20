@@ -8,7 +8,7 @@ import terra.domain.actions.BuildAction;
 import terra.domain.actions.TileAction;
 import terra.domain.actions.UpgradeAction;
 
-public class Tile {
+public class Tile implements ITileInfo {
 
     private final TileLocation location;
     private Terrain terrain;
@@ -26,25 +26,24 @@ public class Tile {
                 .toList();
     }
 
+    public Terrain getTerrain() {
+        return terrain;
+    }
+
+    public Building getBuilding() {
+        return building;
+    }
+
+    public int[] getLocation() {
+        return location.toArray();
+    }
+
     protected boolean isAdjacentTo(Tile other) {
         return location.isAdjacentTo(other.location);
     }
 
-    protected int[][] getTileLocations() {
-        return getTileList().stream().map(t -> t.location.toArray())
-                .toArray(int[][]::new);
-    }
-
     protected List<Tile> getTileList() {
         return getAllTiles().stream().sorted((i, j) -> i.compare(j)).toList();
-    }
-
-    protected Terrain getTileTerrain(TileLocation target) {
-        return findTile(target).terrain;
-    }
-
-    protected Building getTileBuilding(TileLocation target) {
-        return findTile(target).building;
     }
 
     protected void perform(TileAction action) {
@@ -133,10 +132,6 @@ public class Tile {
             set.add(this);
             adjacent.forEach(t -> t.getAllTiles(set));
         }
-    }
-
-    protected int[] getLocation() {
-        return location.toArray();
     }
 
     protected List<Tile> getAdjacent() {

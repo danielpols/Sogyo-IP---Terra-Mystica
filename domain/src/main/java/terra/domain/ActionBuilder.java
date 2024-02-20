@@ -63,7 +63,7 @@ public class ActionBuilder {
         }
 
         Terrain playerTerrain = player.getTerrain();
-        Terrain tileTerrain = getTerrain(tile);
+        Terrain tileTerrain = tile.getTerrain();
 
         if (tileTerrain.equals(Terrain.RIVER)) {
             return list;
@@ -102,12 +102,12 @@ public class ActionBuilder {
             Tile tile) {
         List<UpgradeAction> list = new ArrayList<UpgradeAction>();
 
-        if (tile.hasBuilding() && getTerrain(tile).equals(player.getTerrain())
+        if (tile.hasBuilding() && tile.getTerrain().equals(player.getTerrain())
                 && game.getGamePhase().equals(GamePhase.GAME_ROUND)) {
-            Building tileBuilding = game.getTileBuilding(tile.getLocation());
+            Building tileBuilding = tile.getBuilding();
             boolean adjacencyBonus = tile.getAdjacent().stream()
                     .filter(t -> t.hasBuilding())
-                    .filter(t -> !getTerrain(t).equals(getTerrain(tile)))
+                    .filter(t -> !t.getTerrain().equals(tile.getTerrain()))
                     .count() > 0;
             list.addAll(tileBuilding.upgrades().stream()
                     .filter(b -> player.canPayCost(
@@ -120,10 +120,6 @@ public class ActionBuilder {
         }
 
         return list;
-    }
-
-    private Terrain getTerrain(Tile t) {
-        return game.getTileTerrain(t.getLocation());
     }
 
 }

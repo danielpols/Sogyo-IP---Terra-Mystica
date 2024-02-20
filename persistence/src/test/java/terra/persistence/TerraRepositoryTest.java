@@ -29,8 +29,8 @@ public class TerraRepositoryTest {
 
         ITerraMystica game = repository.loadGame("yo");
 
-        Terrain[] terrain = Arrays.stream(game.getTileLocations())
-                .map(l -> game.getTileTerrain(l)).toArray(Terrain[]::new);
+        Terrain[] terrain = game.getTileInfo().stream().map(t -> t.getTerrain())
+                .toArray(Terrain[]::new);
 
         Terrain[] actual = IntStream.range(0, 5).mapToObj(i -> terrain[i])
                 .toArray(Terrain[]::new);
@@ -57,7 +57,7 @@ public class TerraRepositoryTest {
         ITerraMystica game = repository.loadGame(id);
 
         assertEquals(Building.DWELLING,
-                game.getTileBuilding(new int[] { 0, 0 }));
+                game.getTile(new int[] { 0, 0 }).getBuilding());
         assertTrue(game.getPlayer("Gerrit").hasTurn());
     }
 

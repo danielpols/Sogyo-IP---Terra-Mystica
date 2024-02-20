@@ -14,11 +14,11 @@ public interface ITerraMystica {
 
     IPlayerInfo getPlayer(String name);
 
-    int[][] getTileLocations();
+    IPlayerInfo getTurnPlayer();
 
-    Terrain getTileTerrain(int[] location);
+    List<ITileInfo> getTileInfo();
 
-    Building getTileBuilding(int[] location);
+    ITileInfo getTile(int[] location);
 
     GameAction getPassAction(String playerName);
 

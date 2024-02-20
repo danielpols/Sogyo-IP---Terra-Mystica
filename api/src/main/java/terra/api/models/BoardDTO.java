@@ -1,7 +1,5 @@
 package terra.api.models;
 
-import java.util.Arrays;
-
 import terra.domain.ITerraMystica;
 
 public class BoardDTO {
@@ -10,8 +8,8 @@ public class BoardDTO {
 
     public BoardDTO(ITerraMystica game) {
 
-        tiles = Arrays.stream(game.getTileLocations())
-                .map(loc -> new TileDTO(game, loc)).toArray(TileDTO[]::new);
+        tiles = game.getTileInfo().stream().map(t -> new TileDTO(game, t))
+                .toArray(TileDTO[]::new);
 
     }
 
