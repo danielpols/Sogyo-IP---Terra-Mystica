@@ -58,7 +58,7 @@ public class TerraRepositoryTest {
 
         assertEquals(Building.DWELLING,
                 game.getTileBuilding(new int[] { 0, 0 }));
-        assertTrue(game.playerHasTurn("Gerrit"));
+        assertTrue(game.getPlayer("Gerrit").hasTurn());
     }
 
 }
