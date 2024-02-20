@@ -294,12 +294,12 @@ public class Player implements IPlayerInfo, IPlayerActionInfo {
 
     private void switchTurn() {
         if (turn) {
-            turn = !turn;
+            turn = false;
             nextPlayer.switchTurn();
         } else if (passed) {
             nextPlayer.switchTurn();
         } else {
-            turn = !turn;
+            turn = true;
         }
     }
 
@@ -318,12 +318,12 @@ public class Player implements IPlayerInfo, IPlayerActionInfo {
 
     private void switchTurnReverse() {
         if (turn) {
-            turn = !turn;
+            turn = false;
             findPreviousPlayer(name).switchTurnReverse();
         } else if (passed) {
             findPreviousPlayer(name).switchTurnReverse();
         } else {
-            turn = !turn;
+            turn = true;
         }
     }
 
