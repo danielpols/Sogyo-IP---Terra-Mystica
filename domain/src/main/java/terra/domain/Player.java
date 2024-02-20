@@ -13,7 +13,7 @@ import terra.domain.actions.ShovelAction;
 import terra.domain.actions.TileAction;
 import terra.domain.actions.UpgradeAction;
 
-public class Player implements IPlayerInfo {
+public class Player implements IPlayerInfo, IPlayerActionInfo {
 
     private final String name;
     private final Terrain terrain;
@@ -79,13 +79,13 @@ public class Player implements IPlayerInfo {
         rewards.put(Building.SANCTUARY, Arrays.asList(new Resource(0, 0, 1)));
     }
 
-    protected List<IPlayerInfo> getAllPlayers() {
-        List<IPlayerInfo> list = new ArrayList<IPlayerInfo>();
+    protected List<Player> getAllPlayers() {
+        List<Player> list = new ArrayList<Player>();
         getAllPlayers(list);
         return list;
     }
 
-    private void getAllPlayers(List<IPlayerInfo> list) {
+    private void getAllPlayers(List<Player> list) {
         if (!list.contains(this)) {
             list.add(this);
             nextPlayer.getAllPlayers(list);
@@ -148,7 +148,7 @@ public class Player implements IPlayerInfo {
         return getPlayer(name).getBuildingCost(building, adjacent);
     }
 
-    private Resource getBuildingCost(Building building, boolean adjacent) {
+    public Resource getBuildingCost(Building building, boolean adjacent) {
         switch (building) {
         case CHURCH:
             return new Resource(5, 2, 0);
@@ -169,9 +169,28 @@ public class Player implements IPlayerInfo {
         return new Resource(0, 0, 0);
     }
 
+    public Resource getTerraformCost(Terrain origin) {
+        return terraformCost[terraformStep]
+                .multiply(terrain.distanceTo(origin).getAsInt());
+    }
+
     protected Resource getTerraformCost(String name, int steps) {
         return getPlayer(name).terraformCost[getPlayer(name).terraformStep]
                 .multiply(steps);
+    }
+
+    public Resource getShippingImprovementCost() {
+        if (shippingRange < maxRange) {
+            return rangeCost;
+        }
+        return null;
+    }
+
+    public Resource getShovelImprovementCost() {
+        if (terraformStep < terraformCost.length) {
+            return tfImproveCost;
+        }
+        return null;
     }
 
     protected Resource getPlayerImprovementCost(String name, String type) {
@@ -227,10 +246,10 @@ public class Player implements IPlayerInfo {
     }
 
     protected boolean canPayForCost(String name, Resource cost) {
-        return getPlayer(name).canPayForCost(cost);
+        return getPlayer(name).canPayCost(cost);
     }
 
-    private boolean canPayForCost(Resource cost) {
+    public boolean canPayCost(Resource cost) {
         return resource.coin() >= cost.coin()
                 && resource.worker() >= cost.worker()
                 && resource.priest() >= cost.priest();
@@ -240,7 +259,7 @@ public class Player implements IPlayerInfo {
         return getPlayer(name).canBuildBuilding(building);
     }
 
-    private boolean canBuildBuilding(Building building) {
+    public boolean canBuildBuilding(Building building) {
         return amountBuilt.get(building) < rewards.get(building).size();
     }
 

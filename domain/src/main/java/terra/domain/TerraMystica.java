@@ -54,7 +54,9 @@ public class TerraMystica implements ITerraMystica {
     }
 
     public List<IPlayerInfo> getPlayerInfo() {
-        return player.getAllPlayers();
+        List<IPlayerInfo> list = new ArrayList<IPlayerInfo>();
+        list.addAll(player.getAllPlayers());
+        return list;
     }
 
     public IPlayerInfo getPlayer(String name) {

@@ -134,7 +134,7 @@ public class Tile {
         return location.compare(other.location);
     }
 
-    private Tile findTile(TileLocation target) {
+    protected Tile findTile(TileLocation target) {
         return target.equals(location) ? this
                 : adjacent.stream()
                         .filter(t -> t.location.distance(target) < location
