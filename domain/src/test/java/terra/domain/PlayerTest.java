@@ -9,9 +9,11 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import terra.domain.actions.BuildAction;
 import terra.domain.actions.PassAction;
 import terra.domain.actions.ShippingAction;
 import terra.domain.actions.ShovelAction;
+import terra.domain.actions.UpgradeAction;
 
 public class PlayerTest {
 
@@ -117,17 +119,25 @@ public class PlayerTest {
                 player.getPlayer("Henk").getShovelImprovementCost());
 
         IntStream.range(0, 3).forEach(i -> player
-                .perform(new ShippingAction("Henk", new Resource(0, 0, 0), 0)));
+                .perform(new ShippingAction("Henk", Resource.free(), 0)));
 
         IntStream.range(0, 2)
                 .forEach(i -> player.perform(new ShovelAction("Henk",
-                        new Resource(0, 0, 0), new Resource(0, 0, 0))));
+                        Resource.free(), new Resource(0, 0, 0))));
 
         assertEquals(3, player.getPlayer("Henk").getShippingRange());
         assertArrayEquals((new Resource(0, 1, 0)).toArray(),
                 player.getPlayer("Henk").getTerraformCost());
         assertNull(player.getPlayer("Henk").getShippingImprovementCost());
         assertNull(player.getPlayer("Henk").getShovelImprovementCost());
+    }
+
+    @Test
+    public void testBuildingLimits() {
+        player.perform(new BuildAction("Henk", Resource.free(), null,
+                Terrain.DESERT, Building.DWELLING, 0));
+        player.perform(new UpgradeAction("Henk", Resource.free(), null,
+                Building.DWELLING, Building.TRADING));
     }
 
 }

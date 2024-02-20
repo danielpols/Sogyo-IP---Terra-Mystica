@@ -110,8 +110,7 @@ public class TerraMysticaTest {
         // across the river
         ((TerraMystica) defaultGame).setGamePhase(GamePhase.GAME_ROUND);
 
-        defaultGame.perform(
-                new ShippingAction("Daniel", new Resource(0, 0, 0), 1));
+        defaultGame.perform(new ShippingAction("Daniel", Resource.free(), 1));
 
         List<GameAction> crossRiverActions = defaultGame
                 .getTileActions("Daniel", new int[] { 0, 3 }).stream()
@@ -265,11 +264,11 @@ public class TerraMysticaTest {
         assertNull(defaultGame.getShovelAction("Daniel"));
 
         // give priest
-        defaultGame.perform(new BuildAction("Daniel", new Resource(0, 0, 0),
+        defaultGame.perform(new BuildAction("Daniel", Resource.free(),
                 new int[] { 0, 0 }, Terrain.SWAMP, Building.DWELLING, 0));
-        defaultGame.perform(new UpgradeAction("Daniel", new Resource(0, 0, 0),
+        defaultGame.perform(new UpgradeAction("Daniel", Resource.free(),
                 new int[] { 0, 0 }, Building.DWELLING, Building.TRADING));
-        defaultGame.perform(new UpgradeAction("Daniel", new Resource(0, 0, 0),
+        defaultGame.perform(new UpgradeAction("Daniel", Resource.free(),
                 new int[] { 0, 0 }, Building.TRADING, Building.CHURCH));
 
         defaultGame.perform(new PassAction("Daniel", true));

@@ -44,12 +44,8 @@ public class TerraMystica implements ITerraMystica {
             return "Game has ended";
         case GAME_ROUND:
             return "Round " + (roundNumber + 1);
-        case GAME_START:
-            return "Setup";
-        case GAME_START_REVERSE:
-            return "Setup";
         default:
-            return "";
+            return "Setup";
         }
     }
 
