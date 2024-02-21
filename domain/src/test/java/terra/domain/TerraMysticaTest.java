@@ -36,7 +36,13 @@ public class TerraMysticaTest {
     public void testAllLocationsPresent() {
         Terrain[] terrains = { Terrain.RIVER, Terrain.DESERT, Terrain.FOREST,
                 Terrain.WASTELAND, Terrain.LAKE };
-        ITerraMystica game = new TerraMystica(null, terrains, 2);
+
+        List<Tile> tiles = IntStream.range(0, terrains.length).mapToObj(
+                i -> new Tile(TileLocation.fromBoardIndex(i, 2), terrains[i]))
+                .toList();
+        tiles.stream().forEach(t -> t.setAdjacent(tiles));
+
+        ITerraMystica game = new TerraMystica(null, tiles.get(0));
         int[][] expected = { { 0, 0 }, { 0, 1 }, { 1, 0 }, { 2, 0 }, { 2, 1 } };
         assertArrayEquals(
                 Arrays.stream(expected).map(i -> TileLocation.fromArray(i))
@@ -50,7 +56,13 @@ public class TerraMysticaTest {
     public void testCanGetTerrains() {
         Terrain[] terrains = { Terrain.RIVER, Terrain.DESERT, Terrain.FOREST,
                 Terrain.WASTELAND, Terrain.LAKE };
-        ITerraMystica game = new TerraMystica(null, terrains, 2);
+
+        List<Tile> tiles = IntStream.range(0, terrains.length).mapToObj(
+                i -> new Tile(TileLocation.fromBoardIndex(i, 2), terrains[i]))
+                .toList();
+        tiles.stream().forEach(t -> t.setAdjacent(tiles));
+
+        ITerraMystica game = new TerraMystica(null, tiles.get(0));
         int[][] locations = game.getTileInfo().stream()
                 .map(t -> t.getLocation()).toArray(int[][]::new);
         assertAll(IntStream.range(0, terrains.length).mapToObj(i -> (() -> {

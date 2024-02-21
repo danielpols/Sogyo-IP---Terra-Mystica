@@ -2,7 +2,6 @@ package terra.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import terra.domain.actions.GameAction;
 import terra.domain.actions.PlayerAction;
@@ -15,22 +14,14 @@ public class TerraMystica implements ITerraMystica {
     private GamePhase gamePhase;
     private int roundNumber;
 
-    private final int boardSize;
     private Tile rootTile;
     private Player player;
 
-    public TerraMystica(Player player, Terrain[] board, int boardSize) {
+    public TerraMystica(Player player, Tile rootTile) {
         this.actionBuilder = new ActionBuilder(this);
         this.gamePhase = GamePhase.GAME_START;
         this.roundNumber = 0;
-        this.boardSize = boardSize;
-        List<Tile> tiles = IntStream.range(0, board.length)
-                .mapToObj(i -> new Tile(
-                        TileLocation.fromBoardIndex(i, this.boardSize),
-                        board[i]))
-                .toList();
-        tiles.stream().forEach(t -> t.setAdjacent(tiles));
-        this.rootTile = tiles.get(0);
+        this.rootTile = rootTile;
         this.player = player;
     }
 
