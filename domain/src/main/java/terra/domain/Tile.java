@@ -26,6 +26,10 @@ public class Tile implements ITileInfo {
                 .toList();
     }
 
+    private boolean isAdjacentTo(Tile other) {
+        return location.isAdjacentTo(other.location);
+    }
+
     public Terrain getTerrain() {
         return terrain;
     }
@@ -36,10 +40,6 @@ public class Tile implements ITileInfo {
 
     public int[] getLocation() {
         return location.toArray();
-    }
-
-    protected boolean isAdjacentTo(Tile other) {
-        return location.isAdjacentTo(other.location);
     }
 
     protected List<Tile> getTileList() {
