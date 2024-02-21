@@ -155,8 +155,6 @@ public class Player implements IPlayerInfo, IPlayerActionInfo {
             return new Resource(2, 1, 0);
         case FORTRESS:
             return new Resource(6, 4, 0);
-        case NONE:
-            break;
         case SANCTUARY:
             return new Resource(6, 4, 0);
         case TRADING:
