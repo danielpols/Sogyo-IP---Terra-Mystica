@@ -1,6 +1,6 @@
 package terra.api.models;
 
-import terra.domain.ITerraMystica;
+import terra.domain.ITerraMysticaInfo;
 
 public class GameDTO {
 
@@ -8,7 +8,7 @@ public class GameDTO {
     private PlayerDTO[] players;
     String message;
 
-    public GameDTO(ITerraMystica game) {
+    public GameDTO(ITerraMysticaInfo game) {
         board = new BoardDTO(game);
         players = game.getPlayerInfo().stream().map(p -> new PlayerDTO(game, p))
                 .toArray(PlayerDTO[]::new);

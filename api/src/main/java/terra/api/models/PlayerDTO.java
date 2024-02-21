@@ -1,7 +1,7 @@
 package terra.api.models;
 
 import terra.domain.IPlayerInfo;
-import terra.domain.ITerraMystica;
+import terra.domain.ITerraMysticaInfo;
 import terra.domain.Terrain;
 
 public class PlayerDTO {
@@ -21,7 +21,7 @@ public class PlayerDTO {
     private ActionDTO shippingAction;
     private ActionDTO shovelAction;
 
-    public PlayerDTO(ITerraMystica game, IPlayerInfo player) {
+    public PlayerDTO(ITerraMysticaInfo game, IPlayerInfo player) {
         this.name = player.getName();
         this.terrain = player.getTerrain();
         this.turn = player.hasTurn();

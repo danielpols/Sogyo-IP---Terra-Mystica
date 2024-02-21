@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 
 import terra.domain.Building;
-import terra.domain.ITerraMystica;
+import terra.domain.ITerraMysticaInfo;
 import terra.domain.Resource;
 import terra.domain.TerraMysticaFactory;
 import terra.domain.Terrain;
@@ -27,7 +27,7 @@ public class TerraRepositoryTest {
         repository.initialiseGame("yo", Arrays.asList("Daniel", "Gerrit"),
                 Arrays.asList(Terrain.PLAINS, Terrain.MOUNTAINS));
 
-        ITerraMystica game = repository.loadGame("yo");
+        ITerraMysticaInfo game = repository.loadGame("yo");
 
         Terrain[] terrain = game.getTileInfo().stream().map(t -> t.getTerrain())
                 .toArray(Terrain[]::new);
@@ -54,7 +54,7 @@ public class TerraRepositoryTest {
                         new int[] { 0, 0 }, Terrain.PLAINS, Building.DWELLING,
                         0));
 
-        ITerraMystica game = repository.loadGame(id);
+        ITerraMysticaInfo game = repository.loadGame(id);
 
         assertEquals(Building.DWELLING,
                 game.getTile(new int[] { 0, 0 }).getBuilding());

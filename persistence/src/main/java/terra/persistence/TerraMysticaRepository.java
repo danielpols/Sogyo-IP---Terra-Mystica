@@ -4,6 +4,7 @@ import java.util.List;
 
 import terra.domain.ITerraMystica;
 import terra.domain.ITerraMysticaFactory;
+import terra.domain.ITerraMysticaInfo;
 import terra.domain.Terrain;
 import terra.domain.actions.GameAction;
 
@@ -29,7 +30,7 @@ public class TerraMysticaRepository implements ITerraMysticaRepository {
         database.saveAction(id, action);
     }
 
-    public ITerraMystica loadGame(String id) {
+    public ITerraMysticaInfo loadGame(String id) {
         ITerraMystica game = factory.startGame(database.getPlayerNames(id),
                 database.getPlayerTerrains(id), getStartingTerrain());
         database.getGameActions(id).forEach(a -> {

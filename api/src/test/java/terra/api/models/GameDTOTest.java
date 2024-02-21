@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import terra.domain.ITerraMystica;
 import terra.domain.TerraMysticaFactory;
 import terra.domain.Terrain;
 import terra.persistence.ITerraMysticaRepository;
@@ -24,8 +23,7 @@ public class GameDTOTest {
         repository.initialiseGame("yo", Arrays.asList("Daniel", "Gerrit"),
                 Arrays.asList(Terrain.PLAINS, Terrain.MOUNTAINS));
 
-        ITerraMystica game = repository.loadGame("yo");
-        GameDTO dto = new GameDTO(game);
+        GameDTO dto = new GameDTO(repository.loadGame("yo"));
         ObjectMapper mapper = new ObjectMapper();
 
         try {
