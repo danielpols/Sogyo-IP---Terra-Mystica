@@ -1,7 +1,7 @@
 package terra.api.models;
 
 import terra.domain.Building;
-import terra.domain.ITerraMystica;
+import terra.domain.ITerraMysticaInfo;
 import terra.domain.ITileInfo;
 import terra.domain.Terrain;
 
@@ -11,7 +11,7 @@ public class TileDTO {
     private Building building;
     private ActionDTO[] actions;
 
-    public TileDTO(ITerraMystica game, ITileInfo tile) {
+    public TileDTO(ITerraMysticaInfo game, ITileInfo tile) {
         this.terrain = tile.getTerrain();
         this.building = tile.getBuilding();
         this.actions = game

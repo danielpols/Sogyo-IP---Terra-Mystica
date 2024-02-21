@@ -15,7 +15,6 @@ import jakarta.ws.rs.core.Response;
 import terra.api.models.ActionDTO;
 import terra.api.models.GameDTO;
 import terra.api.models.StartGameDTO;
-import terra.domain.ITerraMystica;
 import terra.persistence.ITerraMysticaRepository;
 
 @Path("/terra/api")
@@ -51,10 +50,8 @@ public class TerraController {
         repository.initialiseGame(gameId, body.getStartingNames(),
                 body.getStartingTerrains());
 
-        ITerraMystica game = repository.loadGame(gameId);
-
         // Use the game to create a DTO.
-        GameDTO output = new GameDTO(game);
+        GameDTO output = new GameDTO(repository.loadGame(gameId));
         return Response.status(200).entity(output).build();
     }
 
@@ -70,9 +67,7 @@ public class TerraController {
 
         repository.saveAction(gameId, body.toAction());
 
-        ITerraMystica game = repository.loadGame(gameId);
-
-        GameDTO output = new GameDTO(game);
+        GameDTO output = new GameDTO(repository.loadGame(gameId));
         return Response.status(200).entity(output).build();
     }
 }
