@@ -55,6 +55,16 @@ De doelen van dit project opgeschreven in MoSCoW-format:
 
 ## Architectuur
 
+Deze applicatie bestaat uit de volgende lagen:
+- Client: Een Vue.js/Vite front-end server.
+- API: Een Java/Jetty back-end server die aangeroepen wordt vanuit de client.
+- Persistence: Een Java in-memory repository en database.
+- Domain: De Java laag die de back-end logica doet.
+
+![Architecture](architecture.png)
+
+De API heeft twee endpoints, `/start` en `/act`, voor het aanmaken en het spelen van een spel respectievelijk. Alle acties die gedaan moeten worden in het spel moeten via de persistencelaag lopen, want de API mag niet de staat van het spel zelf aanpassen. De informatie die terug wordt gestuurd naar de client heeft een vergelijkbare structuur als het spel-object in het domein.
+
 ## Persoonlijke leerdoelen
 
 - Beter bekend raken met AGILE/SCRUM.
