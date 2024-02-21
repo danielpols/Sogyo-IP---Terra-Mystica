@@ -143,7 +143,7 @@ public class TerraMystica implements ITerraMystica {
     }
 
     private void allPlayersTakeIncome() {
-        player.getPlayerList().forEach(p -> player.gainIncome());
+        player.getPlayerList().forEach(p -> p.gainIncome());
     }
 
     protected void setGamePhase(GamePhase phase) {
