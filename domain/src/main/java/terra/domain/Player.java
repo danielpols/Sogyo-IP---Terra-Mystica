@@ -13,7 +13,7 @@ import terra.domain.actions.ShovelAction;
 import terra.domain.actions.TileAction;
 import terra.domain.actions.UpgradeAction;
 
-public class Player implements IPlayerInfo, IPlayerActionInfo {
+public class Player implements IPlayer {
 
     private final String name;
     private final Terrain terrain;
@@ -79,7 +79,13 @@ public class Player implements IPlayerInfo, IPlayerActionInfo {
         rewards.put(Building.SANCTUARY, Arrays.asList(new Resource(0, 0, 1)));
     }
 
-    protected List<Player> getAllPlayers() {
+    public List<IPlayer> getPlayerList() {
+        List<IPlayer> list = new ArrayList<IPlayer>();
+        list.addAll(getAllPlayers());
+        return list;
+    }
+
+    private List<Player> getAllPlayers() {
         List<Player> list = new ArrayList<Player>();
         getAllPlayers(list);
         return list;
@@ -128,7 +134,7 @@ public class Player implements IPlayerInfo, IPlayerActionInfo {
         return getIncomeResource().toArray();
     }
 
-    protected void gainIncome() {
+    public void gainIncome() {
         resource = resource.add(getIncomeResource());
     }
 
@@ -144,7 +150,7 @@ public class Player implements IPlayerInfo, IPlayerActionInfo {
 
     protected Resource getBuildingCost(String name, Building building,
             boolean adjacent) {
-        return getPlayer(name).getBuildingCost(building, adjacent);
+        return findPlayer(name).getBuildingCost(building, adjacent);
     }
 
     public Resource getBuildingCost(Building building, boolean adjacent) {
@@ -195,22 +201,30 @@ public class Player implements IPlayerInfo, IPlayerActionInfo {
         return amountBuilt.get(building) < rewards.get(building).size();
     }
 
-    protected Player getPlayer(String name) {
+    public IPlayer getPlayer(String name) {
+        return findPlayer(name);
+    }
+
+    protected Player findPlayer(String name) {
         if (this.name.equals(name)) {
             return this;
         }
-        return nextPlayer.getPlayer(name);
+        return nextPlayer.findPlayer(name);
     }
 
-    protected Player getTurnPlayer() {
+    public IPlayer getTurnPlayer() {
+        return findTurnPlayer();
+    }
+
+    protected Player findTurnPlayer() {
         if (turn) {
             return this;
         }
-        return nextPlayer.getTurnPlayer();
+        return nextPlayer.findTurnPlayer();
     }
 
-    protected void perform(GameAction action) {
-        Player targetPlayer = getPlayer(action.getPlayerName());
+    public void perform(GameAction action) {
+        Player targetPlayer = findPlayer(action.getPlayerName());
         if (action instanceof TileAction) {
             TileAction tileAction = (TileAction) action;
             targetPlayer.buildBuilding(tileAction instanceof UpgradeAction
@@ -263,11 +277,11 @@ public class Player implements IPlayerInfo, IPlayerActionInfo {
     }
 
     private boolean firstToPass() {
-        return getTurnPlayer().nextPlayer.noneHavePassed();
+        return findTurnPlayer().nextPlayer.noneHavePassed();
     }
 
     private boolean lastToPass() {
-        return getTurnPlayer().nextPlayer.allHavePassed();
+        return findTurnPlayer().nextPlayer.allHavePassed();
     }
 
     private void pass() {
@@ -284,9 +298,9 @@ public class Player implements IPlayerInfo, IPlayerActionInfo {
         }
     }
 
-    protected void endTurn(String name) {
-        if (getPlayer(name).hasTurn()) {
-            getPlayer(name).switchTurn();
+    public void endTurn(String name) {
+        if (findPlayer(name).hasTurn()) {
+            findPlayer(name).switchTurn();
         }
     }
 
@@ -301,9 +315,9 @@ public class Player implements IPlayerInfo, IPlayerActionInfo {
         }
     }
 
-    protected void endTurnReverse(String name) {
-        if (getPlayer(name).hasTurn()) {
-            getPlayer(name).switchTurnReverse();
+    public void endTurnReverse(String name) {
+        if (findPlayer(name).hasTurn()) {
+            findPlayer(name).switchTurnReverse();
         }
     }
 
@@ -325,7 +339,7 @@ public class Player implements IPlayerInfo, IPlayerActionInfo {
         }
     }
 
-    protected void startNewRound() {
+    public void startNewRound() {
         if (!passed) {
             return;
         }

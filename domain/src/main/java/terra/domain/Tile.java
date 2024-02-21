@@ -1,5 +1,6 @@
 package terra.domain;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -8,7 +9,7 @@ import terra.domain.actions.BuildAction;
 import terra.domain.actions.TileAction;
 import terra.domain.actions.UpgradeAction;
 
-public class Tile implements ITileInfo, ITileActionInfo {
+public class Tile implements ITile {
 
     private final TileLocation location;
     private Terrain terrain;
@@ -42,11 +43,14 @@ public class Tile implements ITileInfo, ITileActionInfo {
         return location.toArray();
     }
 
-    protected List<Tile> getTileList() {
-        return getAllTiles().stream().sorted((i, j) -> i.compare(j)).toList();
+    public List<ITile> getTileList() {
+        List<ITile> list = new ArrayList<ITile>();
+        list.addAll(
+                getAllTiles().stream().sorted((i, j) -> i.compare(j)).toList());
+        return list;
     }
 
-    protected void perform(TileAction action) {
+    public void perform(TileAction action) {
         if (action instanceof BuildAction) {
             findTile(TileLocation.fromArray(action.getLocation()))
                     .build((BuildAction) action);
@@ -74,7 +78,7 @@ public class Tile implements ITileInfo, ITileActionInfo {
         }
     }
 
-    protected int getAmountOfBuildingsOn(Terrain playerTerrain) {
+    public int getAmountOfBuildingsOn(Terrain playerTerrain) {
         return (int) getAllTiles().stream()
                 .filter(t -> t.terrain.equals(playerTerrain) && t.hasBuilding())
                 .count();
@@ -113,7 +117,11 @@ public class Tile implements ITileInfo, ITileActionInfo {
         return location.compare(other.location);
     }
 
-    protected Tile findTile(TileLocation target) {
+    public ITile getTile(TileLocation target) {
+        return findTile(target);
+    }
+
+    private Tile findTile(TileLocation target) {
         return target.equals(location) ? this
                 : adjacent.stream()
                         .filter(t -> t.location.distance(target) < location

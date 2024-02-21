@@ -14,10 +14,10 @@ public class TerraMystica implements ITerraMystica {
     private GamePhase gamePhase;
     private int roundNumber;
 
-    private Tile rootTile;
-    private Player player;
+    private ITile rootTile;
+    private IPlayer player;
 
-    public TerraMystica(Player player, Tile rootTile) {
+    public TerraMystica(IPlayer player, ITile rootTile) {
         this.actionBuilder = new ActionBuilder(this);
         this.gamePhase = GamePhase.GAME_START;
         this.roundNumber = 0;
@@ -42,11 +42,11 @@ public class TerraMystica implements ITerraMystica {
 
     public List<IPlayerInfo> getPlayerInfo() {
         List<IPlayerInfo> list = new ArrayList<IPlayerInfo>();
-        list.addAll(player.getAllPlayers());
+        list.addAll(player.getPlayerList());
         return list;
     }
 
-    public Player getPlayer(String name) {
+    public IPlayer getPlayer(String name) {
         return player.getPlayer(name);
     }
 
@@ -61,7 +61,7 @@ public class TerraMystica implements ITerraMystica {
     }
 
     public ITileInfo getTile(int[] location) {
-        return rootTile.findTile(TileLocation.fromArray(location));
+        return rootTile.getTile(TileLocation.fromArray(location));
     }
 
     public GameAction getPassAction(String playerName) {
@@ -88,7 +88,7 @@ public class TerraMystica implements ITerraMystica {
     public List<GameAction> getTileActions(String name, int[] location) {
         List<GameAction> list = new ArrayList<GameAction>();
         list.addAll(actionBuilder.getTileActions(getPlayer(name),
-                rootTile.findTile(TileLocation.fromArray(location))));
+                rootTile.getTile(TileLocation.fromArray(location))));
         return list;
     }
 
@@ -143,7 +143,7 @@ public class TerraMystica implements ITerraMystica {
     }
 
     private void allPlayersTakeIncome() {
-        player.getAllPlayers().forEach(p -> player.gainIncome());
+        player.getPlayerList().forEach(p -> player.gainIncome());
     }
 
     protected void setGamePhase(GamePhase phase) {
