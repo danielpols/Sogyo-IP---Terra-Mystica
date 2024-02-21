@@ -9,7 +9,7 @@ import terra.domain.actions.BuildAction;
 import terra.domain.actions.TileAction;
 import terra.domain.actions.UpgradeAction;
 
-public class Tile {
+public class Tile implements ITile {
 
     private final TileLocation location;
     private Terrain terrain;
@@ -27,47 +27,30 @@ public class Tile {
                 .toList();
     }
 
-    protected boolean isAdjacentTo(Tile other) {
+    private boolean isAdjacentTo(Tile other) {
         return location.isAdjacentTo(other.location);
     }
 
-    protected int[][] getTileLocations() {
-        return getTileList().stream().map(t -> t.location.toArray())
-                .toArray(int[][]::new);
+    public Terrain getTerrain() {
+        return terrain;
     }
 
-    protected List<Tile> getTileList() {
-        return getAllTiles().stream().sorted((i, j) -> i.compare(j)).toList();
+    public Building getBuilding() {
+        return building;
     }
 
-    protected Terrain getTileTerrain(TileLocation target) {
-        return findTile(target).terrain;
+    public int[] getLocation() {
+        return location.toArray();
     }
 
-    protected Building getTileBuilding(TileLocation target) {
-        return findTile(target).building;
-    }
-
-    protected List<TileAction> getTileActions(String playerName,
-            TileLocation target, ActionBuilder builder) {
-        List<TileAction> list = new ArrayList<TileAction>();
-        Tile targetTile = findTile(target);
-        list.addAll(targetTile.getBuildAction(playerName, builder));
-        list.addAll(targetTile.getUpgradeActions(playerName, builder));
+    public List<ITile> getTileList() {
+        List<ITile> list = new ArrayList<ITile>();
+        list.addAll(
+                getAllTiles().stream().sorted((i, j) -> i.compare(j)).toList());
         return list;
     }
 
-    private List<BuildAction> getBuildAction(String playerName,
-            ActionBuilder builder) {
-        return builder.getBuildAction(playerName, this);
-    }
-
-    private List<UpgradeAction> getUpgradeActions(String playerName,
-            ActionBuilder builder) {
-        return builder.getUpgradeActions(playerName, this);
-    }
-
-    protected void perform(TileAction action) {
+    public void perform(TileAction action) {
         if (action instanceof BuildAction) {
             findTile(TileLocation.fromArray(action.getLocation()))
                     .build((BuildAction) action);
@@ -95,17 +78,17 @@ public class Tile {
         }
     }
 
-    protected int getAmountOfBuildingsOn(Terrain playerTerrain) {
+    public int getAmountOfBuildingsOn(Terrain playerTerrain) {
         return (int) getAllTiles().stream()
                 .filter(t -> t.terrain.equals(playerTerrain) && t.hasBuilding())
                 .count();
     }
 
-    protected boolean hasBuilding() {
+    public boolean hasBuilding() {
         return !building.equals(Building.NONE);
     }
 
-    protected boolean isIndirectlyAdjacentTo(Terrain playerTerrain,
+    public boolean isIndirectlyAdjacentTo(Terrain playerTerrain,
             int shippingRange) {
         return getAllIndirectAdjacentWithin(shippingRange + 1).stream()
                 .filter(t -> t.terrain.equals(playerTerrain) && t.hasBuilding())
@@ -134,6 +117,10 @@ public class Tile {
         return location.compare(other.location);
     }
 
+    public ITile getTile(TileLocation target) {
+        return findTile(target);
+    }
+
     private Tile findTile(TileLocation target) {
         return target.equals(location) ? this
                 : adjacent.stream()
@@ -155,12 +142,9 @@ public class Tile {
         }
     }
 
-    protected int[] getLocation() {
-        return location.toArray();
-    }
-
-    protected List<Tile> getAdjacent() {
-        return adjacent;
+    public boolean hasAdjacencyBonus() {
+        return adjacent.stream().filter(t -> t.hasBuilding())
+                .filter(t -> !t.terrain.equals(terrain)).count() > 0;
     }
 
 }

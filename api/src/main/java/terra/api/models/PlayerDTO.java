@@ -1,7 +1,7 @@
 package terra.api.models;
 
+import terra.domain.IPlayerInfo;
 import terra.domain.ITerraMystica;
-import terra.domain.Resource;
 import terra.domain.Terrain;
 
 public class PlayerDTO {
@@ -21,22 +21,16 @@ public class PlayerDTO {
     private ActionDTO shippingAction;
     private ActionDTO shovelAction;
 
-    public PlayerDTO(ITerraMystica game, String name) {
-        this.name = name;
-        this.terrain = game.getPlayerTerrain(name);
-        this.turn = game.playerHasTurn(name);
-        this.passed = game.playerHasPassed(name);
-        this.starting = game.isStartingPlayer(name);
+    public PlayerDTO(ITerraMystica game, IPlayerInfo player) {
+        this.name = player.getName();
+        this.terrain = player.getTerrain();
+        this.turn = player.hasTurn();
+        this.passed = player.hasPassed();
+        this.starting = player.isNewStartingPlayer();
 
-        this.setShippingRange(game.getPlayerShippingRange(name));
-
-        Resource tCost = game.getPlayerTerraformCost(name, 1);
-        this.terraformCost = new int[] { tCost.coin(), tCost.worker(),
-                tCost.priest() };
-
-        Resource playerResources = game.getPlayerResource(name);
-        this.setResources(new int[] { playerResources.coin(),
-                playerResources.worker(), playerResources.priest() });
+        this.shippingRange = player.getShippingRange();
+        this.terraformCost = player.getTerraformCost();
+        this.resources = player.getResources();
 
         this.passAction = ActionDTO.getActionDTO(game.getPassAction(name));
         this.shippingAction = ActionDTO

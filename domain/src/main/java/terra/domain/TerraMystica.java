@@ -2,7 +2,6 @@ package terra.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import terra.domain.actions.GameAction;
 import terra.domain.actions.PlayerAction;
@@ -15,22 +14,14 @@ public class TerraMystica implements ITerraMystica {
     private GamePhase gamePhase;
     private int roundNumber;
 
-    private final int boardSize;
-    private Tile rootTile;
-    private Player player;
+    private ITile rootTile;
+    private IPlayer player;
 
-    public TerraMystica(Player player, Terrain[] board, int boardSize) {
+    public TerraMystica(IPlayer player, ITile rootTile) {
         this.actionBuilder = new ActionBuilder(this);
         this.gamePhase = GamePhase.GAME_START;
         this.roundNumber = 0;
-        this.boardSize = boardSize;
-        List<Tile> tiles = IntStream.range(0, board.length)
-                .mapToObj(i -> new Tile(
-                        TileLocation.fromBoardIndex(i, this.boardSize),
-                        board[i]))
-                .toList();
-        tiles.stream().forEach(t -> t.setAdjacent(tiles));
-        this.rootTile = tiles.get(0);
+        this.rootTile = rootTile;
         this.player = player;
     }
 
@@ -44,116 +35,71 @@ public class TerraMystica implements ITerraMystica {
             return "Game has ended";
         case GAME_ROUND:
             return "Round " + (roundNumber + 1);
-        case GAME_START:
-            return "Setup";
-        case GAME_START_REVERSE:
-            return "Setup";
         default:
-            return "";
+            return "Setup";
         }
     }
 
-    public List<String> getPlayerNames() {
-        return player.getAllPlayerNames();
+    public List<IPlayerInfo> getPlayerInfo() {
+        List<IPlayerInfo> list = new ArrayList<IPlayerInfo>();
+        list.addAll(player.getPlayerList());
+        return list;
     }
 
-    public Terrain getPlayerTerrain(String name) {
-        return player.getPlayerTerrain(name);
+    public IPlayer getPlayer(String name) {
+        return player.getPlayer(name);
     }
 
-    public boolean playerHasTurn(String name) {
-        return player.playerHasTurn(name);
+    public IPlayerInfo getTurnPlayer() {
+        return player.getTurnPlayer();
     }
 
-    public boolean playerHasPassed(String name) {
-        return player.playerHasPassed(name);
+    public List<ITileInfo> getTileInfo() {
+        List<ITileInfo> list = new ArrayList<ITileInfo>();
+        list.addAll(rootTile.getTileList());
+        return list;
     }
 
-    public boolean isStartingPlayer(String name) {
-        return player.isStartingPlayer(name);
-    }
-
-    public int getPlayerShippingRange(String name) {
-        return player.getPlayerShippingRange(name);
-    }
-
-    public Resource getPlayerResource(String name) {
-        return player.getPlayerResource(name);
-    }
-
-    public Resource getPlayerIncome(String name) {
-        return player.getPlayerIncome(name);
-    }
-
-    public Resource getPlayerBuildingCost(String name, Building building,
-            boolean adjacent) {
-        return player.getBuildingCost(name, building, adjacent);
-    }
-
-    public Resource getPlayerTerraformCost(String name, int steps) {
-        return player.getTerraformCost(name, steps);
-    }
-
-    public Resource getPlayerImprovementCost(String name, String type) {
-        return player.getPlayerImprovementCost(name, type);
-    }
-
-    public boolean playerCanPayCost(String name, Resource cost) {
-        return player.canPayForCost(name, cost);
-    }
-
-    public boolean playerCanBuildBuilding(String name, Building building) {
-        return player.canBuildBuilding(name, building);
-    }
-
-    public int[][] getTileLocations() {
-        return rootTile.getTileLocations();
-    }
-
-    public Terrain getTileTerrain(int[] location) {
-        return rootTile.getTileTerrain(TileLocation.fromArray(location));
-    }
-
-    public Building getTileBuilding(int[] location) {
-        return rootTile.getTileBuilding(TileLocation.fromArray(location));
+    public ITileInfo getTile(int[] location) {
+        return rootTile.getTile(TileLocation.fromArray(location));
     }
 
     public GameAction getPassAction(String playerName) {
         if (gamePhase == GamePhase.GAME_ROUND) {
-            return actionBuilder.getPassAction(playerName);
+            return actionBuilder.getPassAction(getPlayer(playerName));
         }
         return null;
     }
 
     public GameAction getShippingAction(String playerName) {
         if (gamePhase == GamePhase.GAME_ROUND) {
-            return actionBuilder.getShippingAction(playerName);
+            return actionBuilder.getShippingAction(getPlayer(playerName));
         }
         return null;
     }
 
     public GameAction getShovelAction(String playerName) {
         if (gamePhase == GamePhase.GAME_ROUND) {
-            return actionBuilder.getShovelAction(playerName);
+            return actionBuilder.getShovelAction(getPlayer(playerName));
         }
         return null;
     }
 
-    public List<GameAction> getTileActions(String playerName, int[] location) {
+    public List<GameAction> getTileActions(String name, int[] location) {
         List<GameAction> list = new ArrayList<GameAction>();
-        list.addAll(rootTile.getTileActions(playerName,
-                TileLocation.fromArray(location), actionBuilder));
+        list.addAll(actionBuilder.getTileActions(getPlayer(name),
+                rootTile.getTile(TileLocation.fromArray(location))));
         return list;
     }
 
     public void perform(GameAction action) {
-        if (playerHasTurn(action.getPlayerName())) {
+        if (getPlayer(action.getPlayerName()).hasTurn()) {
             if (action instanceof PlayerAction) {
                 player.perform((PlayerAction) action);
             }
             if (action instanceof TileAction) {
                 rootTile.perform((TileAction) action);
-                if (getTileBuilding(((TileAction) action).getLocation())
+                if (getTile(((TileAction) action).getLocation()).getBuilding()
                         .equals(((TileAction) action).getTargetBuilding())) {
                     player.perform((TileAction) action);
                 }
@@ -167,30 +113,26 @@ public class TerraMystica implements ITerraMystica {
         } else {
             player.endTurn(playerName);
         }
-        if (gamePhase == GamePhase.GAME_START && player.getAllPlayerNames()
-                .stream()
-                .filter(n -> rootTile
-                        .getAmountOfBuildingsOn(getPlayerTerrain(n)) != 1)
+        if (gamePhase == GamePhase.GAME_START && getPlayerInfo().stream()
+                .filter(p -> rootTile
+                        .getAmountOfBuildingsOn(p.getTerrain()) != 1)
                 .count() == 0) {
             gamePhase = GamePhase.GAME_START_REVERSE;
-            player.endTurnReverse(player.getAllPlayerNames().stream()
-                    .filter(n -> playerHasTurn(n)).findFirst().get());
+            player.endTurnReverse(getTurnPlayer().getName());
         }
-        if (gamePhase == GamePhase.GAME_START_REVERSE && player
-                .getAllPlayerNames().stream()
-                .filter(n -> rootTile
-                        .getAmountOfBuildingsOn(getPlayerTerrain(n)) != 2)
-                .count() == 0) {
+        if (gamePhase == GamePhase.GAME_START_REVERSE
+                && getPlayerInfo().stream()
+                        .filter(p -> rootTile
+                                .getAmountOfBuildingsOn(p.getTerrain()) != 2)
+                        .count() == 0) {
             gamePhase = GamePhase.GAME_ROUND;
-            player.endTurn(player.getAllPlayerNames().stream()
-                    .filter(n -> playerHasTurn(n)).findFirst().get());
+            player.endTurn(getTurnPlayer().getName());
             allPlayersTakeIncome();
         }
     }
 
     public void startNewRoundIfAllPassed() {
-        if (player.getAllPlayerNames().stream().filter(n -> !playerHasPassed(n))
-                .count() == 0) {
+        if (getPlayerInfo().stream().filter(p -> !p.hasPassed()).count() == 0) {
             player.startNewRound();
             allPlayersTakeIncome();
             roundNumber++;
@@ -201,7 +143,7 @@ public class TerraMystica implements ITerraMystica {
     }
 
     private void allPlayersTakeIncome() {
-        player.getAllPlayerNames().forEach(n -> player.gainIncome(n));
+        player.getPlayerList().forEach(p -> player.gainIncome());
     }
 
     protected void setGamePhase(GamePhase phase) {

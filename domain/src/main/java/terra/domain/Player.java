@@ -13,7 +13,7 @@ import terra.domain.actions.ShovelAction;
 import terra.domain.actions.TileAction;
 import terra.domain.actions.UpgradeAction;
 
-public class Player {
+public class Player implements IPlayer {
 
     private final String name;
     private final Terrain terrain;
@@ -79,53 +79,66 @@ public class Player {
         rewards.put(Building.SANCTUARY, Arrays.asList(new Resource(0, 0, 1)));
     }
 
-    public List<String> getAllPlayerNames() {
-        ArrayList<String> list = new ArrayList<String>();
-        getAllPlayerNames(list);
+    public List<IPlayer> getPlayerList() {
+        List<IPlayer> list = new ArrayList<IPlayer>();
+        list.addAll(getAllPlayers());
         return list;
     }
 
-    public void getAllPlayerNames(List<String> list) {
-        if (!list.contains(name)) {
-            list.add(name);
-            nextPlayer.getAllPlayerNames(list);
+    private List<Player> getAllPlayers() {
+        List<Player> list = new ArrayList<Player>();
+        getAllPlayers(list);
+        return list;
+    }
+
+    private void getAllPlayers(List<Player> list) {
+        if (!list.contains(this)) {
+            list.add(this);
+            nextPlayer.getAllPlayers(list);
         }
     }
 
-    public Terrain getPlayerTerrain(String name) {
-        return findPlayer(name).terrain;
+    public String getName() {
+        return name;
     }
 
-    public boolean playerHasTurn(String name) {
-        return findPlayer(name).turn;
+    public Terrain getTerrain() {
+        return terrain;
     }
 
-    public boolean playerHasPassed(String name) {
-        return findPlayer(name).passed;
+    public boolean hasTurn() {
+        return turn;
     }
 
-    public boolean isStartingPlayer(String name) {
-        return findPlayer(name).startPlayer;
+    public boolean hasPassed() {
+        return passed;
     }
 
-    public int getPlayerShippingRange(String name) {
-        return findPlayer(name).shippingRange;
+    public boolean isNewStartingPlayer() {
+        return startPlayer;
     }
 
-    public Resource getPlayerResource(String name) {
-        return findPlayer(name).resource;
+    public int getShippingRange() {
+        return shippingRange;
     }
 
-    public Resource getPlayerIncome(String name) {
-        return findPlayer(name).getIncome();
+    public int[] getTerraformCost() {
+        return terraformCost[terraformStep].toArray();
     }
 
-    protected void gainIncome(String name) {
-        findPlayer(name).resource = findPlayer(name).resource
-                .add(findPlayer(name).getIncome());
+    public int[] getResources() {
+        return resource.toArray();
     }
 
-    private Resource getIncome() {
+    public int[] getIncome() {
+        return getIncomeResource().toArray();
+    }
+
+    public void gainIncome() {
+        resource = resource.add(getIncomeResource());
+    }
+
+    private Resource getIncomeResource() {
         Resource income = new Resource(0, 1, 0); // default
         income = income
                 .addAll(amountBuilt.keySet().stream()
@@ -140,7 +153,7 @@ public class Player {
         return findPlayer(name).getBuildingCost(building, adjacent);
     }
 
-    private Resource getBuildingCost(Building building, boolean adjacent) {
+    public Resource getBuildingCost(Building building, boolean adjacent) {
         switch (building) {
         case CHURCH:
             return new Resource(5, 2, 0);
@@ -148,8 +161,6 @@ public class Player {
             return new Resource(2, 1, 0);
         case FORTRESS:
             return new Resource(6, 4, 0);
-        case NONE:
-            break;
         case SANCTUARY:
             return new Resource(6, 4, 0);
         case TRADING:
@@ -161,90 +172,88 @@ public class Player {
         return new Resource(0, 0, 0);
     }
 
-    protected Resource getTerraformCost(String name, int steps) {
-        return findPlayer(name).terraformCost[findPlayer(name).terraformStep]
-                .multiply(steps);
+    public Resource getTerraformCost(Terrain origin) {
+        return terraformCost[terraformStep]
+                .multiply(terrain.distanceTo(origin).getAsInt());
     }
 
-    protected Resource getPlayerImprovementCost(String name, String type) {
-        if (type.equals("Shipping")) {
-            if (findPlayer(name).shippingRange < findPlayer(name).maxRange) {
-                return findPlayer(name).rangeCost;
-            }
+    public Resource getShippingImprovementCost() {
+        if (shippingRange < maxRange) {
+            return rangeCost;
         }
-
-        if (type.equals("Shovel")) {
-            if (findPlayer(
-                    name).terraformStep < findPlayer(name).terraformCost.length
-                            - 1) {
-                return findPlayer(name).tfImproveCost;
-            }
-        }
-
         return null;
     }
 
-    private Player findPlayer(String name) {
+    public Resource getShovelImprovementCost() {
+        if (terraformStep < terraformCost.length - 1) {
+            return tfImproveCost;
+        }
+        return null;
+    }
+
+    public boolean canPayCost(Resource cost) {
+        return resource.coin() >= cost.coin()
+                && resource.worker() >= cost.worker()
+                && resource.priest() >= cost.priest();
+    }
+
+    public boolean canBuildBuilding(Building building) {
+        return amountBuilt.get(building) < rewards.get(building).size();
+    }
+
+    public IPlayer getPlayer(String name) {
+        return findPlayer(name);
+    }
+
+    protected Player findPlayer(String name) {
         if (this.name.equals(name)) {
             return this;
         }
         return nextPlayer.findPlayer(name);
     }
 
-    protected void perform(GameAction action) {
+    public IPlayer getTurnPlayer() {
+        return findTurnPlayer();
+    }
+
+    protected Player findTurnPlayer() {
+        if (turn) {
+            return this;
+        }
+        return nextPlayer.findTurnPlayer();
+    }
+
+    public void perform(GameAction action) {
+        Player targetPlayer = findPlayer(action.getPlayerName());
         if (action instanceof TileAction) {
             TileAction tileAction = (TileAction) action;
-            HashMap<Building, Integer> builtList = findPlayer(
-                    action.getPlayerName()).amountBuilt;
-            builtList.put(tileAction.getTargetBuilding(),
-                    builtList.get(tileAction.getTargetBuilding()) + 1);
-            if (tileAction instanceof UpgradeAction) {
-                UpgradeAction upgradeAction = (UpgradeAction) tileAction;
-                builtList.put(upgradeAction.getSourceBuilding(),
-                        builtList.get(upgradeAction.getSourceBuilding()) - 1);
-            }
-            findPlayer(action.getPlayerName()).payForCost(action.getCost());
+            targetPlayer.buildBuilding(tileAction instanceof UpgradeAction
+                    ? ((UpgradeAction) tileAction).getSourceBuilding()
+                    : null, tileAction.getTargetBuilding());
+            targetPlayer.payForCost(action.getCost());
         }
         if (action instanceof PassAction) {
-            findPlayer(action.getPlayerName()).pass();
+            targetPlayer.pass();
         }
         if (action instanceof ShippingAction) {
-            findPlayer(action.getPlayerName()).payForCost(action.getCost());
-            findPlayer(action.getPlayerName()).shippingRange++;
+            targetPlayer.shippingRange++;
+            targetPlayer.payForCost(action.getCost());
         }
         if (action instanceof ShovelAction) {
-            findPlayer(action.getPlayerName()).payForCost(action.getCost());
-            findPlayer(action.getPlayerName()).terraformStep++;
+            targetPlayer.terraformStep++;
+            targetPlayer.payForCost(action.getCost());
         }
     }
 
-    protected boolean canPayForCost(String name, Resource cost) {
-        return findPlayer(name).canPayForCost(cost);
-    }
-
-    private boolean canPayForCost(Resource cost) {
-        return resource.coin() >= cost.coin()
-                && resource.worker() >= cost.worker()
-                && resource.priest() >= cost.priest();
-    }
-
-    protected boolean canBuildBuilding(String name, Building building) {
-        return findPlayer(name).canBuildBuilding(building);
-    }
-
-    private boolean canBuildBuilding(Building building) {
-        return amountBuilt.get(building) < rewards.get(building).size();
+    private void buildBuilding(Building source, Building target) {
+        if (source != null) {
+            amountBuilt.put(source, amountBuilt.get(source) - 1);
+        }
+        amountBuilt.put(target, amountBuilt.get(target) + 1);
     }
 
     private void payForCost(Resource cost) {
         resource = resource.subtract(cost);
-    }
-
-    private Player getTurnPlayer() {
-        if (turn) {
-            return this;
-        }
-        return nextPlayer.getTurnPlayer();
     }
 
     private boolean noneHavePassed() {
@@ -268,11 +277,11 @@ public class Player {
     }
 
     private boolean firstToPass() {
-        return getTurnPlayer().nextPlayer.noneHavePassed();
+        return findTurnPlayer().nextPlayer.noneHavePassed();
     }
 
     private boolean lastToPass() {
-        return getTurnPlayer().nextPlayer.allHavePassed();
+        return findTurnPlayer().nextPlayer.allHavePassed();
     }
 
     private void pass() {
@@ -289,25 +298,25 @@ public class Player {
         }
     }
 
-    protected void endTurn(String name) {
-        if (playerHasTurn(name)) {
+    public void endTurn(String name) {
+        if (findPlayer(name).hasTurn()) {
             findPlayer(name).switchTurn();
         }
     }
 
     private void switchTurn() {
         if (turn) {
-            turn = !turn;
+            turn = false;
             nextPlayer.switchTurn();
         } else if (passed) {
             nextPlayer.switchTurn();
         } else {
-            turn = !turn;
+            turn = true;
         }
     }
 
-    protected void endTurnReverse(String name) {
-        if (playerHasTurn(name)) {
+    public void endTurnReverse(String name) {
+        if (findPlayer(name).hasTurn()) {
             findPlayer(name).switchTurnReverse();
         }
     }
@@ -321,16 +330,16 @@ public class Player {
 
     private void switchTurnReverse() {
         if (turn) {
-            turn = !turn;
+            turn = false;
             findPreviousPlayer(name).switchTurnReverse();
         } else if (passed) {
             findPreviousPlayer(name).switchTurnReverse();
         } else {
-            turn = !turn;
+            turn = true;
         }
     }
 
-    protected void startNewRound() {
+    public void startNewRound() {
         if (!passed) {
             return;
         }

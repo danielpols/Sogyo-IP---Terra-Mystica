@@ -10,38 +10,15 @@ public interface ITerraMystica {
 
     String getGamePhaseMessage();
 
-    List<String> getPlayerNames();
+    List<IPlayerInfo> getPlayerInfo();
 
-    Terrain getPlayerTerrain(String name);
+    IPlayerInfo getPlayer(String name);
 
-    boolean playerHasTurn(String name);
+    IPlayerInfo getTurnPlayer();
 
-    boolean playerHasPassed(String name);
+    List<ITileInfo> getTileInfo();
 
-    boolean isStartingPlayer(String name);
-
-    int getPlayerShippingRange(String name);
-
-    Resource getPlayerResource(String name);
-
-    Resource getPlayerIncome(String name);
-
-    Resource getPlayerBuildingCost(String name, Building building,
-            boolean adjacent);
-
-    Resource getPlayerTerraformCost(String name, int steps);
-
-    Resource getPlayerImprovementCost(String name, String type);
-
-    boolean playerCanPayCost(String name, Resource cost);
-
-    boolean playerCanBuildBuilding(String name, Building building);
-
-    int[][] getTileLocations();
-
-    Terrain getTileTerrain(int[] location);
-
-    Building getTileBuilding(int[] location);
+    ITileInfo getTile(int[] location);
 
     GameAction getPassAction(String playerName);
 
