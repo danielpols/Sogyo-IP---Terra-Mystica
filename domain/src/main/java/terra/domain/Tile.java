@@ -8,7 +8,7 @@ import terra.domain.actions.BuildAction;
 import terra.domain.actions.TileAction;
 import terra.domain.actions.UpgradeAction;
 
-public class Tile implements ITileInfo {
+public class Tile implements ITileInfo, ITileActionInfo {
 
     private final TileLocation location;
     private Terrain terrain;
@@ -80,11 +80,11 @@ public class Tile implements ITileInfo {
                 .count();
     }
 
-    protected boolean hasBuilding() {
+    public boolean hasBuilding() {
         return !building.equals(Building.NONE);
     }
 
-    protected boolean isIndirectlyAdjacentTo(Terrain playerTerrain,
+    public boolean isIndirectlyAdjacentTo(Terrain playerTerrain,
             int shippingRange) {
         return getAllIndirectAdjacentWithin(shippingRange + 1).stream()
                 .filter(t -> t.terrain.equals(playerTerrain) && t.hasBuilding())
@@ -134,8 +134,9 @@ public class Tile implements ITileInfo {
         }
     }
 
-    protected List<Tile> getAdjacent() {
-        return adjacent;
+    public boolean hasAdjacencyBonus() {
+        return adjacent.stream().filter(t -> t.hasBuilding())
+                .filter(t -> !t.terrain.equals(terrain)).count() > 0;
     }
 
 }

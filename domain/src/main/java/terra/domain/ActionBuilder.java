@@ -48,7 +48,7 @@ public class ActionBuilder {
     }
 
     public List<TileAction> getTileActions(IPlayerActionInfo player,
-            Tile tile) {
+            ITileActionInfo tile) {
         List<TileAction> list = new ArrayList<TileAction>();
         list.addAll(getBuildAction(player, tile));
         list.addAll(getUpgradeActions(player, tile));
@@ -56,7 +56,7 @@ public class ActionBuilder {
     }
 
     public List<BuildAction> getBuildAction(IPlayerActionInfo player,
-            Tile tile) {
+            ITileActionInfo tile) {
         List<BuildAction> list = new ArrayList<BuildAction>();
         if (tile.hasBuilding()) {
             return list;
@@ -99,16 +99,13 @@ public class ActionBuilder {
     }
 
     public List<UpgradeAction> getUpgradeActions(IPlayerActionInfo player,
-            Tile tile) {
+            ITileActionInfo tile) {
         List<UpgradeAction> list = new ArrayList<UpgradeAction>();
 
         if (tile.hasBuilding() && tile.getTerrain().equals(player.getTerrain())
                 && game.getGamePhase().equals(GamePhase.GAME_ROUND)) {
             Building tileBuilding = tile.getBuilding();
-            boolean adjacencyBonus = tile.getAdjacent().stream()
-                    .filter(t -> t.hasBuilding())
-                    .filter(t -> !t.getTerrain().equals(tile.getTerrain()))
-                    .count() > 0;
+            boolean adjacencyBonus = tile.hasAdjacencyBonus();
             list.addAll(tileBuilding.upgrades().stream()
                     .filter(b -> player.canPayCost(
                             player.getBuildingCost(b, adjacencyBonus))
