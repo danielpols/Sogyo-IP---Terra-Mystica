@@ -194,6 +194,8 @@ public class TerraMysticaTest {
         game.endTurn("Daniel");
 
         assertEquals(GamePhase.GAME_ROUND, game.getGamePhase());
+        assertArrayEquals(new int[] { 15, 6, 0 },
+                game.getPlayer("Daniel").getResources());
     }
 
     @Test
