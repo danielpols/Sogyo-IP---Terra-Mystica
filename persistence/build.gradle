@@ -3,12 +3,14 @@ plugins {
     id 'java'
     id 'java-library'
     id 'jacoco'
-    id 'org.barfuin.gradle.jacocolog' version '3.1.0'
 }
 
 repositories {
     // Specify the repository mirror that we want to download our dependencies from. Maven Central is configured by default when creating a new Gradle project.
     mavenCentral()
+    maven {
+        url "https://m2.objectdb.com/"
+    }
 }
 
 dependencies {

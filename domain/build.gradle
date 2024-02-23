@@ -3,15 +3,19 @@ plugins {
     id 'java'
     id 'java-library'
     id 'jacoco'
-    id 'org.barfuin.gradle.jacocolog' version '3.1.0'
 }
 
 repositories {
     // Specify the repository mirror that we want to download our dependencies from. Maven Central is configured by default when creating a new Gradle project.
     mavenCentral()
+    maven {
+        url "https://m2.objectdb.com/"
+    }
 }
 
 dependencies {
+    implementation 'com.objectdb:objectdb:2.8.9'
+
     // Download JUnit so that we can use it in our tests.
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
