@@ -21,9 +21,7 @@ public class TerraMysticaRepository implements ITerraMysticaRepository {
 
     public void initialiseGame(String id, List<String> playerNames,
             List<Terrain> playerTerrains) {
-        if (!database.hasID(id)) {
-            database.initialiseGame(id, playerNames, playerTerrains);
-        }
+        database.initialiseGame(id, playerNames, playerTerrains);
     }
 
     public void saveAction(String id, GameAction action) {

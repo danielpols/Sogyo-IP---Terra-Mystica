@@ -51,6 +51,13 @@ public class TerraMysticaDatabase implements ITerraMysticaDatabase {
 
     public void initialiseGame(String id, List<String> playerNames,
             List<Terrain> playerTerrains) {
+        PersistableGameObject existingGame = findGame(id);
+        if (existingGame != null) {
+            manager.getTransaction().begin();
+            manager.remove(existingGame);
+            manager.getTransaction().commit();
+        }
+
         PersistableGameObject game = new PersistableGameObject(id, playerNames,
                 playerTerrains);
 
