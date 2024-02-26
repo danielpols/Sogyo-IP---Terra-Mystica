@@ -21,7 +21,7 @@ public class TerraMysticaDatabase implements ITerraMysticaDatabase {
 
     public TerraMysticaDatabase() {
         EntityManagerFactory emf = Persistence
-                .createEntityManagerFactory("terramystica.odb");
+                .createEntityManagerFactory("../persistence/terramystica.odb");
         this.manager = emf.createEntityManager();
     }
 
