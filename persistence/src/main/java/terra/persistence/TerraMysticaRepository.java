@@ -21,9 +21,7 @@ public class TerraMysticaRepository implements ITerraMysticaRepository {
 
     public void initialiseGame(String id, List<String> playerNames,
             List<Terrain> playerTerrains) {
-        if (!database.hasID(id)) {
-            database.initialiseGame(id, playerNames, playerTerrains);
-        }
+        database.initialiseGame(id, playerNames, playerTerrains);
     }
 
     public void saveAction(String id, GameAction action) {
@@ -32,19 +30,13 @@ public class TerraMysticaRepository implements ITerraMysticaRepository {
 
     public ITerraMysticaInfo loadGame(String id) {
         ITerraMystica game = factory.startGame(database.getPlayerNames(id),
-                database.getPlayerTerrains(id), getStartingTerrain());
+                database.getPlayerTerrains(id), database.getStartingBoard());
         database.getGameActions(id).forEach(a -> {
             game.perform(a);
             game.endTurn(a.getPlayerName());
             game.startNewRoundIfAllPassed();
         });
         return game;
-    }
-
-    private Terrain[] getStartingTerrain() {
-        return database.getStartingBoard().chars()
-                .mapToObj(c -> Terrain.getTerrain((char) c))
-                .toArray(Terrain[]::new);
     }
 
 }

@@ -39,6 +39,22 @@ export async function doAction(action) {
     .catch(error => console.log(error));
 }
 
+export async function hasGameState() {
+    var hasState;
+    await fetch('terra/api/get')
+    .then(response => hasState = (response.status == 200))
+    .catch(error => hasState = false);
+    console.log(hasState);
+    return hasState;
+}
+
+export async function getGameState() {
+    var state;
+    await fetch('terra/api/get')
+    .then(response => response.json())
+    .then(data => gameState.state = data);
+}
+
 export function getIcon(building) {
     switch(building) {
         case "DWELLING":

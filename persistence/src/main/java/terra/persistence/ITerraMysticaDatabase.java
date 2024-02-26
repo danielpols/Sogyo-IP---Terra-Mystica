@@ -7,7 +7,7 @@ import terra.domain.actions.GameAction;
 
 public interface ITerraMysticaDatabase {
 
-    String getStartingBoard();
+    Terrain[] getStartingBoard();
 
     boolean hasID(String id);
 

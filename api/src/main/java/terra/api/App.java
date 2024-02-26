@@ -10,7 +10,7 @@ import terra.api.controllers.TerraController;
 import terra.domain.ITerraMysticaFactory;
 import terra.domain.TerraMysticaFactory;
 import terra.persistence.ITerraMysticaRepository;
-import terra.persistence.MockTerraMysticaDatabase;
+import terra.persistence.TerraMysticaDatabase;
 import terra.persistence.TerraMysticaRepository;
 
 public class App {
@@ -59,7 +59,7 @@ public class App {
         // Create the dependencies we want to inject
         ITerraMysticaFactory factory = new TerraMysticaFactory();
         ITerraMysticaRepository repository = new TerraMysticaRepository(
-                new MockTerraMysticaDatabase(), factory);
+                new TerraMysticaDatabase(), factory);
         TerraController controller = new TerraController(repository);
         // Register our MancalaController
         return new ResourceConfig().register(controller);

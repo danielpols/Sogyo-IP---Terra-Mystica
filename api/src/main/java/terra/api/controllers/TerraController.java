@@ -1,9 +1,9 @@
 package terra.api.controllers;
 
-import java.util.UUID;
+import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -26,13 +26,35 @@ public class TerraController {
         this.repository = repository;
     }
 
-    @Path("/log")
+    public static String getSessionId(HttpServletRequest request) {
+        return Arrays.stream(request.getCookies())
+                .filter(c -> c.getName().equals("JSESSIONID"))
+                .map(c -> c.getValue()).findFirst().get();
+    }
+
+    @Path("/get")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response log(@Context HttpServletRequest request, String body) {
-        System.out.println("Received call on /log");
-        return Response.status(200).entity("Hi").build();
+    public Response get(@Context HttpServletRequest request) {
+        System.out.println("Call made to /get");
+
+        try {
+            String gameId = getSessionId(request);
+
+            GameDTO output = new GameDTO(repository.loadGame(gameId));
+
+            return Response.status(200).entity(output).build();
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            return Response.status(406).entity("\"Session has no ID.\"")
+                    .build();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return Response.status(406)
+                    .entity("\"Session ID is not associated with a game.\"")
+                    .build();
+        }
     }
 
     @Path("/start")
@@ -42,10 +64,7 @@ public class TerraController {
     public Response start(@Context HttpServletRequest request,
             StartGameDTO body) {
         System.out.println("Call made to /start");
-
-        HttpSession session = request.getSession(true);
-        String gameId = UUID.randomUUID().toString();
-        session.setAttribute("gameId", gameId);
+        String gameId = getSessionId(request);
 
         repository.initialiseGame(gameId, body.getStartingNames(),
                 body.getStartingTerrains());
@@ -61,9 +80,7 @@ public class TerraController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response act(@Context HttpServletRequest request, ActionDTO body) {
         System.out.println("Call made to /act");
-
-        HttpSession session = request.getSession(false);
-        String gameId = (String) session.getAttribute("gameId");
+        String gameId = getSessionId(request);
 
         repository.saveAction(gameId, body.toAction());
 

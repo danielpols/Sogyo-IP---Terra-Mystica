@@ -4,11 +4,13 @@ plugins {
     // This time we're building a command-line executable application.
     id 'application'
     id 'jacoco'
-    id 'org.barfuin.gradle.jacocolog' version '3.1.0'
 }
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://m2.objectdb.com/"
+    }
 }
 
 dependencies {
