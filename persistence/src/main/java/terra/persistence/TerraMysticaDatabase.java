@@ -1,6 +1,8 @@
 package terra.persistence;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -18,11 +20,13 @@ public class TerraMysticaDatabase implements ITerraMysticaDatabase {
             + "WSMLWFDPMRLFW";
 
     EntityManager manager;
+    Map<String, PersistableGameObject> localDB;
 
     public TerraMysticaDatabase() {
         EntityManagerFactory emf = Persistence
                 .createEntityManagerFactory("../persistence/terramystica.odb");
         this.manager = emf.createEntityManager();
+        this.localDB = new HashMap<String, PersistableGameObject>();
     }
 
     public Terrain[] getStartingBoard() {
@@ -30,10 +34,19 @@ public class TerraMysticaDatabase implements ITerraMysticaDatabase {
                 .toArray(Terrain[]::new);
     }
 
+    private PersistableGameObject findGame(String id) {
+        if (!localDB.containsKey(id)) {
+            PersistableGameObject game = manager
+                    .find(PersistableGameObject.class, id);
+            if (game != null) {
+                localDB.put(id, game);
+            }
+        }
+        return localDB.get(id);
+    }
+
     public boolean hasID(String id) {
-        PersistableGameObject game = manager.find(PersistableGameObject.class,
-                id);
-        return game != null;
+        return findGame(id) != null;
     }
 
     public void initialiseGame(String id, List<String> playerNames,
@@ -41,30 +54,34 @@ public class TerraMysticaDatabase implements ITerraMysticaDatabase {
         PersistableGameObject game = new PersistableGameObject(id, playerNames,
                 playerTerrains);
 
-        manager.getTransaction().begin();
-        manager.persist(game);
-        manager.getTransaction().commit();
+        localDB.put(id, game);
+
+        new Thread(() -> {
+            manager.getTransaction().begin();
+            manager.persist(game);
+            manager.getTransaction().commit();
+        }).start();
     }
 
     public List<String> getPlayerNames(String id) {
-        return manager.find(PersistableGameObject.class, id).getNameList();
+        return findGame(id).getNameList();
     }
 
     public List<Terrain> getPlayerTerrains(String id) {
-        return manager.find(PersistableGameObject.class, id).getTerrainList();
+        return findGame(id).getTerrainList();
     }
 
     public List<GameAction> getGameActions(String id) {
-        return manager.find(PersistableGameObject.class, id).getActionList()
-                .stream().map(a -> a.toAction()).toList();
+        return findGame(id).getActionList().stream().map(a -> a.toAction())
+                .toList();
     }
 
     public void saveAction(String id, GameAction action) {
-        PersistableGameObject game = manager.find(PersistableGameObject.class,
-                id);
         manager.getTransaction().begin();
-        game.addAction(action);
-        manager.getTransaction().commit();
+        findGame(id).addAction(action);
+        new Thread(() -> {
+            manager.getTransaction().commit();
+        }).start();
     }
 
 }
