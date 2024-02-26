@@ -40,11 +40,12 @@ export async function doAction(action) {
 }
 
 export async function hasGameState() {
-    var state;
+    var hasState;
     await fetch('terra/api/get')
-    .then(response => response.json())
-    .then(data => state = data);
-    return state ? true : false;
+    .then(response => hasState = (response.status == 200))
+    .catch(error => hasState = false);
+    console.log(hasState);
+    return hasState;
 }
 
 export async function getGameState() {

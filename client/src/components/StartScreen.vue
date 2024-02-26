@@ -16,7 +16,7 @@
         </ul>
     </div>
     <button type="button" @click="startGame" :disabled="disableStart()">Start game!</button><br/>
-    <button v-if="hasExistingGame" type="button" @click="getGameState">Resume game</button>
+    <button v-if="hasExistingGame" type="button" @click="getGameState">Continue game</button>
 </template>
 
 <script>
@@ -78,7 +78,7 @@
         beforeMount() {
             this.addPlayer();
             this.addPlayer();
-            this.hasExistingGame = hasGameState();
+            hasGameState().then(data => this.hasExistingGame = data);
         }
     }
 </script>
