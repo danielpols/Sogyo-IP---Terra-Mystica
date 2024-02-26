@@ -24,8 +24,9 @@ public class MockTerraMysticaDatabase implements ITerraMysticaDatabase {
         actions = new HashMap<String, List<GameAction>>();
     }
 
-    public String getStartingBoard() {
-        return start;
+    public Terrain[] getStartingBoard() {
+        return start.chars().mapToObj(c -> Terrain.getTerrain((char) c))
+                .toArray(Terrain[]::new);
     }
 
     public boolean hasID(String id) {
