@@ -1,5 +1,5 @@
 <script setup>
-    import { gameState } from '../global.js';
+    import { gameState, hasGameState, getGameState } from '../global.js';
 </script>
 
 <template>
@@ -15,7 +15,8 @@
             <li v-if="playerList.length < 5"><button type="button" @click="addPlayer">Add another player</button></li>
         </ul>
     </div>
-    <button type="button" v-on:click="getGameState" :disabled="disableStart()">Start game!</button>
+    <button type="button" @click="startGame" :disabled="disableStart()">Start game!</button><br/>
+    <button v-if="hasExistingGame" type="button" @click="getGameState">Resume game</button>
 </template>
 
 <script>
@@ -23,7 +24,8 @@
         data () {
             return {
                 playerList: [],
-                terrainList: ["PLAINS", "SWAMP", "LAKE", "FOREST", "MOUNTAINS", "WASTELAND", "DESERT"]
+                terrainList: ["PLAINS", "SWAMP", "LAKE", "FOREST", "MOUNTAINS", "WASTELAND", "DESERT"],
+                hasExistingGame : false
             };
         },
         methods: {
@@ -36,7 +38,7 @@
             removePlayer(index) {
                 this.$delete(this.playerList, index);
             },
-            async getGameState() {
+            async startGame() {
                 await fetch('terra/api/start', {
                 method: "POST",
                 headers: {
@@ -76,6 +78,7 @@
         beforeMount() {
             this.addPlayer();
             this.addPlayer();
+            this.hasExistingGame = hasGameState();
         }
     }
 </script>
