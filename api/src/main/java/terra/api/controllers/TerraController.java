@@ -26,13 +26,28 @@ public class TerraController {
         this.repository = repository;
     }
 
-    @Path("/log")
+    @Path("/get")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response log(@Context HttpServletRequest request, String body) {
-        System.out.println("Received call on /log");
-        return Response.status(200).entity("Hi").build();
+    public Response get(@Context HttpServletRequest request) {
+        System.out.println("Call made to /get");
+
+        HttpSession session = request.getSession(false);
+
+        if (session == null) {
+            return Response.status(404).entity("No session found.").build();
+        }
+
+        String gameId = (String) session.getAttribute("gameId");
+        if (gameId == null) {
+            return Response.status(404)
+                    .entity("Session is not associated with a game.").build();
+        }
+
+        GameDTO output = new GameDTO(repository.loadGame(gameId));
+
+        return Response.status(200).entity(output).build();
     }
 
     @Path("/start")
@@ -44,6 +59,7 @@ public class TerraController {
         System.out.println("Call made to /start");
 
         HttpSession session = request.getSession(true);
+
         String gameId = UUID.randomUUID().toString();
         session.setAttribute("gameId", gameId);
 
